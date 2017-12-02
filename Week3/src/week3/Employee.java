@@ -3,6 +3,8 @@ package week3;
 import java.util.Scanner;
 
 public class Employee extends Person{
+
+  Scanner input = new Scanner(System.in);
   private String department;
   private String position;
   private int workDays;
@@ -21,17 +23,17 @@ public class Employee extends Person{
     this.position = position;
     this.workDays = workDays;
     this.department = department;
-    this.setAllowance();
+    this.setAllowance(position);
   }
 
-  public void setAllowance() {
-    if(this.getPosition().equals("Truong phong")) {
+  public void setAllowance(String position) {
+    if(position.equals("Truong phong")) {
       this.allowance = 1000;
     }
-    if(this.getPosition().equals("Pho phong")) {
+    if(position.equals("Pho phong")) {
       this.allowance = 600;
     }
-    if(this.getPosition().equals("Nhan vien")) {
+    if(position.equals("Nhan vien")) {
       this.allowance = 400;
     }
   }
@@ -75,23 +77,32 @@ public class Employee extends Person{
   @Override
   public void printInfor() {
 	  super.printInfor();
-	  System.out.printf("%4s\t %15s\t %7s\t %5s\t %5s\t",this.getDepartment(),this.getPosition(),
+	  System.out.printf("%-10s %-15s %-7s %-7s %-7s",this.getDepartment(),this.getPosition(),
 	            this.getAllowance(),this.getWorkDays(),this.getCoefficientSalary());
   }
   @Override
   public void inputInfor() {
-	  Scanner input = new Scanner(System.in);
 	  super.inputInfor();
 	  System.out.print("Nhap phong ban : ");
 	  this.setDepartment(input.nextLine());
+	  System.out.println("Chon chuc vu : ");
+    System.out.println("\t1.Nhan vien  2.Pho phong  3.Truong phong");
+    int choose = input.nextInt();
+    if(choose == 1) {
+      this.setPosition("Nhan vien");
+    }
+    else if(choose == 2) {
+      this.setPosition("Pho phong");
+    }
+    else if(choose == 3) {
+      this.setPosition("Truong phong");
+    }
 	  System.out.print("Nhap so ngay cong : ");
 	  this.setWorkDays(input.nextInt());
 	  System.out.print("Nhap he so luong : ");
 	  this.setCoefficientSalary(input.nextFloat());
-	  input.nextLine();
-	  System.out.print("Nhap chuc vu : ");
-	  this.setPosition(input.nextLine());
-	  this.setAllowance();
+	  
+	  this.setAllowance(this.position);
   }
   @Override
   public double getSalary() {

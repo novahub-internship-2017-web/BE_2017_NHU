@@ -3,7 +3,8 @@ package week3;
 import java.util.Scanner;
 
 public class Teacher extends Person {
-  
+
+  Scanner input = new Scanner(System.in);
   private String faculty;
   private String degree;
   private int classHours;
@@ -22,18 +23,17 @@ public class Teacher extends Person {
     this.faculty = faculty;
     this.degree = degree;
     this.classHours = classHours; 
-    this.setAllowance();
+    this.setAllowance(degree);
   }
   
-  public void setAllowance() {
-    if(this.getDegree().equals("Cu nhan")) {
+  public void setAllowance(String degree) {
+    if(degree.equals("Cu nhan")) {
       this.allowance = 300;
     }
-    if(this.getDegree().equals("Thac si")) {
+    if(degree.equals("Thac si")) {
       this.allowance = 900;
     }
-    if(this.getDegree() == "Tien si") this.allowance = 2000.0;
-    if(this.getDegree().equals("Tien si")) {
+    if(degree.equals("Tien si")) {
       this.allowance = 2000;
     }
   }
@@ -80,25 +80,35 @@ public class Teacher extends Person {
   @Override
   public void printInfor() {
 	  super.printInfor();
-	  System.out.printf("%4s\t %15s\t %7s\t %5s\t %5s\t",this.getFaculty(),this.getDegree(),
+	  System.out.printf("%-10s %-15s %-7s %-7s %-7s",this.getFaculty(),this.getDegree(),
 	            this.getAllowance(),this.getClassHours(),this.getCoefficientSalary());
   }
   
   @Override
   public void inputInfor() {
-	  Scanner input = new Scanner(System.in);
 	  super.inputInfor();
 	  System.out.print("Nhap khoa : ");
 	  this.setFaculty(input.nextLine());
-	  System.out.print("Nhap trinh do : ");
-	  this.setDegree(input.nextLine());
+	  System.out.println("Chon trinh do : ");
+	  System.out.println("\t1.Cu nhan 2.Thac si 3.Tien si");
+	  int choose = input.nextInt();
+    if(choose == 1) {
+	    this.setDegree("Cu nhan");
+	  }
+	  else if(choose == 2) {
+      this.setDegree("Thac si");
+    }
+	  else if(choose == 3) {
+      this.setDegree("Tien si");
+    }
 	  System.out.print("Nhap so tiet day/thang : ");
 	  this.setClassHours(input.nextInt());
 	  System.out.print("Nhap he so luong : ");
 	  this.setCoefficientSalary(input.nextFloat());
 	  input.nextLine();
-	  this.setAllowance();
+	  this.setAllowance(this.degree);
   }
+  
   @Override
   public double getSalary() {
     double salary = this.coefficientSalary*730 + this.allowance + this.classHours*45;

@@ -3,10 +3,13 @@ package week3;
 import java.util.Scanner;
 
 public class Person {
+
+  Scanner input = new Scanner(System.in);
   private String name;
   private int year;
   private String address;
   private String career;
+  
   
   public Person() {
     
@@ -55,13 +58,14 @@ public class Person {
 	  return 0;
   }
   
+  
+  
   public void printInfor() {
-	  System.out.printf("%15s\t %8s\t %10s\t %4s\t ",
+	  System.out.printf("%-15s %-8s %-10s %-4s ",
 			  this.getName(), this.getYear(),this.getAddress(),this.getCareer());
   }
   
   public void inputInfor(){
-	  	Scanner input = new Scanner(System.in);
 	  	System.out.print("Nhap ten : ");
 	    setName(input.nextLine());
 	    System.out.print("Nhap nam sinh : ");
@@ -70,4 +74,5 @@ public class Person {
 	    System.out.print("Nhap que quan : ");
 	    setAddress(input.nextLine());
   }
+  
 }
