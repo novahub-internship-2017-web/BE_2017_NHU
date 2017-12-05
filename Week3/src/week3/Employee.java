@@ -110,4 +110,45 @@ public class Employee extends Person{
     return salary;
   }
   
+  @Override
+  public void editInfor() {
+    String string="";
+    super.editInfor();
+    System.out.println("Phong ban hien tai : "+this.department);
+    System.out.print("Sua phong ban (Khong sua -> enter) : ");
+    string = input.nextLine();
+    if(!string.equals("")) {
+      this.setDepartment(string);
+    }
+    System.out.println("Chuc vu : "+this.position);
+    System.out.println("Chon chuc vu (1->3): ");
+    System.out.println("\t1.Nhan vien  2.Pho phong  3.Truong phong");
+    string = input.nextLine();
+    if(!string.equals("")) {
+      int choose = Integer.parseInt(string);
+      if(choose == 1) {
+        this.setPosition("Cu nhan");
+      }
+      else if(choose == 2) {
+        this.setPosition("Thac si");
+      }
+      else if(choose == 3) {
+        this.setPosition("Tien si");
+      }
+    }
+    System.out.println("So ngay cong : "+this.workDays);
+    System.out.println("Sua so ngay cong (Khong sua -> enter): ");
+    string = input.nextLine();
+    if(!string.equals("")) {
+      this.setWorkDays(Integer.parseInt(string));
+    }
+    System.out.println("He so luong : "+this.coefficientSalary);
+    System.out.println("Sua he so luong (Khong sua -> enter): ");
+    string = input.nextLine();
+    if(!string.equals("")) {
+      this.setCoefficientSalary(Float.parseFloat(string));
+    }
+    this.setAllowance(this.position);
+  }
+  
 }

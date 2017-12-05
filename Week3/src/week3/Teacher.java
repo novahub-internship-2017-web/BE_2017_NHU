@@ -115,5 +115,45 @@ public class Teacher extends Person {
     return salary;
   }
   
+  @Override
+  public void editInfor() {
+    super.editInfor();
+    String string="";
+    System.out.println("Khoa : "+this.faculty);
+    System.out.println("Sua khoa (Khong sua -> enter): ");
+    string = input.nextLine();
+    if(!string.equals("")) {
+      this.setFaculty(string);
+    }
+    System.out.println("Trinh do : "+this.faculty);
+    System.out.println("Chon trinh do : ");
+    System.out.println("\t1.Cu nhan 2.Thac si 3.Tien si");
+    string = input.nextLine();
+    if(!string.equals("")) {
+      int choose = Integer.parseInt(string);
+      if(choose == 1) {
+        this.setDegree("Cu nhan");
+      }
+      else if(choose == 2) {
+        this.setDegree("Thac si");
+      }
+      else if(choose == 3) {
+        this.setDegree("Tien si");
+      }
+    }
+    System.out.println("So tiet day/thang : "+this.classHours);
+    System.out.println("Sua so tiet day/thang (Khong sua -> enter): ");
+    string = input.nextLine();
+    if(!string.equals("")) {
+      this.setClassHours(Integer.parseInt(string));
+    }
+    System.out.println("He so luong : "+this.coefficientSalary);
+    System.out.println("Sua he so luong (Khong sua -> enter): ");
+    string = input.nextLine();
+    if(!string.equals("")) {
+    this.setCoefficientSalary(Float.parseFloat(string));
+    }
+    this.setAllowance(this.degree);
+  }
 }
 

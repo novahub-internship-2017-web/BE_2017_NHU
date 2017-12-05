@@ -8,7 +8,174 @@ import java.util.Scanner;
 
 public class Management {
   public static List<Person> list=new ArrayList<Person>();
-  public static Scanner input = new Scanner(System.in);
+  public static Scanner input = new Scanner(System.in); 
+  
+  public static final int FIRST_CHOICE_MENU = 1;
+  public static final int SECOND_CHOICE_MENU = 2;
+  public static final int THIRD_CHOICE_MENU = 3;
+  public static final int FOURTH_CHOICE_MENU = 4;
+  public static final int EXIT_PROGRAM = 5;
+  
+  public static final int ADD_TO_END_OF_LIST = 1;
+  public static final int ADD_TO_FIRST_OF_LIST = 2;
+  public static final int ADD_TO_POSITION_K_OF_LIST = 3;
+  public static final int RETURN_MAIN_MENU = 4;
+  public static final int ADD_AVAILABLE_LIST = 5;
+  
+  public static final int DISPLAY_LIST = 1;
+  public static final int DISPLAY_LIST_SORT_BY_SALARY = 2;
+  public static final int DISPLAY_LIST_SORT_BY_NAME = 3;
+  public static final int SEARCH_BY_NAME = 4;
+  public static final int SEARCH_BY_YEAR = 5;
+  
+  public void showMainMenu() {
+    int choose;
+    do {
+      System.out.println("\n-----------------------------");
+      System.out.println("1. Them moi can bo.");
+      System.out.println("2. Chinh sua thong tin can bo.");
+      System.out.println("3. Xoa can bo.");
+      System.out.println("4. Hien thi danh sach can bo.");
+      System.out.println("5. Thoat chuong trinh.");
+      System.out.print(" Nhap viec muon lam (1->5) : ");
+      choose = nhapSo();
+      switch(choose) {
+        case FIRST_CHOICE_MENU:
+          firstMenu();
+          break;
+        case SECOND_CHOICE_MENU:
+          editPerson();
+          break;
+        case THIRD_CHOICE_MENU:
+          removePerson();
+          break;
+        case FOURTH_CHOICE_MENU:
+          fourthMenu();
+          break;
+        case EXIT_PROGRAM:
+          break;
+        default:
+          System.out.println("So ban nhap khong hop le");
+          showMainMenu();
+      }
+    }while(choose>0 && choose <6);
+  }
+  
+  public void firstMenu() {
+    int choose;
+    do {
+      System.out.println("-----------------------------");
+      System.out.println("1.1 Them can bo vao cuoi danh sach.");
+      System.out.println("1.2 Them can bo vao dau danh sach.");
+      System.out.println("1.3 Them can bo vao sau vi tri thu k.");
+      System.out.println("1.4 Quay lai thu muc truoc.");
+      System.out.println("1.5 Them danh sach san co.");
+      System.out.print(" Nhap viec muon lam (1->5) : ");
+      choose = nhapSo();
+      switch(choose) {
+        case ADD_TO_END_OF_LIST:
+          addPersonToList(ADD_TO_END_OF_LIST,0);
+          break;
+        case ADD_TO_FIRST_OF_LIST:
+          addPersonToList(ADD_TO_FIRST_OF_LIST,0);
+          break;
+        case ADD_TO_POSITION_K_OF_LIST:
+          System.out.print("Vi tri muon them vao : ");
+          int stt = nhapSo();
+          if(stt < 0 || stt>list.size()) {
+            System.out.print("Khong co can bo vi tri thu "+stt);
+          }
+          else {
+            addPersonToList(ADD_TO_POSITION_K_OF_LIST,stt);
+          }
+          break;
+        case RETURN_MAIN_MENU:
+          showMainMenu();
+          break; 
+        case ADD_AVAILABLE_LIST:
+          addAvailableList();
+          break;
+      }
+    }while(choose != 4);
+  }
+  
+  public void fourthMenu() {
+    int choose;
+    System.out.println("-----------------------------");
+    System.out.println("4.1 Hien thi danh sach hien tai.");
+    System.out.println("4.2 Hien thi danh sach sau khi da sap xep tang dan theo luong.");
+    System.out.println("4.3 Hien thi danh sach sau khi da sap xep ten theo thu tu chu cai.");
+    System.out.println("4.4 Tim kiem can bo theo ten.");
+    System.out.println("4.5 Tim kiem can bo theo nam sinh.");
+    System.out.print(" Nhap viec muon lam (1->5) : ");
+    choose = nhapSo();
+    switch(choose) {
+      case DISPLAY_LIST:
+        displayList(list);
+        break;
+      case DISPLAY_LIST_SORT_BY_SALARY:
+        sortBySalary();
+        break;
+      case DISPLAY_LIST_SORT_BY_NAME:
+        sortByName();
+        break;
+      case SEARCH_BY_NAME:
+        searchByName();
+        break; 
+      case SEARCH_BY_YEAR:
+        searchByYear();
+        break;
+      }
+  }
+  
+  public void addPersonToList(int choose,int stt) {
+    if(!list.isEmpty()) {
+      System.out.println("Chon loai can bo muon them ");
+      System.out.println(" 1.Giang vien \t\t 2.Nhan vien");
+      System.out.print("Chon : ");
+      int kind = nhapSo(); 
+      Person obj = new Person();
+      if(kind==1) {
+        obj=new Teacher();
+        obj=addTeacher();
+      }
+      else if(kind==2) {
+        obj=new Employee();
+        obj=addEmployee();
+      }
+      switch(choose) {
+        case 1: 
+          list.add(obj);
+          break;
+        case 2:
+          list.add(0,obj);
+          break;
+        case 3:
+            list.add(stt,obj);
+          break;
+        default:
+          break;
+      }
+    }else {
+      System.out.print("Danh sach rong");
+    }
+    
+  }
+  
+  public void addAvailableList() {
+    Employee obj1 = new Employee("Nguyen Nhu", 1996, "DN", 3.2f, "Ke toan", "Truong phong", 25);
+    Teacher obj2 = new Teacher("Nguyen Van B", 1990, "QN", 2.0f, "CNSH", "Thac si", 21);
+    Employee obj3 = new Employee("Tran C", 1987, "DN", 3.2f, "QLy", "Pho phong", 25);
+    Employee obj4 = new Employee("Le B", 1988, "Hue", 3.1f, "Dao tao", "Nhan vien", 23);
+    Teacher obj5 = new Teacher("Nguyen Van A", 1989, "QN", 2.0f, "DTVT", "Tien si", 21);
+    Teacher obj6 = new Teacher("Nguyen Van C", 1988, "QN", 2.0f, "CNSH", "Tien si", 20);
+    list.add(obj1);
+    list.add(obj2);
+    list.add(obj3);
+    list.add(obj4);
+    list.add(obj5);
+    list.add(obj6);
+  }
   
   public Teacher addTeacher() {
     Teacher obj=new Teacher();
@@ -38,51 +205,18 @@ public class Management {
         return (n);
     } 
   
-  public void addPersonToList(int choose1) {
-    System.out.println("Chon loai can bo muon them ");
-    System.out.println(" 1.Giang vien \t\t 2.Nhan vien");
-    System.out.print("Chon : ");
-    int kind = nhapSo(); 
-    Person obj = new Person();
-    if(kind==1) {
-      obj=new Teacher();
-      obj=addTeacher();
-    }
-    else if(kind==2) {
-      obj=new Employee();
-      obj=addEmployee();
-    }
-    switch(choose1) {
-      case 1: 
-        list.add(obj);
-        break;
-      case 2:
-        list.add(0,obj);
-        break;
-      case 3:
-        System.out.print("Vi tri muon them vao : ");
-        list.add(nhapSo(),obj);
-        break;
-      default:
-        break;
-    }
-  }
+  
    
   public void editPerson() {
-	Person obj = new Person();  
     System.out.print("Nhap so thu tu can bo muon sua : ");
     int stt = nhapSo();
     if(stt < list.size() && stt >= 0) {
       if(list.get(stt).getCareer() == "GV") {
-        obj = new Teacher();
-        obj = addTeacher();
+        list.get(stt).editInfor();
       }
       if(list.get(stt).getCareer() == "NV") {
-          obj = new Employee();
-          obj = addEmployee();
+        list.get(stt).editInfor();
         }
-      list.add(stt, obj);
-      list.remove(stt+1);
     }
     else {
       System.out.println("Khong co can bo tai stt "+stt);
@@ -96,21 +230,25 @@ public class Management {
   
   public void displayList(List<Person> listPerson) {
     colsNameDisplay();
-    for(int i=0;i<listPerson.size();i++) {
-      System.out.print("\n");
-      System.out.printf("%-3s ",i);
-      
-      if(listPerson.get(i).getCareer() == "GV") {
-        Teacher obj1= (Teacher)listPerson.get(i);
-        obj1.printInfor();
-      }
-      
-      if(listPerson.get(i).getCareer() == "NV") {
-        Employee obj1= (Employee)listPerson.get(i);
-        obj1.printInfor();
+    if(!list.isEmpty()) {
+      for(int i=0;i<listPerson.size();i++) {
+        System.out.print("\n");
+        System.out.printf("%-3s ",i);
         
+        if(listPerson.get(i).getCareer() == "GV") {
+          Teacher obj1= (Teacher)listPerson.get(i);
+          obj1.printInfor();
+        }
+        
+        if(listPerson.get(i).getCareer() == "NV") {
+          Employee obj1= (Employee)listPerson.get(i);
+          obj1.printInfor();
+        }
       }
+    }else {
+      System.out.println("\nDanh sach rong!!!");
     }
+    
   }
 
   public void sortBySalary() {
@@ -179,93 +317,15 @@ public class Management {
 	  }
   }
   
-  public void show() {
-    int choose,choose1,choose3,choose4;
-    do {
-      System.out.println("\nQuan ly thong tin");
-      System.out.println("1. Them moi can bo.");
-      System.out.println("2. Chinh sua thong tin can bo.");
-      System.out.println("3. Xoa can bo.");
-      System.out.println("4. Hien thi danh sach can bo.");
-      System.out.println("5. Thoat chuong trinh.");
-      System.out.print(" Nhap viec muon lam : ");
-      choose = nhapSo();
-      switch(choose) {
-        case 1 :
-          System.out.println("1.1 Them can bo vao cuoi danh sach.");
-          System.out.println("1.2 Them can bo vao dau danh sach.");
-          System.out.println("1.3 Them can bo vao sau vi tri thu k.");
-          System.out.println("1.4 Quay lai thu muc truoc.");
-          System.out.print(" Nhap viec muon lam : ");
-          choose1 = nhapSo();
-          switch(choose1) {
-            case 1:
-              do {
-              addPersonToList(1);
-              System.out.print("Ban co muon nhap them can bo (y/n) : ");
-              } while(input.next().equals("y"));
-              break;
-            case 2:
-              do {
-                addPersonToList(2);
-                System.out.print("Ban co muon nhap them can bo (y/n) : ");
-                } while(input.next().equals("y"));
-              break;
-            case 3:
-              do {
-                addPersonToList(3);
-                System.out.print("Ban co muon nhap them can bo (y/n) : ");
-                } while(input.next().equals("y"));
-              break;
-            case 4:
-              show();
-          }
-          break;
-        case 2:
-          editPerson();
-          break;
-        case 3:
-          System.out.print("Nhap so thu can bo can xoa : ");
-          choose3 = nhapSo();
-          list.remove(choose3);
-          break;
-        case 4:
-          System.out.println("4.1 Hien thi danh sach hien tai.");
-          System.out.println("4.2 Hien thi danh sach sau khi da sap xep tang dan theo luong.");
-          System.out.println("4.3 Hien thi danh sach sau khi da sap xep ten theo thu tu chu cai.");
-          System.out.println("4.4 Tim kiem can bo theo ten.");
-          System.out.println("4.5 Tim kiem can bo theo nam sinh.");
-          System.out.print(" Nhap viec muon lam : ");
-          choose4 = nhapSo();
-          switch(choose4) {
-            case 1:
-              displayList(list);
-              break;
-            case 2:
-            	sortBySalary();
-            	break;
-            case 3:
-            	sortByName();
-            	break;
-            case 4:
-            	searchByName();
-            	break;
-            default:
-              break;
-          }
-          break;
-        case 5:
-          System.exit(0);
-        default:
-          System.exit(0);
-        }
-    }while(choose!=5);
-  }
-  
-  public static void main(String[] args) {
-    Management management = new Management();
-    management.show();
-    
+  public void removePerson() {
+    System.out.print("Nhap so thu tu can bo can xoa : ");
+    int choose = nhapSo();
+    if(choose < 0 || choose>list.size()) {
+      System.out.print("Khong co can bo vi tri thu "+choose);
+    }
+    else {
+      list.remove(choose);
+    }
   }
 
 }
