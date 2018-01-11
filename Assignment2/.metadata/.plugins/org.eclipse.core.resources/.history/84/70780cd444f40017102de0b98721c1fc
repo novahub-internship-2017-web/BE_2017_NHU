@@ -1,0 +1,204 @@
+package controller;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import dao.StaffDAO;
+import dao.TeacherDAO;
+import dao.UserDAO;
+import entities.Teacher;
+
+
+
+@Controller
+@RequestMapping("/admin/teacher")
+public class AdminTeacherController extends HttpServlet{
+  private static final long serialVersionUID = 1L;
+
+  @RequestMapping(value= {"","/listTeacher"})
+  public String getAllList(Model model) {
+    List<Teacher> listTeacher = new ArrayList<Teacher>();
+    listTeacher = TeacherDAO.getAll();
+    model.addAttribute("listTeacher", listTeacher);    
+    return "/WEB-INF/views/admin/ListTeacher.jsp";   
+  }
+  
+  @RequestMapping("addForm")
+  public String addForm(){   
+    
+    return "/WEB-INF/views/admin/FormAddTeacher.jsp";   
+  }
+  
+  @RequestMapping("add")
+  public void add(HttpServletRequest request,  HttpServletResponse response) throws ServletException, IOException{ 
+    response.setContentType("text/html;charset=UTF-8");
+    PrintWriter out= response.getWriter();
+    String msg = null;
+    String errorMsg = null;
+    request.setCharacterEncoding("UTF-8");
+    response.setCharacterEncoding("UTF-8");
+    String username = request.getParameter("username");
+    String password = request.getParameter("password");
+    String role = request.getParameter("role");
+    
+    if(username == null || username.equals("") || password == null || password.equals("")) {
+      errorMsg = "Bạn phải điền đủ các trường";
+      request.setAttribute("errorMessage", errorMsg);
+      request.getRequestDispatcher("addForm").include(request, response); 
+    }else {
+      if(UserDAO.checkUsername(username)) {
+        response.setContentType("text/html;charset=UTF-8");
+        out.println("<script type=\"text/javascript\">");
+        out.println("alert('Usernam đã tồn tại');");
+        out.println("location='addForm';");
+        out.println("</script>");
+      }else {
+        UserDAO.add(username, password, role);
+        // get id of new user
+        int teacherId = UserDAO.getId(username);
+        String name = request.getParameter("name");
+        if(name == null || name.equals("")) {
+          UserDAO.delete(teacherId);
+          errorMsg = "Bạn phải điền đủ các trường.\n Họ tên không được để trống";
+          request.setAttribute("errorMessage", errorMsg);
+          request.getRequestDispatcher("addForm").include(request, response); 
+        }
+        String birthYear = request.getParameter("birthYear");
+        int birth_year = 0;
+        if(birthYear == null || birthYear.equals("")) {
+          UserDAO.delete(teacherId);
+          errorMsg = "Bạn phải điền đủ các trường.\n Năm sinh không được để trống";
+          request.setAttribute("errorMessage", errorMsg);
+          request.getRequestDispatcher("addForm").include(request, response);
+        }else {
+          try {
+            birth_year = Integer.parseInt("birthYear");
+          } catch (NumberFormatException nfe) {
+            UserDAO.delete(teacherId);
+            errorMsg = "Năm sinh phải là số";
+            request.setAttribute("errorMessage", errorMsg);
+            request.getRequestDispatcher("addForm").include(request, response); 
+          }
+        }
+      String country = request.getParameter("country");
+      String faculty = request.getParameter("faculty");
+      String degree = request.getParameter("degree");
+      if(country == null || country.equals("") || faculty == null || 
+          faculty.equals("") || degree == null || degree.equals("")){
+        UserDAO.delete(teacherId);
+        errorMsg = "Bạn phải điền đủ các trường.";
+        request.setAttribute("errorMessage", errorMsg);
+        request.getRequestDispatcher("addForm").include(request, response); 
+      }
+      String classHours = request.getParameter("classHours");
+      int class_hours = 0;
+      if(classHours == null || classHours.equals("")) {
+        UserDAO.delete(teacherId);
+        errorMsg = "Bạn phải điền đủ các trường.\n Số tiết dạy không được để trống";
+        request.setAttribute("errorMessage", errorMsg);
+        request.getRequestDispatcher("addForm").include(request, response);
+      }else {
+        try {
+          class_hours = Integer.parseInt("classHours");
+        } catch (NumberFormatException nfe) {
+          UserDAO.delete(teacherId);
+          errorMsg = "Số tiết học phải là số";
+          request.setAttribute("errorMessage", errorMsg);
+          request.getRequestDispatcher("addForm").include(request, response); 
+        }
+      }
+      int allowance = Integer.parseInt(request.getParameter("allowance"));
+      float coefficientSalary = Float.parseFloat(request.getParameter("coefficientSalary"));
+      if(errorMsg != null) {
+        Teacher teacher = new Teacher(teacherId, name, birth_year, country, faculty, degree, class_hours, allowance, coefficientSalary);
+        int status = TeacherDAO.add(teacher);
+        if(status != 0) {
+          msg= "Thêm thành công";
+        }else {
+          msg= "Lỗi ! Chưa thêm được";
+        }
+        out.println("<script type=\"text/javascript\">");
+        out.println("alert('"+ msg +"');");
+        out.println("location='editForm?id="+teacherId+"';");
+        out.println("</script>");
+      }
+      }
+      
+    }
+    
+    
+    
+    
+  }
+  
+  @RequestMapping(value = {"editForm","editForm/"}, method= RequestMethod.GET)
+  public String editForm(@RequestParam("id") String id, Model model) {   
+    Teacher teacher = TeacherDAO.getTeacher(Integer.parseInt(id));
+    model.addAttribute("teacher", teacher);
+    return "/WEB-INF/views/admin/FormEditTeacher.jsp";   
+  }
+  
+  @RequestMapping(value = "edit")
+  public void edit(Model model,HttpServletRequest request,  HttpServletResponse response) throws ServletException, IOException{   
+    request.setCharacterEncoding("UTF-8");
+    response.setCharacterEncoding("UTF-8");
+    String errorMsg = null;
+    int teacherId = Integer.parseInt(request.getParameter("teacherId"));
+    String name = request.getParameter("name");
+    int birthYear = Integer.parseInt(request.getParameter("birthYear"));
+    String country = request.getParameter("country");
+    String faculty = request.getParameter("faculty");
+    String degree = request.getParameter("degree");
+    int classHours = Integer.parseInt(request.getParameter("classHours"));
+    int allowance = Integer.parseInt(request.getParameter("allowance"));
+    float coefficientSalary = Float.parseFloat(request.getParameter("coefficientSalary"));
+    Teacher teacher = new Teacher(teacherId, name, birthYear, country, faculty, degree, classHours, allowance, coefficientSalary);
+    int status = TeacherDAO.editStaffInfo(teacher);
+    if(status != 0) {
+      errorMsg= "Chinh sua thanh cong";
+    }else {
+      errorMsg= "Loi ! CHua chinh sua duoc";
+    }
+    teacher = TeacherDAO.getTeacher(teacherId);
+    model.addAttribute("teacher", teacher);
+    response.setContentType("text/html;charset=UTF-8");
+    PrintWriter out= response.getWriter();
+    out.println("<script type=\"text/javascript\">");
+    out.println("alert('"+ errorMsg +"');");
+    out.println("location='editForm?id="+teacher.getTeacherId()+"';");
+    out.println("</script>");
+  }
+  
+  @RequestMapping(value = {"delete"}, method= RequestMethod.GET)
+  public void delete(@RequestParam("id") String id, Model model,HttpServletRequest request,  HttpServletResponse response) throws ServletException, IOException {
+    String msg = null;
+    int teacherId = Integer.parseInt(id);
+    TeacherDAO.delete(teacherId);
+    int status = UserDAO.delete(teacherId);
+    if(status != 0) {
+      msg= "Xoa thanh cong";
+    }else {
+      msg= "Loi ! Chua xoa duoc";
+    }
+    response.setContentType("text/html;charset=UTF-8");
+    PrintWriter out= response.getWriter();
+    out.println("<script type=\"text/javascript\">");
+    out.println("alert('"+ msg +"');");
+    out.println("location='listTeacher';");
+    out.println("</script>");
+  }
+}

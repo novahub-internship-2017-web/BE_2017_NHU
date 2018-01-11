@@ -1,0 +1,2 @@
+INDEX VERSION 1.4+/media/nhu/New Volume/IT/Java/Novahub_Workspace/Week7_Assignment2/Assignment2/.metadata/.plugins/org.eclipse.wst.jsdt.core/indexes
+3443170566.index
