@@ -15,8 +15,8 @@
     cache-period="31556926"/>
  
     <mvc:annotation-driven />
-  <!-- 
-    <bean 
+  
+    <!-- <bean 
         class="org.springframework.web.servlet.view.InternalResourceViewResolver"> 
         <property name="prefix"> 
             <value>/WEB-INF/views/</value> 
@@ -24,6 +24,6 @@
         <property name="suffix"> 
             <value>.jsp</value> 
         </property> 
-    </bean> -->
+    </bean> --> 
   
 </beans>  

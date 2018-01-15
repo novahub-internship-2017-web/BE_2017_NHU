@@ -24,6 +24,12 @@ public class LogoutController  extends HttpServlet {
       session.removeAttribute("currentSessionUser");
       response.sendRedirect("/LoginServlet");
   }*/
+  @RequestMapping(value = "/login")
+  public String login(HttpServletRequest request, HttpServletResponse response)  
+      throws ServletException, IOException {
+    System.out.print("here");
+    return "redirect:index.jsp";
+  }
   
   @RequestMapping(value = "/logout")
   public String logout(HttpServletRequest request, HttpServletResponse response)  
@@ -39,4 +45,6 @@ public class LogoutController  extends HttpServlet {
     session.removeAttribute("currentSessionUser");*/
     return "index.jsp";
   }
+  
+  
 }  

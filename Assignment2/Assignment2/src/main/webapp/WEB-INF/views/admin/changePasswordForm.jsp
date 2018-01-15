@@ -54,19 +54,19 @@
                 <tr>
                   <td><label>Mật khẩu cũ</label></td>
                  <td>
-                  <input class="form-control" type="text" name="oldPassword" id="oldPassword">
+                  <input class="form-control" type="password" name="oldPassword" id="oldPassword">
                 </td>
                 </tr>
             	<tr>
             		<td><label>Mật khẩu mới</label></td>
             		<td>
-                      <input class="form-control" type="text" name="newPassword" id="newPassword">
+                      <input class="form-control" type="password" name="newPassword" id="newPassword">
                      </td>
             	</tr>
             	<tr>
             		<td><label>Xác nhận mật khẩu</label></td>
             		<td>
-                      <input class="form-control" type="text" name="confirmPassword" id="confirmPassword">
+                      <input class="form-control" type="password" name="confirmPassword" id="confirmPassword">
                      </td>
             	</tr>
             	<tr>

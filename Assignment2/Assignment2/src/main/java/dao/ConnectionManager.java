@@ -18,6 +18,7 @@ public class ConnectionManager {
     } catch (Exception ex) {
       System.out.println("Database.getConnection() Error -->"
           + ex.getMessage());
+      ex.printStackTrace();
          }
   }
   

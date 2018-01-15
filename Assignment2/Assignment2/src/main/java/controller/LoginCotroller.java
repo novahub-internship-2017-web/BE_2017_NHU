@@ -79,9 +79,5 @@ public class LoginCotroller extends HttpServlet {
     }
   }
   
-  @RequestMapping(value = "/login")
-  public String login(HttpServletRequest request, HttpServletResponse response)  
-      throws ServletException, IOException {
-    return "index.jsp";
-  }
+  
 }

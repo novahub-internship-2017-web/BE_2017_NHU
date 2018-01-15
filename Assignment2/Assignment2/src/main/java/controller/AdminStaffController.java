@@ -83,8 +83,13 @@ public class AdminStaffController extends HttpServlet {
   @RequestMapping(value = {"editForm","editForm/"}, method= {RequestMethod.GET,RequestMethod.POST})
   public String editForm(@RequestParam("id") String id, Model model) {   
     Staff staff = StaffDAO.getStaff(Integer.parseInt(id));
-    model.addAttribute("staff", staff);
-    return "/WEB-INF/views/admin/FormEditStaff.jsp";   
+    if(staff != null) {
+      model.addAttribute("staff", staff);
+      return "/WEB-INF/views/admin/FormEditStaff.jsp";
+    }else {
+      model.addAttribute("message","Không có dữ liệu");
+      return "/WEB-INF/views/admin/NotificationPage.jsp";
+    }
   }
   @RequestMapping(value = "edit")
   public void edit(Model model,HttpServletRequest request,  HttpServletResponse response) throws ServletException, IOException{   

@@ -80,7 +80,7 @@ $(document).ready(function(){
     					</tr>
     					<tr>
     						<td><label>Password</label></td>
-    						<td> <input class="form-control" type="text" name="password" id="password"></td>
+    						<td> <input class="form-control" type="password" name="password" id="password"></td>
     					</tr>
     					<tr>
     						<td><label>Quyền truy cập</label></td>

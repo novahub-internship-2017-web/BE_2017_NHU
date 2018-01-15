@@ -80,8 +80,13 @@ public class AdminTeacherController extends HttpServlet{
   @RequestMapping(value = {"editForm","editForm/"}, method= {RequestMethod.GET,RequestMethod.POST})
   public String editForm(@RequestParam("id") String id, Model model) {   
     Teacher teacher = TeacherDAO.getTeacher(Integer.parseInt(id));
-    model.addAttribute("teacher", teacher);
-    return "/WEB-INF/views/admin/FormEditTeacher.jsp";   
+    if(teacher != null) {
+      model.addAttribute("teacher", teacher);
+      return "/WEB-INF/views/admin/FormEditTeacher.jsp";  
+    }else {
+      model.addAttribute("message", "Không có dữ liệu");
+      return "/WEB-INF/views/admin/NotificationPage.jsp";
+    }
   }
   
   @RequestMapping(value = "edit")

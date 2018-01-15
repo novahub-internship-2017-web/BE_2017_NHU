@@ -3,7 +3,7 @@
 This project provides for user a website to manage employees.
 Have three types of users (admin, staff, teacher)
 
-* Admin role 
+* Admin role (username : admin, password : 123)
 	- Login
 	- Managing all information of users( add new, update, delete, change permission of user)
 	- Searching info users

@@ -81,9 +81,14 @@ public class AdminUserController {
   @RequestMapping(value = {"editForm"}, method= {RequestMethod.GET,RequestMethod.POST})
   public String editForm(@RequestParam("id") String id, Model model) {   
     User user = UserDAO.getUser(Integer.parseInt(id));
-    model.addAttribute("user", user);
-    return "/WEB-INF/views/admin/FormEditUser.jsp";   
-  }
+    if(user != null) {
+      model.addAttribute("user", user);
+      return "/WEB-INF/views/admin/FormEditUser.jsp"; 
+    }else {
+      model.addAttribute("message", "Không có dữ liệu");
+      return "/WEB-INF/views/admin/NotificationPage.jsp"; 
+    }
+   }
   
   @RequestMapping(value = "edit")
   public void edit(Model model,HttpServletRequest request,  HttpServletResponse response) throws ServletException, IOException{   
@@ -126,9 +131,7 @@ public class AdminUserController {
     }else if(searchBy.equals("birthYear")) {
       listTeacher = TeacherDAO.searchBy("BirthYear", keyword);
       listStaff = StaffDAO.searchBy("BirthYear", keyword);
-    }/*else {
-      msg = "Không tìm thấy kết quả";
-    }*/
+    }
     if(!listStaff.isEmpty() || !listTeacher.isEmpty()) {
       model.addAttribute("listStaff", listStaff);    
       model.addAttribute("listTeacher", listTeacher); 
@@ -147,19 +150,27 @@ public class AdminUserController {
       Staff staff = StaffDAO.getStaff(Integer.parseInt(id));
       model.addAttribute("staff", staff);
       return "/WEB-INF/views/admin/FormEditStaff.jsp";     
-    }
-    else{
+    }else if(TeacherDAO.isValid(Integer.parseInt(id))){
       Teacher teacher = TeacherDAO.getTeacher(Integer.parseInt(id));
       model.addAttribute("teacher", teacher);
       return "/WEB-INF/views/admin/FormEditTeacher.jsp";   
+    }else {
+      model.addAttribute("message", "Không tồn tại dữ liệu");
+      return "/WEB-INF/views/admin/NotificationPage.jsp";  
     }
   }
   
   @RequestMapping(value = {"changePassForm"}, method= RequestMethod.GET)
   public String changePassForm(@RequestParam("id") String id, Model model) {   
     User user = UserDAO.getUser(Integer.parseInt(id));
-    model.addAttribute("user", user);
-    return "/WEB-INF/views/admin/changePasswordForm.jsp";   
+    if(user != null) {
+      model.addAttribute("user", user);
+      return "/WEB-INF/views/admin/changePasswordForm.jsp"; 
+    }else {
+      model.addAttribute("message", "Không tồn tại dữ liệu");
+      return "/WEB-INF/views/admin/NotificationPage.jsp";  
+    }
+      
   }
   
   @RequestMapping(value = "changePassword")
