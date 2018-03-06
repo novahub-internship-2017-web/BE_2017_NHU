@@ -1,0 +1,57 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+ xmlns:beans="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans 
+ http://www.springframework.org/schema/beans/spring-beans.xsd
+ http://www.springframework.org/schema/security 
+ http://www.springframework.org/schema/security/spring-security.xsd">
+ 
+ <beans:bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    	<beans:property name="location">
+      		<beans:value>/resources/jdbc.properties</beans:value>
+    	</beans:property>
+  	</beans:bean>
+ <beans:bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	    <beans:property name="driverClassName" value="${jdbc.driverClassName}" />
+	    <beans:property name="url" value="${jdbc.url}" />
+	    <beans:property name="username" value="${jdbc.username}" />
+	    <beans:property name="password" value="${jdbc.password}" />
+	  </beans:bean>
+ <beans:bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+    	<beans:property name="dataSource" ref="dataSource"></beans:property>
+  	</beans:bean>
+  	
+  	
+ <http auto-config="true" >
+ <intercept-url pattern="/" access="permitAll" />
+  <intercept-url pattern="/book/booksList" access="user" />
+ 
+ <!-- access denied page -->
+ <access-denied-handler error-page="/403" />
+ 
+ </http>     
+ <!-- Select users and user_roles from database -->
+<authentication-manager>
+<authentication-provider>  
+                <user-service>  
+                     <user name="test" password="123" authorities="user"/>  
+                </user-service>  
+           </authentication-provider> 
+	 <authentication-provider>
+<jdbc-user-service data-source-ref="dataSource"
+ 
+       users-by-username-query="
+         SELECT username, password, CASE enabled WHEN 1 THEN 'true' ELSE 'false' END 'enabled'
+         FROM user
+         WHERE username=?;"
+ 
+       authorities-by-username-query="
+        SELECT u.username, r.rolename
+        FROM user u, role r
+        WHERE u.id = r.role_id
+        AND u.username=?;"
+ 
+        />
+</authentication-provider>
+	</authentication-manager>
+</beans:beans>
