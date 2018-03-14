@@ -33,6 +33,7 @@
 					<button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
 					Tìm kiếm theo : 
 						<select name="searchBy" style="color:black">
+							<option value="all_field">Tất cả</option>
 							<option value="title">Tiêu đề</option>
 							<option value="author">Tác giả</option>
 						</select>

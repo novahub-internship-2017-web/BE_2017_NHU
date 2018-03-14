@@ -2,4 +2,4 @@
     pageEncoding="utf-8"%>
 <p style="color: red">${error}</p>
 
-<a href="${pageContext.request.contextPath}/login">Trang chủ</a>
+<a href="${pageContext.request.contextPath}/">Trang chủ</a>

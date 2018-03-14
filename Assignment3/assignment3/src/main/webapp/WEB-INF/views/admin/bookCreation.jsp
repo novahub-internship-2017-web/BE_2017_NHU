@@ -10,23 +10,29 @@
  			<h1>Thêm sách mới</h1>
  			<form:form id="formBook" name="formBook" class="form-group"
  						action="${pageContext.request.contextPath}/admin/book/add" 
- 						method="post" modelAttribute="book" >
+ 						method="post" modelAttribute="book" 
+						enctype="multipart/form-data" >
     				<table class="tableForm" style="width:100%" >
     					<tr>
     						<td><label >Tiêu đề</label></td>
-    						<td><form:input path="title" class="form-control" /></td>
+    						<td><form:input path="title" class="form-control" 
+    								value="${book.getTitle()}"/></td>
     					</tr>
     					<tr>
     						<td><label>Tác giả</label></td>
-    						<td> <form:input path="author" class="form-control"/></td>
+    						<td> <form:input path="author" class="form-control"
+    									value="${book.getAuthor()}" /></td>
     					</tr>
-    					<!-- <tr>
+    					<tr>
     						<td><label>Hình ảnh</label></td>
-    						<td> <input type="file" name="fileUpload"/></td>
-    					</tr> -->
+    						<td> <input type="file" name="fileUpload" />
+    							<p class="error"> ${error}</p>
+    						</td>
+    					</tr>
     					<tr>
     						<td><label>Mô tả</label></td>
-    						<td> <form:textarea path="description" class="form-control" /></td>
+    						<td> <form:textarea path="description" class="form-control" 
+										value="${book.getDescription()}" /></td>
     					</tr>
     					<tr>
     						<td></td>

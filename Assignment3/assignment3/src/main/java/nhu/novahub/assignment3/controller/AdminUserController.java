@@ -119,7 +119,8 @@ public class AdminUserController {
 		}else {
 		User user = new User();
 		user.setUsername(username);
-		user.setPassword(password);
+		String md5_Pass = org.springframework.util.DigestUtils.md5DigestAsHex(password.getBytes());
+		user.setPassword(md5_Pass);
 		userService.add(user);
 		int userId = userService.findByUsername(username).getId();
 		Role userRole = new Role();
@@ -144,8 +145,10 @@ public class AdminUserController {
 		String username = (String) session.getAttribute("currentSessionUsername");
 		int user_id = userService.findByUsername(username).getId();
 		User user = userService.findByUsername(username);
-		if(user.getPassword().equals(oldPassword) && newPassword.equals(confirmPassword)) {
-			userService.changePassword(user_id, newPassword);
+		String md5_oldPass = org.springframework.util.DigestUtils.md5DigestAsHex(oldPassword.getBytes());
+		if(user.getPassword().equals(md5_oldPass) && newPassword.equals(confirmPassword)) {
+			String md5_newPass = org.springframework.util.DigestUtils.md5DigestAsHex(newPassword.getBytes());
+			userService.changePassword(user_id, md5_newPass);
 			model.addObject("msg", "Cập nhật thành công");
 		}else {
 			model.addObject("msg", "Lỗi");

@@ -29,23 +29,27 @@
     						<td> <form:input path="author" value="${book.getAuthor()}" 
     										class="form-control"/></td>
     					</tr>
-    					<!-- <tr>
+    					<tr>
     						<td><label>Hình ảnh</label></td>
-    						<td> <input type="file" name="fileUpload"/></td>
-    					</tr> -->
+    						<td><input type="file" name="fileUpload"/>
+    							<p class="error"> ${error}</p>
+    						</td>
+    					</tr>
     					<tr>
     						<td><label>Mô tả</label></td>
     						<td> <form:textarea path="description" value="${book.getDescription()}"
     											class="form-control"/></td>
     					</tr>
-    					
+    					<tr>
+    						<td></td>
+    						<td> <input type="submit" value="Cập nhật" class="btn btn-primary pull-right" 
+					    		onclick="validateFormBook();"></td>
+    					</tr>
     				</table>
-					    <input type="submit" value="Cập nhật" class="btn btn-primary pull-right" 
-					    		onclick="validateFormBook();">
+					    
     				</form:form>
     				
  		</div>
  	</div>	
-	<hr/>
 	</div>
 

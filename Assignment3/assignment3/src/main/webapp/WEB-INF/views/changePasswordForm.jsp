@@ -24,12 +24,12 @@ function validateChangePass(){
 
 	<%@ include file="header.jsp" %>
 	<div class="container main-container">
-	<div class="panel panel-default">
- 		<div class="panel-body " id="contentPage">
+	<div class="panel panel-default col-md-6 col-md-offset-3">
+ 		<div class="panel-body text-center" id="contentPage">
  			<h1>Cập nhật mật khẩu </h1>
  			<p class="error">${msg}</p>
  			<form action="changePass" method="post" name="validatePass" id="validatePass">
-    				<table class="tableForm">
+    				<table class="tableForm" style="width:100%">
     					<tr>
     						<td><label >Mật khẩu cũ</label></td>
     						<td><input name="oldPassword" class="form-control" 
@@ -52,6 +52,6 @@ function validateChangePass(){
     				
  		</div>
  	</div>	
-	<hr/>
+
 	</div>
 

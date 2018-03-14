@@ -23,13 +23,13 @@ function validateUserCreation(){
 </script>
 	<%@ include file="header.jsp" %>
 	<div class="container main-container">
-	<div class="panel panel-default">
- 		<div class="panel-body " id="contentPage">
+	<div class="panel panel-default col-md-6 col-md-offset-3">
+ 		<div class="panel-body text-center" id="contentPage">
  			<h1>Thêm người dùng</h1>
  			<h5 class="error">${msg}</h5>
  			<form id="validateUser" name="validateUser" 
  						action="${pageContext.request.contextPath}/admin/user/add" method="post">
-    				<table class="tableForm">
+    				<table class="tableForm" style="width:100%">
     					<tr>
     						<td><label >Username</label></td>
     						<td><input name="username" id="username" class="form-control" 
@@ -54,13 +54,18 @@ function validateUserCreation(){
 								</select>
 							</td>
     					</tr>
+    					<tr>
+    						<td><input onclick="validateUserCreation();" type="submit" 
+    						value="Đăng ký" class="btn btn-primary pull-left"></td>
+    						<td>
+							</td>
+    					</tr>
     				</table>
-					    <input onclick="validateUserCreation();" type="submit" value="Đăng ký" class="btn btn-primary pull-right"
-					     >
+					    
     				</form>
     				
  		</div>
  	</div>	
-	<hr/>
+
 	</div>
 

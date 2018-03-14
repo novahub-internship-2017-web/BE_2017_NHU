@@ -28,7 +28,7 @@ public class UserDAO {
 	  
 	  public User checkExist(User user) {
 		  String sql = "SELECT * FROM user WHERE username ='"+ user.getUsername()+"' "
-		  		+ "and password = '"+ user.getPassword() +"' and enabled=1";
+		  		+ "and password = '"+ user.getPassword() +"'";
 		  return jdbcTemplate.query(sql, new ResultSetExtractor<User>() {
 				  
 			  @Override

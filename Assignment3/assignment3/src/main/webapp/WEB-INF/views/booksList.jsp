@@ -34,7 +34,7 @@
 							  href="${pageContext.request.contextPath}/book/detail?id=${book.getId()}" >
 							  <i class="glyphicon glyphicon-zoom-in"></i>
 							</a>
-							<a onclick="return confirm('Bạn muốn xóa không ?')" title="Xóa" 
+							<a style="${css_del}" onclick="return confirm('Bạn muốn xóa không ?')" title="Xóa" 
 							  href="${pageContext.request.contextPath}/book/delete/${book.getId()}">
 							  <i class="glyphicon glyphicon-remove-circle"></i>
 					 		</a>
@@ -45,6 +45,5 @@
 					</table>
  		</div>
  	</div>	
-	<hr/>
 	</div>
 

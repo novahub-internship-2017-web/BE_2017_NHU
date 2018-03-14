@@ -1,9 +1,11 @@
 package nhu.novahub.assignment3.controller;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.aspectj.lang.annotation.Before;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -52,6 +55,9 @@ public class AdminBookController {
 		if(role.contains("admin")) {
 			model.addObject("booksList", bookService.findAll());
 			model.setViewName("admin/booksList");
+			if(role.equals("admin")) {
+				model.addObject("css_del","display:none");
+			}
 		}else {
 			model.addObject("error", "Bạn không có quyền truy cập");
 			model.setViewName("errorPage");
@@ -104,8 +110,18 @@ public class AdminBookController {
 	@RequestMapping(value = "/{id}/delete", method = RequestMethod.GET)
 	public String deleteUser(@PathVariable("id") int id,
 		final RedirectAttributes redirectAttributes) {
-		bookService.delete(id);
-		redirectAttributes.addFlashAttribute("msg", "Đã xóa thành công");
+		String username = (String) session.getAttribute("currentSessionUsername");
+		User userCurrent = userService.findByUsername(username);
+		String role = roleService.findById(userCurrent.getId()).getRolename();
+		int user_id = userCurrent.getId();
+		int bookId = id;
+		Book book = bookService.findById(bookId);
+		if(book.getUserId() == user_id || role.equals("admin_default")) {
+			bookService.delete(bookId);
+			redirectAttributes.addFlashAttribute("msg", "Đã xóa thành công");
+		}else {
+			redirectAttributes.addFlashAttribute("msg", "Bạn không có quyền xóa");
+		}
 		return "redirect:../booksList";
 	}
 	
@@ -123,7 +139,8 @@ public class AdminBookController {
 	
 	@RequestMapping(value="add", method = RequestMethod.POST)
 	public ModelAndView addBook(@ModelAttribute("book") Book book,ModelAndView model,
-			@ModelAttribute("currentSessionUsername") String username){
+			@ModelAttribute("currentSessionUsername") String username,
+			@RequestParam MultipartFile fileUpload,HttpServletRequest request){
 		int user_id = userService.findByUsername(username).getId();
 		book.setUserId(user_id);
 		Date timeUpdate=new Date(System.currentTimeMillis()); 
@@ -131,6 +148,41 @@ public class AdminBookController {
 		String timeUpdateString=timeFormat.format(timeUpdate.getTime());
 		book.setCreatedAt(timeUpdateString);
 		book.setUpdatedAt(timeUpdateString);
+		//upload image
+		String nameFile = fileUpload.getOriginalFilename();
+		String dirFile = request.getSession().getServletContext().getRealPath("/")+"resources/images";
+		File fileDir = new File(dirFile);
+		if(!"".equals(nameFile)){
+		if(!(fileUpload.getContentType().toLowerCase().equals("image/jpg") 
+			|| fileUpload.getContentType().toLowerCase().equals("image/jpeg") 
+			 || fileUpload.getContentType().toLowerCase().equals("image/png"))){
+			 model.addObject("error", "Chỉ up loại file ảnh");
+			 model.addObject("book",book);
+			 model.setViewName("admin/bookCreation");
+			 return model;
+		    }
+			if(fileUpload.getSize() >= 3000000) {
+				model.addObject("error", "Dung lượng file không quá 3MB");
+				model.addObject("book",book);
+				model.setViewName("admin/bookCreation");
+				return model;
+			}
+			if(!fileDir.exists()){
+				fileDir.mkdir();
+			}
+			String typeOfFile = nameFile.substring(nameFile.lastIndexOf("."));
+			SimpleDateFormat timeFormat2 = new SimpleDateFormat("HHmmssddMMyyyy");
+			nameFile = timeFormat2.format(timeUpdate.getTime());
+			try {
+				fileUpload.transferTo(new File(fileDir+File.separator+nameFile+typeOfFile));
+				System.out.println("Upload file thành công!"+fileDir+File.separator+nameFile+typeOfFile);
+				book.setPicture(nameFile+typeOfFile);
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				System.out.println("Upload file thất bại!");
+			}
+		}
+		//		
 		bookService.add(book);
 		model.addObject("booksList", bookService.findAll());
 		model.setViewName("admin/booksList");
@@ -149,11 +201,46 @@ public class AdminBookController {
 	
 	@RequestMapping(value="edit", method = RequestMethod.POST)
 	public ModelAndView editBook(@ModelAttribute("book") Book book,
-			ModelAndView model) {	
+			ModelAndView model,@RequestParam MultipartFile fileUpload,HttpServletRequest request) {	
 		Date timeUpdate=new Date(System.currentTimeMillis()); 
 		SimpleDateFormat timeFormat= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
 		String timeUpdateString=timeFormat.format(timeUpdate.getTime());
 		book.setUpdatedAt(timeUpdateString);
+		//upload image
+		String nameFile = fileUpload.getOriginalFilename();
+		String dirFile = request.getSession().getServletContext().getRealPath("/")+"resources/images";
+		File fileDir = new File(dirFile);
+		if(!"".equals(nameFile)){
+			if(!(fileUpload.getContentType().toLowerCase().equals("image/jpg") 
+		            || fileUpload.getContentType().toLowerCase().equals("image/jpeg") 
+		            || fileUpload.getContentType().toLowerCase().equals("image/png"))){
+			 model.addObject("error", "Chỉ up loại file ảnh");
+			 model.addObject("book",book);
+			 model.setViewName("admin/bookEdition");
+			 return model;
+		    }
+			if(fileUpload.getSize() >= 3000000) {
+				model.addObject("error", "Dung lượng file không quá 3MB");
+				model.addObject("book",book);
+				model.setViewName("admin/bookEdition");
+				return model;
+			}
+			if(!fileDir.exists()){
+				fileDir.mkdir();
+			}
+			String typeOfFile = nameFile.substring(nameFile.lastIndexOf("."));
+			SimpleDateFormat timeFormat2 = new SimpleDateFormat("HHmmssddMMyyyy");
+			nameFile = timeFormat2.format(timeUpdate.getTime());
+			try {
+				fileUpload.transferTo(new File(fileDir+File.separator+nameFile+typeOfFile));
+				System.out.println("Upload file thành công!"+fileDir+File.separator+nameFile+typeOfFile);
+				book.setPicture(nameFile+typeOfFile);
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				System.out.println("Upload file thất bại!");
+			}
+		}
+		//
 		bookService.edit(book);
 		Book bookEdited = bookService.findById(book.getId());
 		model.addObject("book", bookEdited);

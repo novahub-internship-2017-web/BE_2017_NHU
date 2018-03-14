@@ -75,6 +75,6 @@ function changeRole(str,id){
 					</table>
  		</div>
  	</div>	
-	<hr/>
+
 	</div>
 

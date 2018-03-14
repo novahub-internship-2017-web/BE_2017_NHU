@@ -40,8 +40,9 @@ public class HomeController {
 	@Autowired
 	RoleService roleService;
 	
-	@RequestMapping(value = {"/","book/booksList"}, method = RequestMethod.GET)
-	public ModelAndView login(ModelAndView model,@ModelAttribute("currentSessionUsername") final String username) {
+	@RequestMapping(value = {"/","home"}, method = RequestMethod.GET)
+	public ModelAndView home(@ModelAttribute("currentSessionUsername") final String username){
+		ModelAndView model = new ModelAndView();
 		if(username != null) {
 			int user_id = userService.findByUsername(username).getId();
 			String role = roleService.findById(user_id).getRolename();
@@ -63,6 +64,9 @@ public class HomeController {
 		return model;
 	}
 	
+	
+	
+	
 	@RequestMapping(value = "/404")
 	public ModelAndView accessDenied(ModelAndView model) {
 		model.addObject("error", "Lỗi 404");
@@ -72,6 +76,7 @@ public class HomeController {
 	
 	@RequestMapping(value = "/login",method = RequestMethod.GET)
 	public String doGetLogin(Model model) {
+		
 	    if (!model.containsAttribute("user")) {
 	        model.addAttribute("user", new User());
 	      }
@@ -84,13 +89,19 @@ public class HomeController {
 		 if(result.hasErrors()) {
 			 return "loginPage";
 		 }
+		 String md5_Pass = org.springframework.util.DigestUtils.md5DigestAsHex(user.getPassword().getBytes());
+		 user.setPassword(md5_Pass);
 		 User userCurrent = userService.checkExist(user);
 		 if(userCurrent==null) {
 			 model.addAttribute("msg", "Username hoặc password không đúng. ");
 			 return "loginPage";
-		 }else {				
+		 }
+		 if(userCurrent.getEnabled()==0){
+			 model.addAttribute("msg", "Tài khoản này đã bị khóa");
+			 return "loginPage";
+		 }else {		
 			 rd.addFlashAttribute("currentSessionUsername",userCurrent.getUsername());
-			 return "redirect:book/booksList";
+			 return "redirect:home";
 		 }
 	 }
 }

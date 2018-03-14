@@ -10,7 +10,7 @@
  		<div class="panel-body " id="contentPage">
  			
  			<div class="col-md-4" >
- 				<img src="<c:url value="/resources/images/${book.getPicture()}"/>" width=350px>
+ 				<img src="<c:url value="/resources/images/${book.getPicture()}"/>" width=350px >
  			</div>
  			<div class="col-md-8">
  				<table class="tableFormDetail">
@@ -49,6 +49,6 @@
     				
  		</div>
  	</div>	
-	<hr/>
+
 	</div>
 
