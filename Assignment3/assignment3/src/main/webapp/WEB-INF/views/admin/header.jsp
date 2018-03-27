@@ -67,5 +67,8 @@
          	<a class="btn btn-md btn-primary" href="${pageContext.request.contextPath}/admin/user/addForm">
  		 			<span>Thêm user</span>
          	</a>
+         	<a class="btn btn-md btn-default" href="${pageContext.request.contextPath}/admin/book/jsonPage">
+ 		 			<span>JSON</span>
+         	</a>
 	</div>
 </html>

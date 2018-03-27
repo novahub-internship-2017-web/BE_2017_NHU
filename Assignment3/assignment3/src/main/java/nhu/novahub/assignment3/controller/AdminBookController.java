@@ -13,9 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -239,6 +242,8 @@ public class AdminBookController {
 				System.out.println(e.getMessage());
 				System.out.println("Upload file thất bại!");
 			}
+		}else {
+			book.setPicture(bookService.findById(book.getId()).getPicture());
 		}
 		//
 		bookService.edit(book);
@@ -269,4 +274,41 @@ public class AdminBookController {
 	    return model;
 	   
 	  }
+	
+	@RequestMapping(value= {"/jsonPage"},method = RequestMethod.GET)
+	public String jsonPage() {
+		ModelAndView model = new ModelAndView();
+		model.addObject("book", new Book());
+		return "json/booksList";
+	}
+	
+	@RequestMapping(value= {"/json/booksList"},method = RequestMethod.GET)
+	@ResponseBody
+	public List<Book> booksListJSON() {
+		List<Book> booksList = bookService.findAll();
+		return booksList;
+	}
+	
+	@RequestMapping(value= {"/json/search"},method = RequestMethod.GET)
+	@ResponseBody
+	public List<Book> searchJSON(HttpServletRequest request,@RequestParam String title) {
+		List<Book> booksList = bookService.searchAll(title);
+		return booksList;
+	}
+	
+	@RequestMapping(value= {"/json/add"},method = RequestMethod.POST)
+	@ResponseBody
+	public List<Book> addJSON(HttpServletRequest request,@RequestBody Book newBook) {
+			String username = (String) session.getAttribute("currentSessionUsername");
+			int user_id = userService.findByUsername(username).getId();
+			newBook.setUserId(user_id);
+			Date timeUpdate=new Date(System.currentTimeMillis()); 
+			SimpleDateFormat timeFormat= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+			String timeUpdateString=timeFormat.format(timeUpdate.getTime());
+			newBook.setCreatedAt(timeUpdateString);
+			newBook.setUpdatedAt(timeUpdateString);
+			bookService.add(newBook);
+		return bookService.findAll();
+	}
+	
 }

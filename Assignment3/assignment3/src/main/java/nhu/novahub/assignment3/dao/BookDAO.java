@@ -13,7 +13,7 @@ public class BookDAO {
 	  private JdbcTemplate jdbcTemplate;
 	 
 	  public List<Book> findAll() {
-	    String sql = "SELECT * FROM book";
+	    String sql = "SELECT * FROM book ORDER BY created_at DESC";
 	    return jdbcTemplate.query(sql, new BookMapper());
 	  }
 	  

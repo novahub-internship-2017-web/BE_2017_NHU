@@ -2,7 +2,7 @@
 
 Updating...
 
-* Super Admin (username: admin, password:456 )
+* Super Admin (username: admin, password:123 )
 * Admin (username: nhu, password: 123 )
 * User (username: aha, password: 123)
 	

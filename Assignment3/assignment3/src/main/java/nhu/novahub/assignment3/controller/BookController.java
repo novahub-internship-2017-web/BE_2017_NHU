@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -229,6 +230,8 @@ public class BookController {
 				System.out.println(e.getMessage());
 				System.out.println("Upload file thất bại!");
 			}
+		}else {
+			book.setPicture(bookService.findById(book.getId()).getPicture());
 		}
 		//
 		bookService.edit(book);
@@ -326,4 +329,8 @@ public class BookController {
 		model.setViewName("uploadPage");
 		return model;
 	}
+	
+	
+	
+	
 }
