@@ -5,12 +5,9 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-@Configuration
-@EnableAutoConfiguration
-@ComponentScan({"nhu.novahub.assignment4"})
-
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages={"nhu.novahub.assignment4"})
 public class Assignment4Application {
 
 	public static void main(String[] args) {
