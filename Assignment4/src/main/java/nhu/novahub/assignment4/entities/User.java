@@ -1,11 +1,13 @@
 package nhu.novahub.assignment4.entities;
 
+import java.util.Set;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 
 @Entity
-@Table
+@Table (name = "User")
 public class User {
 	
   @Id
@@ -23,7 +25,17 @@ public class User {
   
   @NotBlank
   private int role_id;
+  public User(){
 
+  }
+
+  public User(User user) {
+    this.id = user.getId();
+    this.email = user.getEmail();
+    this.password = user.getPassword();
+    this.enabled = user.getEnabled();
+    this.role_id = user.getRole_id();    
+  }
   public int getId() {
   	return id;
   }
@@ -63,7 +75,4 @@ public class User {
   public void setRole_id(int role_id) {
     this.role_id = role_id;
   }
-  
-  
-  
 }

@@ -10,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 @Entity
-//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table (name = "Role")
 public class Role implements Serializable{
   private static final long serialVersionUID = -3009157732242241606L;
@@ -18,9 +17,12 @@ public class Role implements Serializable{
   @GeneratedValue(strategy=GenerationType.AUTO)
   private int id;
   
-  
   private String name;
 
+  public Role(Role role) {
+    this.id = role.getId();
+    this.name = role.getName();
+  }
   public int getId() {
     return id;
   }
