@@ -11,13 +11,11 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 public class MvcConfig implements WebMvcConfigurer{
 
-    @Override
+    /*@Override
 
     public void addViewControllers(ViewControllerRegistry registry) {
 
         registry.addViewController("/home").setViewName("home");
-
-       // registry.addViewController("/").setViewName("home.jsp");
 
         registry.addViewController("/hello").setViewName("hello");
 
@@ -25,7 +23,7 @@ public class MvcConfig implements WebMvcConfigurer{
 
         registry.addViewController("/403").setViewName("403");
 
-    }    
+    }    */
 
     /*@Bean
 

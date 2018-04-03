@@ -23,5 +23,5 @@ public class RoleController {
         result += "<div>" + cust.toString() + "</div>";
     }
     return result + "</html>";
-}
+ }
 }

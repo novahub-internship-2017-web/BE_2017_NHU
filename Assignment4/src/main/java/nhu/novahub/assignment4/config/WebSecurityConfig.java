@@ -25,9 +25,7 @@ import nhu.novahub.assignment4.security.CustomUserDetailsService;
 
 
 @Configuration
-
 @EnableWebSecurity
-
 @ComponentScan(basePackageClasses = CustomUserDetailsService.class)
 
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -48,17 +46,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
  protected void configure(HttpSecurity http) throws Exception {
 
-   http.authorizeRequests()
-
-  .antMatchers("/hello").hasRole("ADMIN")
-
-  .anyRequest().permitAll()
+   http.authorizeRequests()  
+    .antMatchers("/hello").hasRole("ADMIN")
+    .antMatchers("/").hasAnyRole("USER","ADMIN")
+    .anyRequest().permitAll()
 
   .and()
 
     .formLogin().loginPage("/login")
-
     .usernameParameter("email").passwordParameter("password")
+    .defaultSuccessUrl("/")
 
   .and()
 
@@ -69,7 +66,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
    .exceptionHandling().accessDeniedPage("/403")
 
   .and()
-
     .csrf();
 
  }
