@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class HomeController {
  
   
-	/*@RequestMapping("/")
+	@RequestMapping("/")
 	public String welcome() {
 		return "home";
-	}*/
+	}
 	
-	@RequestMapping(value= {"/login","/"})
+	@RequestMapping(value= {"/login"})
   public String login(Authentication authentication) {
 	  //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 	  if(authentication!= null) {
@@ -33,6 +33,11 @@ public class HomeController {
 	@RequestMapping("/403")
   public String error() {
     return "403";
+  }
+	
+	@RequestMapping("/booksList")
+  public String booksListPage() {
+    return "booksList";
   }
 	
 	@RequestMapping(value = "/test", method = RequestMethod.GET)

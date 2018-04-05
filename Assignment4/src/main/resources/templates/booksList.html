@@ -1,15 +1,61 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<!DOCTYPE HTML>
+ 
+<html>
 <head>
-<meta charset="UTF-8" />
-<title>Index Page</title>
+      <title>Spring Boot - DELETE-UPDATE AJAX Example</title>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+      <script src="/js/jquery.js"></script>
+	  <script src="/js/jqueryAjaxGet.js"></script>
+	  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/> -->
+      <script src="/js/bootstrap.min.js"></script>
+      <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+      <link rel="stylesheet" href="/css/formStyle.css"/>
+      <link rel="stylesheet" href="/css/myStyle.css"/>
+      
 </head>
+ 
 <body>
-    Logged user: <span sec:authentication="name"></span> <br/> 
-    Roles: <span sec:authentication="principal.authorities"></span>
-    <form action="#" th:action="@{/logout}" method="POST">
-        <button type="submit">Logout</button>
-    </form>
+
+	<div id="Content">
+	</div>
+	<input type="button" id="" value="Thêm sách" 
+ 					onclick="document.getElementById('formAddBook').style.display='block'"/>
+	<div id="formAddBook" class="modal text-center">
+         	 <form class="modal-content animate" name="formAddBookJSON" id="formAddBookJSON" method="post"> 
+         	 <h3>Thêm sách mới</h3>
+			  <table style=" width:100%"  class="tableForm">
+			  <tr>
+			    <td><label ><b>Tiêu đề</b></label></td>
+			    <td><input type="text" name="id" id="id" class="form-control" ></td>
+			   </tr>
+			   <tr>
+			    <td><label ><b>Tiêu đề</b></label></td>
+			    <td><input type="text" name="title" id="title" class="form-control" ></td>
+			   </tr>
+			   <tr>
+			    <td><label ><b>Tác giả</b></label></td>
+			    <td> <input type="text" name="author" id="author" class="form-control"></td>
+			   </tr>
+			   <tr>
+			    <td><label ><b>Mô tả</b></label></td>
+			    <td> <textarea name="description" id="description" class="form-control"></textarea>
+			   </tr>
+			   <tr>
+			    <td></td>
+			    <td>
+			    	<input type="button" value="Thêm" class="btn btn-primary "
+						     onclick="addBookJSON();">
+				    <input type="button" value="Hủy" class="btn btn-danger"
+				     	onclick="document.getElementById('formAddBook').style.display='none'">
+				    
+			    </td>
+			   </tr>
+			  </table>
+			 </form>
+			 
+		</div>
 </body>
 </html>

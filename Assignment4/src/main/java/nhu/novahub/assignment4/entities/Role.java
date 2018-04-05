@@ -1,18 +1,13 @@
 package nhu.novahub.assignment4.entities;
 
 
-import java.io.Serializable;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 @Entity
 @Table (name = "Role")
-public class Role implements Serializable{
-  private static final long serialVersionUID = -3009157732242241606L;
+public class Role{
   @Id
   @GeneratedValue(strategy=GenerationType.AUTO)
   private int id;
