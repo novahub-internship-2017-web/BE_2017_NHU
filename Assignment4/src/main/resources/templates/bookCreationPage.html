@@ -1,0 +1,30 @@
+<div id="bookCreationDiv" class="" >
+         	 <form class="" name="bookCreationForm" id="bookCreationForm"> 
+         	 <h3>Chỉnh sửa thông tin sách</h3>
+			  <table style=" width:100%"  class="bookForm">
+			   <tr>
+			    <td><label ><b>Tiêu đề</b></label></td>
+			    <td><input type="text" name="title" id="title" class="form-control" ></td>
+			   </tr>
+			   <tr>
+			    <td><label ><b>Tác giả</b></label></td>
+			    <td> <input type="text" name="author" id="author" class="form-control"></td>
+			   </tr>
+			   <tr>
+			    <td><label ><b>Mô tả</b></label></td>
+			    <td> <textarea name="description" id="description" class="form-control"></textarea>
+			   </tr>
+			   <tr>
+			    <td></td>
+			    <td>
+			    	<input type="button" value="Thêm" class="btn btn-primary "
+						     onclick="addBook();">
+				    <input type="button" value="Hủy" class="btn btn-danger"
+				     	onclick="document.getElementById('editBookForm').style.display='none'">
+				    
+			    </td>
+			   </tr>
+			  </table>
+			 </form>
+			 
+		</div>	

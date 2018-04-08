@@ -1,23 +1,38 @@
 package nhu.novahub.assignment4.controller;
 
 
-import java.security.Principal;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class HomeController {
  
-  
-	@RequestMapping("/")
+  @RequestMapping(value= {"/header"})
+  public String header() {
+    return "html/header";
+  }
+	@RequestMapping(value= {"/"})
 	public String welcome() {
-		return "home";
+		return "index";
 	}
-	
+	@RequestMapping(value= {"/bookDetail/{id}"})
+  public String bookDetail() {
+    return "index";
+  }
+	@RequestMapping(value= {"/bookDetailPage"})
+  public String bookDetailPage() {
+    return "bookDetailPage";
+  }
+	@RequestMapping(value= {"/booksList"})
+  public String booksList() {
+    return "index";
+  }
+	@RequestMapping(value= {"/bookCreationPage"})
+  public String bookCreationPage() {
+    return "bookCreationPage";
+  }
 	@RequestMapping(value= {"/login"})
   public String login(Authentication authentication) {
 	  //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -34,15 +49,14 @@ public class HomeController {
   public String error() {
     return "403";
   }
-	
-	@RequestMapping("/booksList")
-  public String booksListPage() {
-    return "booksList";
+	@RequestMapping("/test")
+  public String test() {
+    return "test";
   }
 	
-	@RequestMapping(value = "/test", method = RequestMethod.GET)
+	/*@RequestMapping(value = "/test1", method = RequestMethod.GET)
   @ResponseBody
   public String currentUserName( Principal principal) {
       return principal.getName();
-  }
+  }*/
 }

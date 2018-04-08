@@ -7,77 +7,27 @@
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <script src="/js/jquery.js"></script>
-	  <script src="/js/jqueryAjaxGet.js"></script>
+	  <script src="/js/myJavascript.js"></script>
       <script src="/js/bootstrap.min.js"></script>
       <link rel="stylesheet" href="/css/bootstrap.min.css"/>
       <link rel="stylesheet" href="/css/formStyle.css"/>
       <link rel="stylesheet" href="/css/myStyle.css"/>
+   
+      
 </head>
-<body>
-    <!-- Logged user: <span sec:authentication="name"></span> <br/> 
-    Roles: <span sec:authentication="principal.authorities"></span>
-    <form action="#" th:action="@{/logout}" method="POST">
-        <button type="submit">Logout</button>
-    </form> -->
-    
-    
-    <div class="navbar navbar-static-top">
-		<div class="container-fluid">
-			<div class="navbar-header">
-				<a class="navbar-brand" href="">THƯ VIỆN SÁCH</a>
-			</div>
-				
-				<form class="navbar-form navbar-left" action=""  method="POST" >
-					<div class="form-group">
-						<input type="text" name="keyword" class="form-control" >
-					</div>
-					<button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
-					Tìm kiếm theo : 
-						<select name="searchBy" style="color:black">
-							<option value="all_field">Tất cả</option>
-							<option value="title">Tiêu đề</option>
-							<option value="author">Tác giả</option>
-						</select>
-				</form>
-      			<ul class="nav navbar-nav navbar-right">
-			      <li><label>Hi! <span sec:authentication="name"></span> </label></li>
-			      <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span>Đăng nhập</a></li>
-			      <li><a href="#"><span class="glyphicon glyphicon-log-in"></span>Đăng kí</a></li>
-			    </ul>
-			
-		</div>
-	</div>
+<body>  
+    <div class="navbar navbar-static-top" id="header-part"></div>
 	<div class="container main-container">
 		<div class="panel panel-default">
 	 		<div class="panel-body">
 	 			 <div id="Content" style="display:block;"></div>
-	 			 <div id="bookDetail" style="display:none;">
-	    	 		<table class="tableDetailBook">
-					<tr>
-						<td colspan="2"><h1 id="title"></h1></td>
-					</tr>
-					<tr>
-						<td><label>Tác giả</label></td>
-						<td id="author"></td>
-					</tr>
-					<tr>
-						<td><label>Ngày tạo</label></td>
-						<td id="created_at"></td>
-					</tr>
-					<tr>
-						<td><label>Ngày cập nhật</label></td>
-						<td id="updated_at"></td>
-					</tr>
-					<tr>
-						<td><label>Mô tả</label></td>
-						<td id="description"></td>
-					</tr>
-				</table>	
- 		</div>
 	 		</div>
 	 		
 	 	</div>
  	</div>
-	
+ 	<script>
+ 	
+ 	</script>
+ 	
 </body>
 </html>

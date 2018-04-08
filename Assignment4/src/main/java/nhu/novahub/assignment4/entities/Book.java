@@ -9,15 +9,15 @@ import javax.persistence.Table;
 @Entity
 @Table (name = "Book")
 public class Book {
+  
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
   private int id;
   private String title;
   private String author;
   private String description;
   private String created_at;
   private String updated_at;
-  private String image = "bookAva.jpg";
+  private String image = "coverBook.jpg";
   private int enabled;
   private int user_id;
   

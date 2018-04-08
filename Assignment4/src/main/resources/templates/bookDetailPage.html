@@ -1,0 +1,66 @@
+
+	<div class="col-md-7" id="bookDetail">
+		<table class="tableDetailBook">
+			<tr>
+				<td colspan="2"><h1 id="title"></h1></td>
+			</tr>
+			<tr>
+				<td><label>Tác giả</label></td>
+				<td id="author"></td>
+			</tr>
+			<tr>
+				<td><label>Ngày tạo</label></td>
+				<td id="created_at"></td>
+			</tr>
+			<tr>
+				<td><label>Ngày cập nhật</label></td>
+				<td id="updated_at"></td>
+			</tr>
+			<tr>
+				<td><label>Mô tả</label></td>
+				<td id="description"></td>
+			</tr>
+		</table>
+	</div>
+	<div class="col-md-5" id=bookImageDiv>
+		<img class = "bookImage" width=280px >
+	</div>
+ 	
+	
+	<input type="button" id="" value="Chỉnh sửa" sec:authorize="hasAnyRole('USER','ADMIN')"
+ 					onclick="document.getElementById('editBookFormDiv').style.display='block'"/>
+	<!-- edit book form -->
+	<div id="editBookFormDiv" class="modal text-center" sec:authorize="hasAnyRole('USER','ADMIN')">
+         	 <form class="modal-content animate" name="editBookForm" id="editBookForm"> 
+         	 <h3>Chỉnh sửa thông tin sách</h3>
+			  <table style=" width:100%"  class="bookForm">
+			  <tr>
+			    <td><label ><b>Mã</b></label></td>
+			    <td><input type="text" name="id" id="id" class="form-control" readonly></td>
+			   </tr>
+			   <tr>
+			    <td><label ><b>Tiêu đề</b></label></td>
+			    <td><input type="text" name="title" id="title" class="form-control" ></td>
+			   </tr>
+			   <tr>
+			    <td><label ><b>Tác giả</b></label></td>
+			    <td> <input type="text" name="author" id="author" class="form-control"></td>
+			   </tr>
+			   <tr>
+			    <td><label ><b>Mô tả</b></label></td>
+			    <td> <textarea name="description" id="description" class="form-control"></textarea>
+			   </tr>
+			   <tr>
+			    <td></td>
+			    <td>
+			    	<input type="button" value="Cập nhật" class="btn btn-primary "
+						     onclick="editBook();">
+				    <input type="button" value="Hủy" class="btn btn-danger"
+				     	onclick="document.getElementById('editBookForm').style.display='none'">
+				    
+			    </td>
+			   </tr>
+			  </table>
+			 </form>
+			 
+		</div>	
