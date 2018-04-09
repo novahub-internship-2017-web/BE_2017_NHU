@@ -1,6 +1,50 @@
+<script>
+$(document).ready(function() {
+    $("#bookCreationForm").validate({
+        rules: {
+	    	title: "required",
+	    	author: "required",
+	    },
+	    messages: {
+	    	title:"Tiêu đề không được trống",
+	    	author: " Tác giả không được trống"
+	    }
+    });
+});
+
+$("#bookCreationForm").submit(function(event) {
+    event.preventDefault();
+    if($("#bookCreationForm").valid() ) {
+        addBook();
+    }
+})
+
+function addBook(){
+	 var newBook = {}
+	 newBook["title"] = $('#bookCreationForm').find('#title').val();
+	 newBook["author"]= $('#bookCreationForm').find('#author').val();	
+	 newBook["description"]= $('#bookCreationForm').find('#description').val();
+	 $.ajax({
+		type : "POST",
+		contentType : "application/json",
+		url : window.location.origin+"/api/book/add",
+		data : JSON.stringify(newBook),
+		dataType : 'json',
+		success: function(result){
+			$('.notiMsg').html("Thêm thành công"); 
+		 },
+	  error: function(e){      
+	   alert('Error while request..'+e);
+	  }
+	 }); 
+	 getBooksList();
+	 
+}
+</script>
+
 <div id="bookCreationDiv" class="" >
          	 <form class="" name="bookCreationForm" id="bookCreationForm"> 
-         	 <h3>Chỉnh sửa thông tin sách</h3>
+         	 <h3>Thêm sách mới</h3>
 			  <table style=" width:100%"  class="bookForm">
 			   <tr>
 			    <td><label ><b>Tiêu đề</b></label></td>
@@ -17,11 +61,9 @@
 			   <tr>
 			    <td></td>
 			    <td>
-			    	<input type="button" value="Thêm" class="btn btn-primary "
-						     onclick="addBook();">
+			    	<input type="submit"  value="Thêm" class="btn btn-primary ">
 				    <input type="button" value="Hủy" class="btn btn-danger"
 				     	onclick="document.getElementById('editBookForm').style.display='none'">
-				    
 			    </td>
 			   </tr>
 			  </table>

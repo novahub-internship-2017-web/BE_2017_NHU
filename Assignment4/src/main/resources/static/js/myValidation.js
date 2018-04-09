@@ -11,6 +11,4 @@ function validateFormBook(){
 });
 }
 
-/*------ JSON ------*/
-
 

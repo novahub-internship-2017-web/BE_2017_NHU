@@ -30,3 +30,37 @@ function getBookDetail(bookId){
 			}
 		});
 	}
+
+/*
+ * */
+$(document).ready(function() {
+	var url = window.location.href;
+	var rootUrl = window.location.origin;
+	var home = window.location.origin+"/";
+	var booksList = window.location.origin+"/booksList";
+	var bookDetail = "";
+	var check = url.search("bookDetail");
+	if(check != -1){
+		bookDetail = url;
+	}
+	switch(url) {
+	    case home:
+	    	$.ajax({url:window.location.origin+'/booksListPage',success:function(result){
+	    	      $("#Content").html(result);
+	    	    }});
+	        break;
+	    case booksList:
+	    	$.ajax({url:window.location.origin+'/booksListPage',success:function(result){
+	    	      $("#Content").html(result);
+	    	    }});
+	        break;
+	    case bookDetail:
+	        var bookId = bookDetail.substring(url.lastIndexOf('/') + 1);
+	    	getBookDetail(bookId);
+	        break;
+	    default:
+	    	alert("error");
+	        break;
+	} 
+})
+

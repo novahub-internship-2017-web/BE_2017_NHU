@@ -1,4 +1,11 @@
 function getBooksList(){
+	var roleUser = "isGuess"; 
+	if($('#checkRoleUser').val() == 'isAdmin'){
+		roleUser = "isAdmin"; 
+	}
+	if($('#checkRoleUser').val() == 'isUser'){
+		roleUser = "isUser"; 
+	}
 		$.ajax({
 			type : "GET",
 			url : window.location.origin+"/api/book/all",
@@ -14,7 +21,6 @@ function getBooksList(){
 							'</tr></thead>'+
 							'<tbody></tbody></table>');
 					$.each(result, function(i, book){
-						var urlDetailBook = window.location.origin+"/";
 						var bookRow = '<tr>' +
 							'<td>' + book.id + '</td>' +
 							'<td>' + book.title + '</td>' +
@@ -22,10 +28,9 @@ function getBooksList(){
 							'<td>' + book.created_at + '</td>' +
 							'<td>' + book.updated_at + '</td>' +
 							'<td><a title="Chi tiết" href="javascript:void(0)" onclick="getBookDetail('+book.id+')"> Xem</a>';
-						/*if('${isAdmiin}' == true){
+						if(roleUser == "isAdmin" || roleUser == "isUser"){
 							bookRow += '<a title="Xóa" onclick="getBookDetail('+book.id+')"> Xóa</a>';
-					   }*/
-							bookRow += '<a title="Xóa" onclick="getBookDetail('+book.id+')"> Xóa</a>';
+					   }
 							bookRow +='</td></tr>';
 						$('#tableList tbody').append(bookRow);
 						
@@ -46,6 +51,7 @@ function getBookDetail(bookId){
       $("#Content").html(result);
     }});
 	window.history.pushState('string', '', window.location.origin+'/bookDetail/'+bookId);
+	
 	$.ajax({
 		type : "GET",
 		url : window.location.origin+"/api/book/"+bookId,
@@ -69,33 +75,7 @@ function getBookDetail(bookId){
 	});
 }
 
-function editBook(){
-		var bookId = $('#editBookForm').find('#id').val();
-		 var updateBook = {}
-		 updateBook["title"] = $('#editBookForm').find('#title').val();
-		 updateBook["author"]= $('#editBookForm').find('#author').val();	
-		 updateBook["description"]= $('#editBookForm').find('#description').val();
-		 alert("hi");
-		 $.ajax({
-			type : "PUT",
-			contentType : "application/json",
-			url : window.location.origin+"/api/book/update/"+bookId,
-			data : JSON.stringify(updateBook),
-			dataType : 'json',
-			success: function(result){
 
-				  document.getElementById('editBookFormDiv').style.display='none';
-				  $('.tableDetailBook').find('#title').html(result.title);
-				  $('.tableDetailBook').find('td#author').html(result.author);
-				  $('.tableDetailBook').find('td#created_at').html(result.created_at);
-				  $('.tableDetailBook').find('td#updated_at').html(result.updated_at);
-				  $('.tableDetailBook').find('td#description').html(result.description); 
-			 },
-		  error: function(e){      
-		   alert('Error while request..'+e);
-		  }
-		 }); 
-	}
 
 function addBookPage(){
 	$.ajax({url:window.location.origin+'/bookCreationPage',success:function(result){
@@ -103,27 +83,7 @@ function addBookPage(){
 	    }});
 }
 
-function addBook(){
-	 var newBook = {}
-	 newBook["title"] = $('#bookCreationForm').find('#title').val();
-	 newBook["author"]= $('#bookCreationForm').find('#author').val();	
-	 newBook["description"]= $('#bookCreationForm').find('#description').val();
-	 $.ajax({
-		type : "POST",
-		contentType : "application/json",
-		url : window.location.origin+"/api/book/add",
-		data : JSON.stringify(newBook),
-		dataType : 'json',
-		success: function(result){
-			$('.notiMsg').html("Thêm thành công"); 
-		 },
-	  error: function(e){      
-	   alert('Error while request..'+e);
-	  }
-	 }); 
-	 getBooksList();
-	 
-}
+
 
 function censorshipBook(){
 	$.ajax({

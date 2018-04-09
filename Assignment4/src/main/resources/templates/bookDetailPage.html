@@ -1,66 +1,117 @@
+<script>
+$(document).ready(function() {
+    $("#editBookForm").validate({
+        rules: {
+	    	title: "required",
+	    	author: "required",
+	    },
+	    messages: {
+	    	title:"Tiêu đề không được trống",
+	    	author: " Tác giả không được trống"
+	    }
+    });
+});
 
-	<div class="col-md-7" id="bookDetail">
-		<table class="tableDetailBook">
-			<tr>
-				<td colspan="2"><h1 id="title"></h1></td>
-			</tr>
-			<tr>
-				<td><label>Tác giả</label></td>
-				<td id="author"></td>
-			</tr>
-			<tr>
-				<td><label>Ngày tạo</label></td>
-				<td id="created_at"></td>
-			</tr>
-			<tr>
-				<td><label>Ngày cập nhật</label></td>
-				<td id="updated_at"></td>
-			</tr>
-			<tr>
-				<td><label>Mô tả</label></td>
-				<td id="description"></td>
-			</tr>
-		</table>
-	</div>
-	<div class="col-md-5" id=bookImageDiv>
-		<img class = "bookImage" width=280px >
-	</div>
+$("#editBookForm").submit(function(event) {
+    event.preventDefault();
+    if($("#editBookForm").valid() ) {
+    	editBook();
+    }
+})
+
+function editBook(){
+		
+		var bookId = $('#editBookForm').find('#id').val();
+		 var updateBook = {}
+		 updateBook["title"] = $('#editBookForm').find('#title').val();
+		 updateBook["author"]= $('#editBookForm').find('#author').val();	
+		 updateBook["description"]= $('#editBookForm').find('#description').val();
+		 $.ajax({
+			type : "PUT",
+			contentType : "application/json",
+			url : window.location.origin+"/api/book/update/"+bookId,
+			data : JSON.stringify(updateBook),
+			dataType : 'json',
+			success: function(result){
+				  $('.tableDetailBook').find('#title').html(result.title);
+				  $('.tableDetailBook').find('td#author').html(result.author);
+				  $('.tableDetailBook').find('td#created_at').html(result.created_at);
+				  $('.tableDetailBook').find('td#updated_at').html(result.updated_at);
+				  $('.tableDetailBook').find('td#description').html(result.description); 
+				  $('#editBookForm .notiMsg').html("Cập nhật thành công"); 
+			 },
+		  error: function(e){      
+		   alert('Error while request..'+e);
+		  }
+		 }); 
+	}
+</script>
+
+
+<div class="col-md-7" id="bookDetail">
+	<table class="tableDetailBook">
+		<tr>
+			<td colspan="2"><h1 id="title"></h1></td>
+		</tr>
+		<tr>
+			<td><label>Tác giả</label></td>
+			<td id="author"></td>
+		</tr>
+		<tr>
+			<td><label>Ngày tạo</label></td>
+			<td id="created_at"></td>
+		</tr>
+		<tr>
+			<td><label>Ngày cập nhật</label></td>
+			<td id="updated_at"></td>
+		</tr>
+		<tr>
+			<td><label>Mô tả</label></td>
+			<td id="description"></td>
+		</tr>
+	</table>
+</div>
+<div class="col-md-5" id=bookImageDiv>
+	<img class = "bookImage" width=280px >
+</div>
  	
 	
-	<input type="button" id="" value="Chỉnh sửa" sec:authorize="hasAnyRole('USER','ADMIN')"
- 					onclick="document.getElementById('editBookFormDiv').style.display='block'"/>
-	<!-- edit book form -->
-	<div id="editBookFormDiv" class="modal text-center" sec:authorize="hasAnyRole('USER','ADMIN')">
-         	 <form class="modal-content animate" name="editBookForm" id="editBookForm"> 
-         	 <h3>Chỉnh sửa thông tin sách</h3>
-			  <table style=" width:100%"  class="bookForm">
-			  <tr>
-			    <td><label ><b>Mã</b></label></td>
-			    <td><input type="text" name="id" id="id" class="form-control" readonly></td>
-			   </tr>
-			   <tr>
-			    <td><label ><b>Tiêu đề</b></label></td>
-			    <td><input type="text" name="title" id="title" class="form-control" ></td>
-			   </tr>
-			   <tr>
-			    <td><label ><b>Tác giả</b></label></td>
-			    <td> <input type="text" name="author" id="author" class="form-control"></td>
-			   </tr>
-			   <tr>
-			    <td><label ><b>Mô tả</b></label></td>
-			    <td> <textarea name="description" id="description" class="form-control"></textarea>
-			   </tr>
-			   <tr>
-			    <td></td>
-			    <td>
-			    	<input type="button" value="Cập nhật" class="btn btn-primary "
-						     onclick="editBook();">
-				    <input type="button" value="Hủy" class="btn btn-danger"
-				     	onclick="document.getElementById('editBookForm').style.display='none'">
-				    
-			    </td>
-			   </tr>
-			  </table>
-			 </form>
-			 
-		</div>	
+<input type="button" id="" value="Chỉnh sửa"  sec:authorize="hasAnyRole('USER','ADMIN')" 
+					data-toggle="modal" data-target="#editBookFormDiv"/>
+<!-- edit book form -->
+<div id="editBookFormDiv" class="modal fade" role="dialog" sec:authorize="hasAnyRole('USER','ADMIN')">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header" style="padding:20px 40px;">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4>Chỉnh sửa thông tin sách</h4>
+        </div>
+        <div class="modal-body" style="padding:40px 50px;">
+	          <form role="form" name="editBookForm" id="editBookForm">
+	          	<div class="form-group">
+	               <p class="notiMsg error"></p>
+	            </div>
+	          	<div class="form-group">
+	              <label> Mã sách</label>
+	              <input type="text" class="form-control" name="id" id="id" readonly>
+	            </div>
+	            <div class="form-group">
+	              <label> Tiêu đề</label>
+	              <input type="text" class="form-control" name="title" id="title" placeholder="Enter email">
+	            </div>
+	            <div class="form-group">
+	              <label> Tác giả</label>
+	              <input type="text" class="form-control" name="author" id="author" placeholder="Enter password">
+	            </div>
+	            <div class="form-group">
+	              <label> Mô tả </label>
+	              <textarea name="description" id="description" class="form-control"></textarea>
+	            </div>
+	              <button type="submit" class="btn btn-primary ">Cập nhật</button>
+	              <button type="submit" class="btn btn-danger btn-default" data-dismiss="modal">
+	              		Hủy</button>
+	          </form>
+	        </div>
+		</div>
+	</div>
+</div>	
