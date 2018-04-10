@@ -20,6 +20,7 @@ public class Book {
   private String image = "coverBook.jpg";
   private int enabled;
   private int user_id;
+  private int removed;
   
   
   public int getId() {
@@ -75,6 +76,12 @@ public class Book {
   }
   public void setUser_id(int user_id) {
     this.user_id = user_id;
+  }
+  public int getRemoved() {
+    return removed;
+  }
+  public void setRemoved(int removed) {
+    this.removed = removed;
   }
   
   

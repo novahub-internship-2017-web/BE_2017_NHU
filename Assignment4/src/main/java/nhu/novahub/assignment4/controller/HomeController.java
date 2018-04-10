@@ -1,8 +1,12 @@
 package nhu.novahub.assignment4.controller;
 
+import java.security.Principal;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class HomeController {
@@ -44,9 +48,5 @@ public class HomeController {
     return "test";
   }
 	
-	/*@RequestMapping(value = "/test1", method = RequestMethod.GET)
-  @ResponseBody
-  public String currentUserName( Principal principal) {
-      return principal.getName();
-  }*/
+	
 }

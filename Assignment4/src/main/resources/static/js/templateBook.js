@@ -6,9 +6,10 @@ function getBooksList(){
 	if($('#checkRoleUser').val() == 'isUser'){
 		roleUser = "isUser"; 
 	}
+	window.history.pushState('string', '', window.location.origin+'/booksList');
 		$.ajax({
 			type : "GET",
-			url : window.location.origin+"/api/book/all",
+			url : window.location.origin+"/api/book/all/enabled",
 			success: function(result){
 				if(result.length > 0){
 					$('#Content').html('<table id="tableList"><thead><tr>'+
@@ -50,8 +51,18 @@ function getBookDetail(bookId){
 	$.ajax({url:window.location.origin+'/bookDetailPage',success:function(result){
       $("#Content").html(result);
     }});
+	var idUser = -1;
 	window.history.pushState('string', '', window.location.origin+'/bookDetail/'+bookId);
-	
+	$.ajax({
+		type : "GET",
+		url : window.location.origin+"/api/user/getCurrentUser",
+		success: function(result){		
+			idUser = result.id;
+		},
+		error : function(ex) {
+			console.log("ERROR: ", ex);
+		}
+	});
 	$.ajax({
 		type : "GET",
 		url : window.location.origin+"/api/book/"+bookId,
@@ -67,6 +78,10 @@ function getBookDetail(bookId){
 				$('#editBookForm').find('#title').val(result.title);
 				$('#editBookForm').find('#author').val(result.author);
 				$('#editBookForm').find('#description').val(result.description);
+				if(idUser == result.user_id){
+					
+					document.getElementById('buttonEditBook').style.display = 'block';
+				}
 		},
 		error : function(ex) {
 			alert("ERROR: ", ex);
@@ -141,3 +156,4 @@ function enabled(st, id){
       },
 	});	
 }
+

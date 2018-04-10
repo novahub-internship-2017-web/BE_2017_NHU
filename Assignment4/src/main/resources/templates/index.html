@@ -81,7 +81,7 @@ $(document).ready(function() {
       	<a class="btn btn-md btn-primary" href="javascript:void(0)" onclick="addBookPage()" sec:authorize="hasAnyRole('USER','ADMIN')">
  		 			<span>Thêm sách</span>
          </a>
-         <a class="btn btn-md btn-primary" href="javascript:void(0)" onclick="censorshipBook()" sec:authorize="hasRole('ADMIN')">
+         <a class="btn btn-md btn-default" href="javascript:void(0)" onclick="censorshipBook()" sec:authorize="hasRole('ADMIN')">
  		 			<span>Duyệt sách</span>
          </a>
          <p class="notiMsg error"></p>

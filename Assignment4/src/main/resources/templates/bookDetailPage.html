@@ -76,8 +76,8 @@ function editBook(){
 </div>
  	
 	
-<input type="button" id="" value="Chỉnh sửa"  sec:authorize="hasAnyRole('USER','ADMIN')" 
-					data-toggle="modal" data-target="#editBookFormDiv"/>
+<input type="button" id="buttonEditBook" value="Chỉnh sửa"  sec:authorize="hasAnyRole('USER','ADMIN')" 
+					data-toggle="modal" data-target="#editBookFormDiv" style="display:none"/>
 <!-- edit book form -->
 <div id="editBookFormDiv" class="modal fade" role="dialog" sec:authorize="hasAnyRole('USER','ADMIN')">
 	<div class="modal-dialog">
