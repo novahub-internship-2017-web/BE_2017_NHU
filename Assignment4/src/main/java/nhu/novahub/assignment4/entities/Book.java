@@ -1,25 +1,46 @@
 package nhu.novahub.assignment4.entities;
 
+import java.util.Date;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.*; 
 
 @Entity
 @Table (name = "Book")
 public class Book {
   
   @Id
+  @Column(name = "id")
   private int id;
+  
+  @Column(name = "title")
   private String title;
+  
+  @Column(name = "author")
   private String author;
+  
+  @Column(name = "description")
   private String description;
-  private String created_at;
-  private String updated_at;
+  
+  @Column(name = "created_at")
+  private Date createdAt;
+  
+  @Column(name = "updated_at")
+  private String updatedAt;
+  
+  @Column(name = "image")
   private String image = "coverBook.jpg";
+  
+  @Column(name = "enabled")
   private int enabled;
-  private int user_id;
+  
+  @Column(name = "user_id")
+  private int userId;
+  
+  @Column(name = "removed")
   private int removed;
   
   
@@ -47,17 +68,17 @@ public class Book {
   public void setDescription(String description) {
     this.description = description;
   }
-  public String getCreated_at() {
-    return created_at;
+  public Date getCreatedAt() {
+    return createdAt;
   }
-  public void setCreated_at(String created_at) {
-    this.created_at = created_at;
+  public void setCreatedAt(Date createdAt) {
+    this.createdAt = createdAt;
   }
-  public String getUpdated_at() {
-    return updated_at;
+  public String getUpdatedAt() {
+    return updatedAt;
   }
-  public void setUpdated_at(String updated_at) {
-    this.updated_at = updated_at;
+  public void setUpdatedAt(String updatedAt) {
+    this.updatedAt = updatedAt;
   }
   public String getImage() {
     return image;
@@ -71,11 +92,11 @@ public class Book {
   public void setEnabled(int enabled) {
     this.enabled = enabled;
   }
-  public int getUser_id() {
-    return user_id;
+  public int getUserId() {
+    return userId;
   }
-  public void setUser_id(int user_id) {
-    this.user_id = user_id;
+  public void setUserId(int userId) {
+    this.userId = userId;
   }
   public int getRemoved() {
     return removed;

@@ -9,8 +9,8 @@
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
-      <!-- <script src="/js/jquery.js"></script> -->
-	  <script src="/js/templateBook.js"></script>
+      
+	  <script src="/js/myJavascript.js"></script> <!--  -->
       <script src="/js/bootstrap.min.js"></script>
       <link rel="stylesheet" href="/css/bootstrap.min.css"/>
       <link rel="stylesheet" href="/css/formStyle.css"/>
@@ -83,6 +83,9 @@ $(document).ready(function() {
          </a>
          <a class="btn btn-md btn-default" href="javascript:void(0)" onclick="censorshipBook()" sec:authorize="hasRole('ADMIN')">
  		 			<span>Duyệt sách</span>
+         </a>
+         <a class="btn btn-md btn-primary" href="javascript:void(0)" onclick="getBooksListByUser()" sec:authorize="hasAnyRole('USER','ADMIN')">
+ 		 			<span>Sách của bạn</span>
          </a>
          <p class="notiMsg error"></p>
 	</div>

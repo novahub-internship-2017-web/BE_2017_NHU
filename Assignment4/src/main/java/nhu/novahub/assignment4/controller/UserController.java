@@ -27,7 +27,12 @@ public class UserController {
   
   @GetMapping("/getCurrentUser")
   public User currentUserName( Principal principal) {
+    try {
       String email = principal.getName();
       return userRepository.findByEmail(email);
+    }catch(Exception e) {
+      System.out.print(e);
+      return null;
+    }
   }
 }

@@ -10,20 +10,26 @@ import javax.validation.constraints.NotBlank;
 public class User {
 	
   @Id
+  @Column(name = "id")
   @GeneratedValue(strategy = GenerationType.AUTO)
   private int id;
   
   @NotBlank
+  @Column(name = "email")
   private String email;
 
   @NotBlank
+  @Column(name = "password")
   private String password;
   
   @NotBlank
+  @Column(name = "enabled")
   private int enabled;
   
   @NotBlank
-  private int role_id;
+  @Column(name = "role_id")
+  private int roleId;
+  
   public User(){
 
   }
@@ -33,7 +39,7 @@ public class User {
     this.email = user.getEmail();
     this.password = user.getPassword();
     this.enabled = user.getEnabled();
-    this.role_id = user.getRole_id();    
+    this.roleId = user.getRoleId();    
   }
   public int getId() {
   	return id;
@@ -67,11 +73,11 @@ public class User {
   	this.enabled = enabled;
   }
   
-  public int getRole_id() {
-  	return role_id;
+  public int getRoleId() {
+  	return roleId;
   }
   
-  public void setRole_id(int role_id) {
-    this.role_id = role_id;
+  public void setRoleId(int roleId) {
+    this.roleId = roleId;
   }
 }

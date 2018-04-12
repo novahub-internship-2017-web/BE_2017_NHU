@@ -35,19 +35,18 @@ function editBook(){
 			success: function(result){
 				  $('.tableDetailBook').find('#title').html(result.title);
 				  $('.tableDetailBook').find('td#author').html(result.author);
-				  $('.tableDetailBook').find('td#created_at').html(result.created_at);
-				  $('.tableDetailBook').find('td#updated_at').html(result.updated_at);
+				  $('.tableDetailBook').find('td#created_at').html(result.createdAt);
+				  $('.tableDetailBook').find('td#updated_at').html(result.updatedAt);
 				  $('.tableDetailBook').find('td#description').html(result.description); 
 				  $('#editBookForm .notiMsg').html("Cập nhật thành công"); 
+				
 			 },
 		  error: function(e){      
-		   alert('Error while request..'+e);
+		   alert('Lỗi!Không cập nhật được'+e);
 		  }
 		 }); 
 	}
 </script>
-
-
 <div class="col-md-7" id="bookDetail">
 	<table class="tableDetailBook">
 		<tr>

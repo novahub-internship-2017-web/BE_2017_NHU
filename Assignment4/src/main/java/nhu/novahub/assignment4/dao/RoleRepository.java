@@ -9,13 +9,10 @@ import org.springframework.data.repository.CrudRepository;
 import nhu.novahub.assignment4.entities.Role;
 
 
-
-
-//@Repository
 public interface RoleRepository  extends CrudRepository<Role , Long>{
-  //public List<Role> findAll();
-  @Query("select a.name from Role a, User b where b.email=?1 and a.id=b.role_id")
+  
+  @Query("select a.name from Role a, User b where b.email=?1 and a.id=b.roleId")
   public List<String> findRoleByEmail(String email);
   
-  
+  public Role findById(int id);
 }
