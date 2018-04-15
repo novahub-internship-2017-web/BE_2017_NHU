@@ -1,34 +1,57 @@
-<!DOCTYPE html>
-<html>
-
-  <head>
-    <meta charset="utf-8" />
-    <title></title>
-    <script data-require="jquery" data-semver="2.0.3" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="/js/jquery.js"></script>
-    
-    <script>
-    $(function () {
-    	  // New script
-    	  /*$("button").click(function(){
-    	    $("#div1").load("myPage2.html");
-    	  });*/
-    	  // Old script
-    	  $("button").click(function(){
-    	    $.ajax({url:"booksList",success:function(result){
-    	    	
-    	      $("#div1").html(result);
-    	    }});
-    	  });
-    	  
-    	  // Both seem to work just fine
-    	});
-    </script>
-  </head>
-
-  <body>
-    <div id="div1"><h2>Let jQuery AJAX Change This Text</h2></div>
-    <button>Get External Content</button>
-  </body>
-
-</html>
+<table id="tableList" class="display">
+					       <thead>
+					            <tr>
+					                <th>Mã</th>
+									<th>Tiêu đề</th>
+					                <th>Tác giả</th>
+					                <th>Thời gian tạo</th>
+					                <th>Thời gian cập nhật</th>
+					                <th>Chi tiết</th>
+					                <th>Duyệt</th>
+					                <th>Xóa</th>
+					            </tr>
+					        </thead>
+					    </table>
+<script>
+$(document).ready( function () {
+	var table = $('#tableList').DataTable({
+		"sAjaxSource": window.location.origin+"/api/book/all/enabled",
+		"sAjaxDataProp": "",
+		"aoColumns": [
+			{ "mData": "id"},
+			{ "mData": "title" },
+			{ "mData": "author" },
+			{ "mData": "createdAt"},
+			{ "mData": "updatedAt" },
+			{ "mData": "id", 
+				render: function (dataType) { 
+					return '<a href="javascript:void(0)" onclick="getBookDetail('+dataType+')"> Xem</a>'; } 
+			},
+			{ "mData": "", 
+				render: function (data, type, row) {
+					if(row.enabled == 1){
+						return '<input type="checkbox" value="'+ row.enabled +'" checked onclick="enabled('+row.enabled+','+row.id+')">';
+					}else{
+						return '<input type="checkbox" value="'+ row.enabled +'" onclick="enabled('+row.enabled+','+row.id+')">';
+					}
+				},
+			 visible:false
+			},
+			{ "mData": "id", 
+			  render: function (dataType) {
+						return '<a title="Xóa" onclick="deleteBook('+dataType+')">Xóa</a>';
+			  },
+			  visible:false
+			}
+		]
+	 });
+	 if (($('#checkRoleUser').val() =="isAdmin")){
+	        var column = table.column(6);
+	        column.visible(true);
+	 }
+	 if (($('#checkRoleUser').val() =="isAdmin") || ($('#checkRoleUser').val() =="isUser")){
+	        var column = table.column(7);
+	        column.visible(true);
+	 }
+});
+</script>

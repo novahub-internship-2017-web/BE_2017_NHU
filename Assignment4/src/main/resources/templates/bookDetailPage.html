@@ -10,6 +10,8 @@ $(document).ready(function() {
 	    	author: " Tác giả không được trống"
 	    }
     });
+    
+    getAllComment();
 });
 
 $("#editBookForm").submit(function(event) {
@@ -17,10 +19,9 @@ $("#editBookForm").submit(function(event) {
     if($("#editBookForm").valid() ) {
     	editBook();
     }
-})
+});
 
 function editBook(){
-		
 		var bookId = $('#editBookForm').find('#id').val();
 		 var updateBook = {}
 		 updateBook["title"] = $('#editBookForm').find('#title').val();
@@ -45,7 +46,60 @@ function editBook(){
 		   alert('Lỗi!Không cập nhật được'+e);
 		  }
 		 }); 
-	}
+}
+
+function getAllComment(){
+	var url = window.location.href;
+	var bookId = url.substring(url.lastIndexOf('/') + 1);
+	 $.ajax({
+		type : "GET",
+		contentType : "application/json",
+		url : window.location.origin+"/api/comment/all/"+bookId,
+		success: function(result){
+			$.each(result, function(i, comment){
+				var commentDiv = '<div class="panel panel-info">' + 
+					'<div class="panel-body">'+comment.message + '</div>' +
+					'<div class="panel-footer"> <i>Người đăng</i> ' + comment.userId + 
+					'<p>' + comment.createdAt + '</p></div>' +
+					'</div>';
+				$('#commentDiv').append(commentDiv);
+	        });
+		 },
+	  error: function(e){      
+	   alert('Lỗi!Không cập nhật được'+e);
+	  }
+	 }); 
+}
+$("#commentForm").submit(function(event) {
+    event.preventDefault();
+    addComment();
+});
+
+function addComment(){
+	var url = window.location.href;
+	var bookId = url.substring(url.lastIndexOf('/') + 1);
+	var newComment = {}
+	newComment["message"] = $('#commentForm').find('#comment').val();
+	alert(window.location.origin+"/api/comment/add/"+bookId);
+	 $.ajax({
+		type : "POST",
+		contentType : "application/json",
+		url : window.location.origin+"/api/comment/add/"+bookId,
+		data : JSON.stringify(newComment),
+		dataType : 'json',
+		success: function(result){
+			var commentDiv = '<div class="panel panel-info">' + 
+			'<div class="panel-body">'+result.message + '</div>' +
+			'<div class="panel-footer"> <i>Người đăng</i> ' + result.userId + 
+			'<p>' + result.createdAt + '</p></div>' +
+			'</div>';
+		$('#commentDiv').append(commentDiv);
+		 },
+	  error: function(e){      
+	   alert('Error while request..'+e);
+	  }
+	 }); 
+}
 </script>
 <div class="col-md-7" id="bookDetail">
 	<table class="tableDetailBook">
@@ -73,7 +127,17 @@ function editBook(){
 <div class="col-md-5" id=bookImageDiv>
 	<img class = "bookImage" width=280px >
 </div>
- 	
+	
+<div class="col-md-10" id="commentDiv" style="margin-top:20px"></div>	
+<div class="col-md-10 form-group" id="">
+	<form role="form" name="commentForm" id="commentForm">
+		<div class="form-group">
+			<label> Bình luận </label>
+       		<textarea name="comment" id="comment" class="form-control"></textarea> 
+		</div>	 
+		<button type="submit" class="btn btn-primary ">Đăng</button>
+	</form>
+</div>
 	
 <input type="button" id="buttonEditBook" value="Chỉnh sửa"  sec:authorize="hasAnyRole('USER','ADMIN')" 
 					data-toggle="modal" data-target="#editBookFormDiv" style="display:none"/>
@@ -96,11 +160,11 @@ function editBook(){
 	            </div>
 	            <div class="form-group">
 	              <label> Tiêu đề</label>
-	              <input type="text" class="form-control" name="title" id="title" placeholder="Enter email">
+	              <input type="text" class="form-control" name="title" id="title" placeholder="Nhập tiêu đề">
 	            </div>
 	            <div class="form-group">
 	              <label> Tác giả</label>
-	              <input type="text" class="form-control" name="author" id="author" placeholder="Enter password">
+	              <input type="text" class="form-control" name="author" id="author" placeholder="Nhập tác giả">
 	            </div>
 	            <div class="form-group">
 	              <label> Mô tả </label>

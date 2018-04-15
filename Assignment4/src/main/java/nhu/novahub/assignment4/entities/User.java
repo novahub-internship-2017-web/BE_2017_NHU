@@ -14,19 +14,15 @@ public class User {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private int id;
   
-  @NotBlank
   @Column(name = "email")
   private String email;
 
-  @NotBlank
   @Column(name = "password")
   private String password;
   
-  @NotBlank
   @Column(name = "enabled")
   private int enabled;
   
-  @NotBlank
   @Column(name = "role_id")
   private int roleId;
   

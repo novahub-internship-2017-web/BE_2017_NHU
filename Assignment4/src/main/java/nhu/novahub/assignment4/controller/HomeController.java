@@ -1,12 +1,8 @@
 package nhu.novahub.assignment4.controller;
 
-import java.security.Principal;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class HomeController {
@@ -17,12 +13,18 @@ public class HomeController {
   }
   @RequestMapping(value= {"/","/booksList","/bookDetail/{id}"})
   public String welcome() {
-    return "index";
+    return "home";
   }
   @RequestMapping(value= {"/bookDetailPage"})
   public String bookDetailPage() {
     return "bookDetailPage";
   }
+  
+  @RequestMapping(value= {"/booksListPage"})
+  public String booksListPage() {
+    return "booksListPage";
+  }
+  
   @RequestMapping(value= {"/bookCreationPage"})
   public String bookCreationPage() {
     return "bookCreationPage";
@@ -38,15 +40,18 @@ public class HomeController {
 	  }
 	  else return "login";
   }
+	@RequestMapping(value= {"/userProfilePage"})
+  public String userProfilePage() {
+    return "userProfilePage";
+  }
 	
 	@RequestMapping("/403")
   public String error() {
     return "403";
   }
-	@RequestMapping("/test")
+	
+	@RequestMapping("/test1")
   public String test() {
-    return "test";
+    return "test1";
   }
-	
-	
 }

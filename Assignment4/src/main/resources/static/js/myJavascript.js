@@ -1,4 +1,6 @@
-function getBooksList(){
+
+
+/*function getBooksList(){
 	var roleUser = "isGuess"; 
 	if($('#checkRoleUser').val() == 'isAdmin'){
 		roleUser = "isAdmin"; 
@@ -46,7 +48,7 @@ function getBooksList(){
 			}
 		});	
 	}
-
+*/
 function getBooksListByUser(){
 	var idUser = -1; // not login
 	// check id user
@@ -60,7 +62,6 @@ function getBooksListByUser(){
 			console.log("ERROR: ", ex);
 		}
 	});
-	alert(window.location.origin+"/api/book/all/"+idUser);
 	window.history.pushState('string', '', window.location.origin+'/booksListByUser');
 		$.ajax({
 			type : "GET",
@@ -227,4 +228,10 @@ function deleteBook(bookId){
 			}
 		});	
 	}
+}
+
+function loadUserProfile(){
+	$.ajax({url:window.location.origin+'/userProfilePage',success:function(result){
+	      $("#otherContent").html(result);
+	    }});
 }

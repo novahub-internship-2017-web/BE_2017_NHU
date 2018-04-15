@@ -43,6 +43,7 @@ public class Book {
   @Column(name = "removed")
   private int removed;
   
+  public Book() {}
   
   public int getId() {
     return id;

@@ -13,7 +13,10 @@ public class Role{
   private int id;
   
   private String name;
-
+  
+  public Role() {
+  }
+  
   public Role(Role role) {
     this.id = role.getId();
     this.name = role.getName();
