@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import nhu.novahub.assignment4.entities.Book;
-import nhu.novahub.assignment4.entities.Role;
 import nhu.novahub.assignment4.entities.User;
 import nhu.novahub.assignment4.service.BookService;
 import nhu.novahub.assignment4.service.RoleService;
@@ -76,8 +75,8 @@ public class BookController {
   public void changeEnabled(@PathVariable(value = "id") int bookId,@RequestParam int status,
             Principal principal) {
     User currentUser =  userService.findByEmail(principal.getName());
-    Role currentUserRole = roleService.findById(currentUser.getId());
-    if(currentUserRole.getName().contains("ADMIN")) {
+    String currentUserRole = roleService.findById(currentUser.getId());
+    if(currentUserRole.contains("ADMIN")) {
       if(status == 1) { 
         status = 0;
       }else {

@@ -15,4 +15,6 @@ public interface RoleRepository  extends CrudRepository<Role , Long>{
   public List<String> findRoleByEmail(String email);
   
   public Role findById(int id);
-}
+  
+  public List<Role> findAll();
+} 

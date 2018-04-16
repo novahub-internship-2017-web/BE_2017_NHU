@@ -36,13 +36,18 @@ public class HomeController {
 	    /*if(auth.toString().contains("ROLE_ADMIN")) {
 	      return "home";
 	    }else*/
-	      return "home";
+	      return "redirect:booksList";
 	  }
 	  else return "login";
   }
 	@RequestMapping(value= {"/userProfilePage"})
   public String userProfilePage() {
     return "userProfilePage";
+  }
+	
+	@RequestMapping(value= {"/usersListPage"})
+  public String usersListPage() {
+    return "usersListPage";
   }
 	
 	@RequestMapping("/403")

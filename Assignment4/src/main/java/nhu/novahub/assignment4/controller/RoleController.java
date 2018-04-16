@@ -1,27 +1,29 @@
 package nhu.novahub.assignment4.controller;
 
-import java.util.List;
+
+import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import nhu.novahub.assignment4.dao.RoleRepository;
-import nhu.novahub.assignment4.entities.Role;
+import nhu.novahub.assignment4.service.RoleService;
+import nhu.novahub.assignment4.service.UserService;
 
 @RestController
-
+@RequestMapping("/api/role")
 public class RoleController {
   @Autowired
-  RoleRepository roleRepository;
+  RoleService roleService;
+  @Autowired
+  UserService userService;
   
-  @RequestMapping("/findall")
-  public String findAll(){
-    String result = "<html>";
-      
-    for(Role cust : roleRepository.findAll()){
-        result += "<div>" + cust.toString() + "</div>";
-    }
-    return result + "</html>";
- }
+  @GetMapping("/{roleId}")
+  public String getIdUser(@PathVariable(value = "roleId") int roleId) {
+    return roleService.findById(roleId);
+  }
+  
+  
 }

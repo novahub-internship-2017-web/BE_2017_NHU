@@ -1,5 +1,4 @@
 
-
 /*function getBooksList(){
 	var roleUser = "isGuess"; 
 	if($('#checkRoleUser').val() == 'isAdmin'){
@@ -49,6 +48,8 @@
 		});	
 	}
 */
+
+//get books list of each user
 function getBooksListByUser(){
 	var idUser = -1; // not login
 	// check id user
@@ -101,6 +102,8 @@ function getBooksListByUser(){
 		});	
 	}
 
+
+//get book's detail by bookId
 function getBookDetail(bookId){
 	$.ajax({url:window.location.origin+'/bookDetailPage',success:function(result){
       $("#Content").html(result);
@@ -234,4 +237,21 @@ function loadUserProfile(){
 	$.ajax({url:window.location.origin+'/userProfilePage',success:function(result){
 	      $("#otherContent").html(result);
 	    }});
+}
+
+function loadUsersList(){
+	$.ajax({url:window.location.origin+'/usersListPage',success:function(result){
+	      $("#Content").html(result);
+	    }});
+}
+
+function enabledUser(st, id){
+	$.ajax({
+	  url: window.location.origin+"/api/user/enabled/"+id,
+      type: 'POST',
+      cache: false,
+      data: {
+        status : st
+      },
+	});	
 }

@@ -1,0 +1,42 @@
+<table id="tableList" class="display">
+					       <thead>
+					            <tr>
+					                <th>Mã</th>
+									<th>Email</th>
+					                <th>Quyền truy cập</th>
+					                <th>Hoạt động</th>
+					            </tr>
+					        </thead>
+					    </table>
+<script>
+$(document).ready( function () {
+	var table = $('#tableList').DataTable({
+		"sAjaxSource": window.location.origin+"/api/user/all",
+		"sAjaxDataProp": "",
+		"aoColumns": [
+			{ "mData": "id"},
+			{ "mData": "email" },
+			{ "mData": "roleId", 
+				render: function (data, type, full, meta) {
+		            var currentCell = $("#tableList").DataTable().cells({"row":meta.row, "column":meta.col}).nodes(0);
+		            $.ajax({
+		                url: window.location.origin+"/api/role/"+data
+		            }).done(function (data) {
+		                $(currentCell).text(data);
+		            });
+		            return null;
+		        }
+			},
+			{ "mData": "", 
+				render: function (data, type, row) {
+					if(row.enabled == 1){
+						return '<input type="checkbox" value="'+ row.enabled +'" checked onclick="enabledUser('+row.enabled+','+row.id+')">';
+					}else{
+						return '<input type="checkbox" value="'+ row.enabled +'" onclick="enabledUser('+row.enabled+','+row.id+')">';
+					}
+				}
+			}			
+		]
+	 });
+});
+</script>
