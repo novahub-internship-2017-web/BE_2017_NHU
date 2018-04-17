@@ -90,7 +90,7 @@ $(document).ready( function () {
          <a class="btn btn-md btn-primary" href="javascript:void(0)" onclick="getBooksListByUser()" sec:authorize="hasAnyRole('USER','ADMIN')">
  		 	<span>Sách của bạn</span>
          </a>
-         <a class="btn btn-md btn-primary" href="javascript:void(0)" onclick="loadUsersList()" >
+         <a class="btn btn-md btn-primary" href="javascript:void(0)" onclick="loadUsersList()" sec:authorize="hasRole('ADMIN')" >
  		 			<span>Quản lý User</span>
          </a>
          <p class="notiMsg error"></p>

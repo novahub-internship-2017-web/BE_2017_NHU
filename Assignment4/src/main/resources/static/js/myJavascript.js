@@ -51,22 +51,10 @@
 
 //get books list of each user
 function getBooksListByUser(){
-	var idUser = -1; // not login
-	// check id user
-	$.ajax({
-		type : "GET",
-		url : window.location.origin+"/api/user/getCurrentUser",
-		success: function(result){		
-			idUser = result.id;
-		},
-		error : function(ex) {
-			console.log("ERROR: ", ex);
-		}
-	});
 	window.history.pushState('string', '', window.location.origin+'/booksListByUser');
 		$.ajax({
 			type : "GET",
-			url : window.location.origin+"/api/book/all/"+idUser,
+			url : window.location.origin+"/api/book/all/byUser",
 			success: function(result){
 				if(result.length > 0){
 					$('#Content').html('<table id="tableList"><thead><tr>'+
@@ -137,9 +125,21 @@ function getBookDetail(bookId){
 				$('#editBookForm').find('#title').val(result.title);
 				$('#editBookForm').find('#author').val(result.author);
 				$('#editBookForm').find('#description').val(result.description);
-				if(idUser == result.user_id){
+				/*if(idUser == result.userId){
 					document.getElementById('buttonEditBook').style.display = 'block';
-				}
+				}*/
+				$.ajax({
+					type : "GET",
+					url : window.location.origin+"/api/user/getCurrentUser",
+					success: function(data){
+						if(data.id == result.userId){
+							document.getElementById('buttonEditBook').style.display = 'block';
+						}
+					},
+					error : function(ex) {
+						console.log("ERROR: ", ex);
+					}
+				});
 		},
 		error : function(ex) {
 			alert("ERROR: ", ex);
@@ -254,4 +254,17 @@ function enabledUser(st, id){
         status : st
       },
 	});	
+}
+
+function getEmailUserById(id){
+	$.ajax({
+		type : "GET",
+		url : window.location.origin+"/api/user/profile/"+id,
+		success: function(result){
+			return result.email;
+		},
+		error : function(ex) {
+			console.log("ERROR: ", ex);
+		}
+	});
 }

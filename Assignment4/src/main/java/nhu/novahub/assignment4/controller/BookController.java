@@ -62,8 +62,15 @@ public class BookController {
   }
   
   @GetMapping("/all/{userId}")
-  public List<Book> getAllByIdUser(@PathVariable(value = "userId") int userId) {
+  public List<Book> getAllByIdUser1(@PathVariable(value = "userId") int userId) {
     return bookService.findAllByUserId(userId);
+  }
+  
+  @GetMapping("/all/byUser")
+  public List<Book> getAllByIdUser( Principal principal) {
+    User currentUser =  userService.findByEmail(principal.getName());
+    int idCurrentUser = currentUser.getId();
+    return bookService.findAllByUserId(idCurrentUser);
   }
   
   @GetMapping("/{id}")

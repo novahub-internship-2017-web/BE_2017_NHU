@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table (name = "Comment")
 public class Comment {
@@ -25,6 +27,8 @@ public class Comment {
   private int bookId;
   
   @Column(name = "created_at")
+  @JsonFormat
+  (shape = JsonFormat.Shape.STRING, pattern = "hh:mm:ss dd-MM-yyyy")
   private Date createdAt;
   
   @Column(name = "updated_at")

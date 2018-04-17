@@ -35,6 +35,11 @@ public class UserController {
     return userService.findByEmail(email);
   }  
   
+  @GetMapping("/profile/{id}")
+  public User getEmailUser(@PathVariable(value = "id") int id) {
+    return userService.findById(id);
+  }
+  
   @GetMapping("/getCurrentUser")
   public User currentUserName( Principal principal) {
     try {

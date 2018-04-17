@@ -76,7 +76,7 @@ function editPassword(){
 		      {oldPass: $('#userProfileForm').find('#oldPass').val(),
 		newPass: $('#userProfileForm').find('#newPass').val(),
 		confirmPass: $('#userProfileForm').find('#confirmPass').val()} ,function(data){
-		        window.location.href = serverContext +"/home.html?message="+data.message;
+		        alert("Cập nhật thành công");
 		    })
 		    .fail(function(data) {
 		        $("#errormsg").show().html(data.responseJSON.message);
