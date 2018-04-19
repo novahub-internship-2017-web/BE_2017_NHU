@@ -204,16 +204,7 @@ function censorshipBook(){
 	});	
 }
 
-function enabled(st, id){
-	$.ajax({
-	  url: window.location.origin+"/api/book/enabled/"+id,
-      type: 'POST',
-      cache: false,
-      data: {
-        status : st
-      },
-	});	
-}
+
 
 function deleteBook(bookId){
 	var confirmMsg = confirm("Bạn có muốn xóa không ?");

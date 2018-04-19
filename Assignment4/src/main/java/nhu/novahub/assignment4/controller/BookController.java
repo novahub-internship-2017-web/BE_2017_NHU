@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +34,7 @@ public class BookController {
   @Autowired
   private RoleService roleService;
   
-  @PostMapping("/add")
+/*  @PostMapping("/add")
   public List<Book> postMethod(@RequestBody Book newBook,Principal principal) {
     User currentUser =  userService.findByEmail(principal.getName());
     newBook.setUserId(currentUser.getId());
@@ -44,11 +46,11 @@ public class BookController {
     newBook.setUpdatedAt(timeUpdateToString);
     bookService.addBook(newBook);
     return bookService.findAll();
-  }
+  }*/
   
-  @GetMapping("/all")
-  public List<Book> getAllBooks() {
-    return bookService.findAll();
+  @GetMapping(value= {"/all"})
+  public Page<Book> getAllBooks(Pageable pageable) {
+    return bookService.findAll(pageable);
   }
   
   @GetMapping("/all/enabled")
@@ -84,11 +86,6 @@ public class BookController {
     User currentUser =  userService.findByEmail(principal.getName());
     String currentUserRole = roleService.findById(currentUser.getId());
     if(currentUserRole.contains("ADMIN")) {
-      if(status == 1) { 
-        status = 0;
-      }else {
-        status = 1;
-      }
       Book book = bookService.findById(bookId);
       book.setEnabled(status);
       bookService.updateBook(book);
