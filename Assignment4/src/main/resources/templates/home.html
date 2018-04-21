@@ -17,6 +17,10 @@
 </head>
 <script>
 $(document).ready( function () {
+	var roleUser = "isGuest"; 
+	if(!($('#checkRoleUser').val() === undefined)){
+		roleUser = $('#checkRoleUser').val();
+	}
 	var url = window.location.href;
 	var rootUrl = window.location.origin;
 	var home = window.location.origin+"/";
@@ -46,9 +50,12 @@ $(document).ready( function () {
 	        break;
 	}
 });
+
+
 </script>
 <body>
 	<input id="checkRoleUser" type="hidden" sec:authorize="hasRole('ADMIN')" value="isAdmin"/>
+	<input id="checkRoleUser" type="hidden" sec:authorize="hasRole('SUPER_ADMIN')" value="isSuperAdmin"/>
 	<input id="checkRoleUser" type="hidden" sec:authorize="hasRole('USER')" value="isUser"/>
     <div class="navbar navbar-static-top">
 		<div class="container-fluid">
@@ -72,25 +79,26 @@ $(document).ready( function () {
 		      <li><label>Hi! <span sec:authentication="name"></span> </label></li>
 		      <li><a href="#" sec:authorize="isAnonymous()"><span class="glyphicon glyphicon-log-in"></span>Đăng kí</a></li>
 		      <li><a href="/login" sec:authorize="isAnonymous()"><span class="glyphicon glyphicon-log-in"></span>Đăng nhập</a></li>
-		      <li><a href="javascript:void(0)" onclick="loadUserProfile()" sec:authorize="hasAnyRole('USER','ADMIN')">Đổi mật khẩu</a></li>
-		      <li><a th:href="@{/logout}" sec:authorize="hasAnyRole('USER','ADMIN')">Đăng xuất</a></li>
+		      <li><a href="javascript:void(0)" onclick="loadUserProfile()" sec:authorize="hasAnyRole('USER','ADMIN','SUPER_ADMIN')">Đổi mật khẩu</a></li>
+		      <li><a th:href="@{/logout}" sec:authorize="hasAnyRole('USER','ADMIN','SUPER_ADMIN')">Đăng xuất</a></li>
 		    </ul>
 		</div>
 	</div>
 	<div class="container main-container" id="menubar">
 		<a class="btn btn-md btn-default" href="/booksList">
- 		 	<span>Toàn bộ sách</span>
+			<span>Toàn bộ sách</span>
         </a> 
-      	<a class="btn btn-md btn-primary" href="javascript:void(0)" onclick="addBookPage()" sec:authorize="hasAnyRole('USER','ADMIN')">
- 		 	<span>Thêm sách</span>
-         </a>
-         <a class="btn btn-md btn-default" href="javascript:void(0)" onclick="censorshipBook()" sec:authorize="hasRole('ADMIN')">
+        <a class="btn btn-md btn-primary" href="javascript:void(0)" onclick="loadBookForm()" 
+		   sec:authorize="hasAnyRole('USER','ADMIN','SUPER_ADMIN')">Thêm sách mới
+        </a>
+         <a class="btn btn-md btn-default" href="javascript:void(0)" onclick="censorshipBook()" sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')">
  		 	<span>Duyệt sách</span>
          </a>
-         <a class="btn btn-md btn-primary" href="javascript:void(0)" onclick="getBooksListByUser()" sec:authorize="hasAnyRole('USER','ADMIN')">
+         
+         <a class="btn btn-md btn-primary" href="javascript:void(0)" onclick="getBooksListByUser()" sec:authorize="hasAnyRole('USER','ADMIN','SUPER_ADMIN')">
  		 	<span>Sách của bạn</span>
          </a>
-         <a class="btn btn-md btn-primary" href="javascript:void(0)" onclick="loadUsersList()" sec:authorize="hasRole('ADMIN')" >
+         <a class="btn btn-md btn-default" href="javascript:void(0)" onclick="loadUsersList()" sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')" >
  		 			<span>Quản lý User</span>
          </a>
          <p class="notiMsg error"></p>

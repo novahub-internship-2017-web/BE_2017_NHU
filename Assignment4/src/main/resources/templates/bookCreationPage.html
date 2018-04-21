@@ -10,6 +10,7 @@ $(document).ready(function() {
 	    	author: " Tác giả không được trống"
 	    }
     });
+    $('#bookCreationDiv').modal('show');
 });
 
 $("#bookCreationForm").submit(function(event) {
@@ -31,20 +32,39 @@ function addBook(){
 		data : JSON.stringify(newBook),
 		dataType : 'json',
 		success: function(result){
-			$('.notiMsg').html("Thêm thành công"); 
+			 $('.notiMsg').html(result.status);
+			 setTimeout(function(){ $('.notiMsg').html("")}, 5000);
+			 var bookRow = '<tr>' +
+				'<td>' + result.data.id + '</td>' +
+				'<td>' + result.data.title + '</td>' +
+				'<td>' + result.data.author + '</td>' +
+				'<td>' + result.data.createdAt + '</td>' +
+				'<td>' + result.data.updatedAt + '</td>' +
+				'<td><a title="Chi tiết" href="javascript:void(0)" '+
+					'onclick="getBookDetail('+result.data.id+')"> Xem</a></td>' +
+				'<td>'+ doCheck(result.data.enabled,result.data.id) +'</td>' + 
+				'<td id="rowBook'+result.data.id+'">'+ doCheck1(result.data.enabled,result.data.id) +'</td>' + 
+				'<td><a title="Xóa" onclick="deleteBook('+ result.data.id+')">Xóa</a></td></tr>';
+				$('#tableList tbody').append(bookRow);
+			 
+			
 		 },
 	  error: function(e){      
 	   alert('Error while request..'+e);
 	  }
 	 }); 
-	 getBooksList();
-	 
 }
 </script>
 
-<div id="bookCreationDiv" class="" >
-         	 <form class="" name="bookCreationForm" id="bookCreationForm"> 
-         	 <h3>Thêm sách mới</h3>
+<div id="bookCreationDiv" class="modal fade" role="dialog" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header" style="padding:20px 40px;">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4>Thêm sách mới</h4>
+        </div>
+        <div class="modal-body" style="padding:40px 50px;">
+	          <form role="form" name="bookCreationForm" id="bookCreationForm"> 
 			  <table style=" width:100%"  class="bookForm">
 			   <tr>
 			    <td><label ><b>Tiêu đề</b></label></td>
@@ -61,12 +81,16 @@ function addBook(){
 			   <tr>
 			    <td></td>
 			    <td>
-			    	<input type="submit"  value="Thêm" class="btn btn-primary ">
-				    <input type="button" value="Hủy" class="btn btn-danger"
-				     	onclick="document.getElementById('editBookForm').style.display='none'">
+			    	<button type="submit" class="btn btn-primary ">Cập nhật</button>
+	              <button type="submit" class="btn btn-danger btn-default" data-dismiss="modal">
+	              		Hủy</button>
 			    </td>
 			   </tr>
 			  </table>
 			 </form>
+	        </div>
+		</div>
+	</div>
+         	 
 			 
 		</div>	

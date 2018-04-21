@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import nhu.novahub.assignment4.entities.Role;
 import nhu.novahub.assignment4.service.RoleService;
 import nhu.novahub.assignment4.service.UserService;
 
@@ -21,7 +22,7 @@ public class RoleController {
   UserService userService;
   
   @GetMapping("/{roleId}")
-  public String getIdUser(@PathVariable(value = "roleId") int roleId) {
+  public Role getIdUser(@PathVariable(value = "roleId") int roleId) {
     return roleService.findById(roleId);
   }
   

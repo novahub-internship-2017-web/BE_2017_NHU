@@ -8,7 +8,7 @@
         <div class="modal-body" style="padding:40px 50px;">
 	          <form role="form" name="userProfileForm" id="userProfileForm">
 	          	<div class="form-group">
-	               <p class="notiMsg error"></p>
+	               <p class="notiMsgChangePass error"></p>
 	            </div>
 	          	<div class="form-group">
 	              <label>Email</label>
@@ -76,7 +76,7 @@ function editPassword(){
 		      {oldPass: $('#userProfileForm').find('#oldPass').val(),
 		newPass: $('#userProfileForm').find('#newPass').val(),
 		confirmPass: $('#userProfileForm').find('#confirmPass').val()} ,function(data){
-		        alert("Cập nhật thành công");
+			 $('.notiMsgChangePass').html(data.status);
 		    })
 		    .fail(function(data) {
 		        $("#errormsg").show().html(data.responseJSON.message);

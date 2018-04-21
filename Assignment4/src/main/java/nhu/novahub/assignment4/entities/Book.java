@@ -34,7 +34,9 @@ public class Book {
   private Date createdAt;
   
   @Column(name = "updated_at")
-  private String updatedAt;
+  @JsonFormat
+  (shape = JsonFormat.Shape.STRING, pattern = "hh:mm:ss dd-MM-yyyy")
+  private Date updatedAt;
   
   @Column(name = "image")
   private String image = "coverBook.jpg";
@@ -80,10 +82,10 @@ public class Book {
   public void setCreatedAt(Date createdAt) {
     this.createdAt = createdAt;
   }
-  public String getUpdatedAt() {
+  public Date getUpdatedAt() {
     return updatedAt;
   }
-  public void setUpdatedAt(String updatedAt) {
+  public void setUpdatedAt(Date updatedAt) {
     this.updatedAt = updatedAt;
   }
   public String getImage() {

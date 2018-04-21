@@ -15,9 +15,8 @@ public class RoleService{
   @Autowired
   RoleRepository roleRepository; 
   
-  public String findById(int id) {
-    Role role = roleRepository.findById(id);
-    return role.getName();
+  public Role findById(int id) {
+    return roleRepository.findById(id);
   }
   
   public List<Role> findAll(){

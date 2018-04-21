@@ -30,8 +30,9 @@ public class BookService{
     return bookRepository.findById(id);
   }
   
-  public void addBook(Book book) {
-    bookRepository.save(book);
+  public Book addBook(Book book) {
+    Book newBook = bookRepository.save(book);
+    return newBook;
   }
   
   public void updateBook(Book book) {

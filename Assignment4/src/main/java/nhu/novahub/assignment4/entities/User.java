@@ -2,7 +2,6 @@ package nhu.novahub.assignment4.entities;
 
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 
 
 @Entity

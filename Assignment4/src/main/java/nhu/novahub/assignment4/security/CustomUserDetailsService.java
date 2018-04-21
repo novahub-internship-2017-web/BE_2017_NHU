@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 import nhu.novahub.assignment4.dao.RoleRepository;
 import nhu.novahub.assignment4.dao.UserRepository;
 import nhu.novahub.assignment4.entities.User;
-@Service("customUserDetailsService")
 
+@Service("customUserDetailsService")
 public class CustomUserDetailsService implements UserDetailsService{
 
  private final UserRepository userRepository;
@@ -28,8 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService{
     public CustomUserDetailsService(UserRepository userRepository,RoleRepository userRolesRepository) {
 
         this.userRepository = userRepository;
-
-        this.roleRepository=userRolesRepository;
+        this.roleRepository = userRolesRepository;
 
     }
 

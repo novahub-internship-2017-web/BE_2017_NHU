@@ -55,8 +55,8 @@ public class HomeController {
     return "403";
   }
 	
-	@RequestMapping("/test1")
-  public String test() {
-    return "test1";
+	@RequestMapping("/formBook")
+  public String formBook() {
+    return "formBook";
   }
 }

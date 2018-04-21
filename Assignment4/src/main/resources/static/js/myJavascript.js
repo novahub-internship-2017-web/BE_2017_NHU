@@ -101,6 +101,7 @@ function getBookDetail(bookId){
 	// check id user
 	$.ajax({
 		type : "GET",
+		async: false,
 		url : window.location.origin+"/api/user/getCurrentUser",
 		success: function(result){		
 			idUser = result.id;
@@ -213,8 +214,8 @@ function deleteBook(bookId){
 			type : "DELETE",
 			url : window.location.origin+"/api/book/delete/"+bookId,
 			success: function(result){
-				$('.notiMsg').html("Xóa thành công");
-				getBooksList();
+				 $('.notiMsg').html(result.status);
+				 setTimeout(function(){ $('.notiMsg').html("")}, 5000);
 			},
 			error : function(e) {
 				alert("ERROR: ", e);
@@ -223,7 +224,11 @@ function deleteBook(bookId){
 		});	
 	}
 }
-
+function loadBookForm(){
+	$.ajax({url:window.location.origin+'/bookCreationPage',success:function(result){
+	      $("#otherContent").html(result);
+	    }});
+}
 function loadUserProfile(){
 	$.ajax({url:window.location.origin+'/userProfilePage',success:function(result){
 	      $("#otherContent").html(result);
@@ -236,26 +241,20 @@ function loadUsersList(){
 	    }});
 }
 
-function enabledUser(st, id){
-	$.ajax({
-	  url: window.location.origin+"/api/user/enabled/"+id,
-      type: 'POST',
-      cache: false,
-      data: {
-        status : st
-      },
-	});	
-}
+
 
 function getEmailUserById(id){
+	var result = 'undefined';
 	$.ajax({
 		type : "GET",
+		async: false,
 		url : window.location.origin+"/api/user/profile/"+id,
-		success: function(result){
-			return result.email;
+		success: function(data){
+			result =  data.email;
 		},
 		error : function(ex) {
 			console.log("ERROR: ", ex);
 		}
 	});
+	return result;
 }

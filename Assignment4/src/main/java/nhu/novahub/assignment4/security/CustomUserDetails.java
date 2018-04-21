@@ -65,9 +65,11 @@ public class CustomUserDetails extends User implements UserDetails {
   @Override
 
   public boolean isEnabled() {
-
-   return true;
-
+	if(super.getEnabled() == 1)  {
+		return true;
+	}else {
+		return false;
+	}
   }
 
   @Override

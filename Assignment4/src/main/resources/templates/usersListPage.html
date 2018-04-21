@@ -1,42 +1,130 @@
 <table id="tableList" class="display">
-					       <thead>
-					            <tr>
-					                <th>Mã</th>
-									<th>Email</th>
-					                <th>Quyền truy cập</th>
-					                <th>Hoạt động</th>
-					            </tr>
-					        </thead>
-					    </table>
+   <thead>
+        <tr>
+            <th>Mã</th>
+			<th>Email</th>
+			<th>Quyền truy cập</th>
+			<th>Hoạt động</th>
+        </tr>
+    </thead>
+    <tbody>
+    	
+    </tbody>
+</table>
+<div id="Pagination" class="pagination">
+	<table id="">
+	    <tr>
+	        <td ><a href="javascript:void(0);" onclick="moveFirstPage()" id="firstPage">Trang đầu</a></td>
+	        <td ><a href="javascript:void(0);" onclick="movePreviousPage()" id="previousPage">Trang trước</a></td>        
+	        <td id="pageTitle"></td>        
+	        <td><a href="javascript:void(0);" onclick="moveNextPage()" id="nextPage">Trang sau</a></td>        
+	        <td ><a href="javascript:void(0);" onclick="moveLastPage()" id="lastPage">Trang cuối</a></td>
+	    </tr>
+	</table>
+</div>
 <script>
-$(document).ready( function () {
-	var table = $('#tableList').DataTable({
-		"sAjaxSource": window.location.origin+"/api/user/all",
-		"sAjaxDataProp": "",
-		"aoColumns": [
-			{ "mData": "id"},
-			{ "mData": "email" },
-			{ "mData": "roleId", 
-				render: function (data, type, full, meta) {
-		            var currentCell = $("#tableList").DataTable().cells({"row":meta.row, "column":meta.col}).nodes(0);
-		            $.ajax({
-		                url: window.location.origin+"/api/role/"+data
-		            }).done(function (data) {
-		                $(currentCell).text(data);
-		            });
-		            return null;
-		        }
-			},
-			{ "mData": "", 
-				render: function (data, type, row) {
-					if(row.enabled == 1){
-						return '<input type="checkbox" value="'+ row.enabled +'" checked onclick="enabledUser('+row.enabled+','+row.id+')">';
-					}else{
-						return '<input type="checkbox" value="'+ row.enabled +'" onclick="enabledUser('+row.enabled+','+row.id+')">';
-					}
-				}
-			}			
-		]
-	 });
-});
+
+var pageSize = 5;
+var currentPageIndex = 0;
+var pageCount = 0;
+var sortBy = 'id';
+var startItemIndex = 0;
+var itemsToDisplay = 0;
+
+var roleName ='non';
+function PaginateSetPageObjects() {
+	$('#pageTitle').text('Page ' + (currentPageIndex + 1) + ' of ' + pageCount);
+	if (pageCount <= 1) {
+		$('#nextPage').hide();
+		$('#previousPage').hide();
+		$('#lastPage').hide();
+		$('#firstPage').hide();
+	} else {
+		$('#nextPage').show();
+		$('#previousPage').show();
+		$('#lastPage').show();
+		$('#firstPage').show();
+		if (currentPageIndex == 0) {
+			$('#previousPage').hide();
+			$('#firstPage').hide();
+		} else if (currentPageIndex == (pageCount - 1)) {
+			$('#nextPage').hide();
+			$('#lastPage').hide();
+		}
+	}
+}
+
+function displayUsers(){
+	
+	$.ajax({
+		type : "GET",
+		url : window.location.origin+"/api/user/all?page="+currentPageIndex+"&size="+pageSize,
+		success: function(result){
+				$('#tableList tbody').html("");
+				$.each(result.data.content, function(i, user){
+					var userRow = '<tr>' +
+					'<td>' + user.id + '</td>' +
+					'<td>' + user.email + '</td>' +
+					'<td>' + getRoleName(user.roleId) + '</td>' +
+					'<td>' + doCheck(user.enabled,user.id) + '</td>' +
+					'</tr>';
+					$('#tableList tbody').append(userRow);
+		        });
+				currentPageIndex = result.data.pageable.pageNumber;
+				pageCount = result.data.totalPages;
+				PaginateSetPageObjects();
+		},
+		error : function(e) {
+			alert("ERROR: ", e);
+			console.log("ERROR: ", e);
+		}
+	});
+}
+	
+function moveFirstPage() { currentPageIndex = 0; displayBooks(); }
+function moveLastPage() { currentPageIndex = pageCount - 1; displayBooks(); }
+function movePreviousPage() { currentPageIndex--; displayBooks(); }
+function moveNextPage() { currentPageIndex++; displayBooks(); }
+
+displayUsers();
+
+function doCheck(status,userId){
+	var select = '<select id="statusBook" onchange="enabledUser(this.value,'+userId+')">';
+    if(status){
+    	 select += '<option value="1" selected="selected" style="color:red">Hiện</option>'+
+			'<option value="0" class="choose2">Ẩn</option>';
+    }else{
+    	select += '<option value="1" class="choose1">Hiện</option>'+
+		'<option value="0" selected="selected" class="choose2">Ẩn</option>';
+    }
+    select += '</select>';
+    return select;
+}
+
+function getRoleName(roleId){
+	var result = 'undefined';
+		$.ajax({
+		 type : "GET",
+		 async: false,
+         url: window.location.origin+"/api/role/"+roleId
+     }).done(function (data) {
+    	 result = data.name;
+     });
+	return result;
+}
+
+function enabledUser(st, id){
+	$.ajax({
+	  url: window.location.origin+"/api/user/enabled/"+id,
+      type: 'POST',
+      cache: false,
+      data: {
+        status : st
+      },
+      success: function(result){
+    	$('.notiMsg').html(result.status);
+		setTimeout(function(){ $('.notiMsg').html("")}, 5000);
+	  }
+	});	
+}
 </script>
