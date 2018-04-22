@@ -37,19 +37,6 @@ public class BookController {
   private RoleService roleService;
   
   Authentication authentication;
-/*  @PostMapping("/add")
-  public List<Book> postMethod(@RequestBody Book newBook,Principal principal) {
-    User currentUser =  userService.findByEmail(principal.getName());
-    newBook.setUserId(currentUser.getId());
-    Date timeUpdate=new Date(System.currentTimeMillis()); 
-    newBook.setCreatedAt(timeUpdate);
-    SimpleDateFormat timeFormat= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
-    String timeUpdateToString=timeFormat.format(timeUpdate.getTime());
-    //newBook.setCreatedAt(timeUpdateToString);
-    newBook.setUpdatedAt(timeUpdateToString);
-    bookService.addBook(newBook);
-    return bookService.findAll();
-  }*/
   
   @PostMapping("/add")
   public Response addBook(@RequestBody Book newBook,Principal principal) {
@@ -58,7 +45,8 @@ public class BookController {
     Date timeUpdate=new Date(System.currentTimeMillis()); 
     newBook.setCreatedAt(timeUpdate);
     newBook.setUpdatedAt(timeUpdate);
-    Response response = new Response("Thêm sách thành công",bookService.addBook(newBook));
+    Book newBookAdd = bookService.addBook(newBook);
+    Response response = new Response("Thêm sách thành công",newBookAdd);
     return response;
   }
   @GetMapping(value= {"/all"})
@@ -74,10 +62,20 @@ public class BookController {
     return response;
   }
   
-  /*@GetMapping(value= {"/all"})
-  public Page<Book> getAllBooks(Pageable pageable) {
-    return bookService.findAll(pageable);
-  }*/
+  
+  @GetMapping(value= {"/search"})
+  public Response search(@RequestParam String keyword,
+		  				 Pageable pageable) {
+	  Page<Book> books = bookService.searchByTitle(keyword, pageable);
+	  Response response = new Response();
+	  if(books.hasContent()) {
+		 response.setData(books);
+		 response.setStatus("Kết quả tìm kiếm với từ khóa '"+ keyword +"'" );
+	  }else {
+		  response.setStatus("Không có kết quả");
+	  }
+    return response;
+  }
   
   @GetMapping("/all/enabled")
   public List<Book> getAllEnabledBooks() {

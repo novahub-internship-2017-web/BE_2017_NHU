@@ -1,0 +1,147 @@
+<table id="tableList" class="display">
+       <thead>
+            <tr>
+                <th>Mã</th>
+				<th>Tiêu đề</th>
+                <th>Tác giả</th>
+                <th>Thời gian tạo</th>
+                <th>Thời gian cập nhật</th>
+                <th>Chi tiết</th>
+                <th>Tình trạng</th>
+                <th>Tình trạng</th>
+                <th>Xóa</th>
+            </tr>
+        </thead>
+        <tbody>
+        	
+        </tbody>
+    </table>
+<div id="Pagination" class="pagination">
+	<table id="">
+	    <tr>
+	        <td ><a href="javascript:void(0);" onclick="moveFirstPage()" id="firstPage">Trang đầu</a></td>
+	        <td ><a href="javascript:void(0);" onclick="movePreviousPage()" id="previousPage">Trang trước</a></td>        
+	        <td id="pageTitle"></td>        
+	        <td><a href="javascript:void(0);" onclick="moveNextPage()" id="nextPage">Trang sau</a></td>        
+	        <td ><a href="javascript:void(0);" onclick="moveLastPage()" id="lastPage">Trang cuối</a></td>
+	    </tr>
+	</table>
+</div>
+<script>
+var pageSize = 5;
+var currentPageIndex = 0;
+var pageCount = 0;
+var sortBy = 'id';
+var startItemIndex = 0;
+var itemsToDisplay = 0;
+function PaginateSetPageObjects() {
+	$('#pageTitle').text('Page ' + (currentPageIndex + 1) + ' of ' + pageCount);
+	if (pageCount <= 1) {
+		$('#nextPage').hide();
+		$('#previousPage').hide();
+		$('#lastPage').hide();
+		$('#firstPage').hide();
+	} else {
+		$('#nextPage').show();
+		$('#previousPage').show();
+		$('#lastPage').show();
+		$('#firstPage').show();
+		if (currentPageIndex == 0) {
+			$('#previousPage').hide();
+			$('#firstPage').hide();
+		} else if (currentPageIndex == (pageCount - 1)) {
+			$('#nextPage').hide();
+			$('#lastPage').hide();
+		}
+	}
+}
+
+function displayBooks(){
+	var keyword = $('#keyword').val();
+	$.ajax({
+		type : "GET",
+		url : window.location.origin+"/api/book/search?page="+currentPageIndex+"&size="+pageSize+"&keyword="+keyword,
+		success: function(result){
+				if(result.data === null){
+					$('#tableList').html("");
+					$('.pagination').html(result.status);
+					
+				}else{
+					$('.notiMsg').html(result.status);
+					$('#tableList tbody').html("");
+					$.each(result.data.content, function(i, book){
+						var bookRow = '<tr>' +
+						'<td>' + book.id + '</td>' +
+						'<td>' + book.title + '</td>' +
+						'<td>' + book.author + '</td>' +
+						'<td>' + book.createdAt + '</td>' +
+						'<td>' + book.updatedAt + '</td>' +
+						'<td><a title="Chi tiết" href="javascript:void(0)" '+
+							'onclick="getBookDetail('+book.id+')"> Xem</a></td>' +
+						'<td>'+ doCheck(book.enabled,book.id) +'</td>' + 
+						'<td id="rowBook'+book.id+'">'+ doCheck1(book.enabled,book.id) +'</td>' + 
+						'<td><a title="Xóa" onclick="deleteBook('+ book.id+')">Xóa</a></td></tr>';
+						$('#tableList tbody').append(bookRow);
+			        });
+					currentPageIndex = result.data.pageable.pageNumber;
+					pageCount = result.data.totalPages;
+					PaginateSetPageObjects();
+				}
+				
+		},
+		error : function(e) {
+			alert("ERROR: ", e);
+			console.log("ERROR: ", e);
+		}
+	});
+}
+	
+function moveFirstPage() { currentPageIndex = 0; displayBooks(); }
+function moveLastPage() { currentPageIndex = pageCount - 1; displayBooks(); }
+function movePreviousPage() { currentPageIndex--; displayBooks(); }
+function moveNextPage() { currentPageIndex++; displayBooks(); }
+
+displayBooks();
+
+function doCheck(status,bookId){
+	var select = '<select id="statusBook" onchange="changeStatusBook(this.value,'+bookId+')">';
+    if(status){
+    	 select += '<option value="1" selected="selected" style="color:red">Hiện</option>'+
+			'<option value="0" class="choose2">Ẩn</option>';
+    }else{
+    	select += '<option value="1" class="choose1">Hiện</option>'+
+		'<option value="0" selected="selected" class="choose2">Ẩn</option>';
+    }
+    select += '</select>';
+    return select;
+}
+
+function doCheck1(status,bookId){
+	var div = '<div class="btn-group">';
+    if(status){
+    	div += '<a class="btn dropdown-toggle btn-success optEnabled" data-toggle="dropdown" href="#">Hiện<span class="caret"></span></a>';
+    }else{
+    	div += '<a class="btn dropdown-toggle btn-danger optDisabled" data-toggle="dropdown" href="#">Ẩn<span class="caret"></span></a>';
+
+    }
+    div += '<ul class="dropdown-menu"><li><a value="1" onclick="changeStatusBook(this.value,'+bookId+')">Hiện</a></li><li><a value="0" onclick="changeStatusBook(this.value,'+bookId+')">Ẩn</a></li></ul></div>';
+    return div;
+}
+
+$('#sortBy').on('change', function() {
+	sortBy = this.value;
+	displayBooks();
+});
+
+function changeStatusBook(st, id){
+	$.ajax({
+	  url: window.location.origin+"/api/book/enabled/"+id,
+      type: 'POST',
+      cache: false,
+      data: {
+        status : st
+      },
+	});	
+	
+}
+</script>

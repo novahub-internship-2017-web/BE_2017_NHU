@@ -45,6 +45,10 @@ public class HomeController {
     return "userProfilePage";
   }
 	
+  @RequestMapping(value= {"/searchBookResult"})
+	  public String searchBookResult() {
+	    return "searchBookResult";
+  }
 	@RequestMapping(value= {"/usersListPage"})
   public String usersListPage() {
     return "usersListPage";

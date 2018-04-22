@@ -26,6 +26,10 @@ public class BookService{
     return bookRepository.findAll(pageable);
   }
   
+  public Page<Book> searchByTitle(String title,Pageable pageable){
+	  return bookRepository.searchByTitle(title, pageable);
+  }
+  
   public Book findById(int id) {
     return bookRepository.findById(id);
   }
