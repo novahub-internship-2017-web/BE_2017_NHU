@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+	<meta charset="utf-8" />
+	<title>Trang chủ</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+	<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+	<script src="/js/myJavascript.js"></script> 
+	<link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/formStyle.css"/>
+    <link rel="stylesheet" href="/css/myStyle.css"/>
+</head>
+<script>
+
+$(document).ready( function () {/* 
+	 $("#tableList tbody tr td .btn1").click(function(){
+		   //alert($(this).closest('tr').prop('rowIndex'));
+		   alert(1);
+		    $(this).closest('td').html(1);
+		  });  */
+	 $.ajax({
+		type : "GET",
+		url : window.location.origin+"/api/book/all?page=0&size=5",
+		success: function(result){
+				$.each(result.data.content, function(i, book){
+					var bookRow = '<tr>' +
+					'<td >'+ '<button id="btn'+book.id+'">A</button>' +'</td>' + 
+					'</tr>';
+					$("#btn"+book.id+"").click(function(){
+					    alert("The button was clicked.");
+					}); 
+					
+					$('#tableList tbody').append(bookRow);
+					
+					
+		        });
+				$("#btntest").click(function(){
+				    alert("The paragraph was clicked.");
+				}); 
+		},
+		error : function(e) {
+			alert("ERROR: ", e);
+			console.log("ERROR: ", e);
+		}
+	}); 
+	
+	 
+});
+
+function doCheck(status){
+	var div = '';
+    if(status){
+    	div += '<button class="btn1">A</button>';
+    }else{
+    	div += '<button class="btn1">A</button>';
+
+    }
+    return div;
+}
+function test(btn){
+	alert(btn);
+}
+</script>
+<body>
+	<table id="tableList" class="display">
+       <thead>
+            <tr>
+                <th>Tình trạng</th>
+            </tr>
+        </thead>
+        <tbody>
+         <tr>
+                <td ><button id = "btntest">A</button></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

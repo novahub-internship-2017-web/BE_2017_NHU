@@ -11,7 +11,7 @@ public class HomeController {
   public String header() {
     return "html/header";
   }
-  @RequestMapping(value= {"/","/booksList","/bookDetail/{id}"})
+  @RequestMapping(value= {"/","/booksList","/bookDetail/{id}","booksListByUser"})
   public String welcome() {
     return "home";
   }
@@ -29,7 +29,13 @@ public class HomeController {
   public String bookCreationPage() {
     return "bookCreationPage";
   }
-	@RequestMapping(value= {"/login"})
+  
+  @RequestMapping(value= {"/booksListPageOfUser"})
+  public String booksListPageOfUser() {
+    return "booksListPageOfUser";
+  }
+  
+  @RequestMapping(value= {"/login"})
   public String login(Authentication authentication) {
 	  //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 	  if(authentication!= null) {
@@ -40,27 +46,33 @@ public class HomeController {
 	  }
 	  else return "login";
   }
-	@RequestMapping(value= {"/userProfilePage"})
+  @RequestMapping(value= {"/userProfilePage"})
   public String userProfilePage() {
     return "userProfilePage";
   }
 	
   @RequestMapping(value= {"/searchBookResult"})
-	  public String searchBookResult() {
-	    return "searchBookResult";
+  public String searchBookResult() {
+	return "searchBookResult";
   }
-	@RequestMapping(value= {"/usersListPage"})
+  
+  @RequestMapping(value= {"/usersListPage"})
   public String usersListPage() {
     return "usersListPage";
   }
 	
-	@RequestMapping("/403")
+  @RequestMapping("/403")
   public String error() {
     return "403";
   }
 	
-	@RequestMapping("/formBook")
+  @RequestMapping("/formBook")
   public String formBook() {
     return "formBook";
+  }
+  
+  @RequestMapping("/test")
+  public String test() {
+    return "test";
   }
 }

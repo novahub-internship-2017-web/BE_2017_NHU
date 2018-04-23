@@ -1,3 +1,4 @@
+<p class="msgSearch error"></p>
 <table id="tableList" class="display">
        <thead>
             <tr>
@@ -62,12 +63,13 @@ function displayBooks(){
 		type : "GET",
 		url : window.location.origin+"/api/book/search?page="+currentPageIndex+"&size="+pageSize+"&keyword="+keyword,
 		success: function(result){
+			$('.msgSearch').html(result.status);
 				if(result.data === null){
 					$('#tableList').html("");
-					$('.pagination').html(result.status);
+					$('.pagination').html("");
 					
 				}else{
-					$('.notiMsg').html(result.status);
+					
 					$('#tableList tbody').html("");
 					$.each(result.data.content, function(i, book){
 						var bookRow = '<tr>' +
@@ -79,7 +81,6 @@ function displayBooks(){
 						'<td><a title="Chi tiết" href="javascript:void(0)" '+
 							'onclick="getBookDetail('+book.id+')"> Xem</a></td>' +
 						'<td>'+ doCheck(book.enabled,book.id) +'</td>' + 
-						'<td id="rowBook'+book.id+'">'+ doCheck1(book.enabled,book.id) +'</td>' + 
 						'<td><a title="Xóa" onclick="deleteBook('+ book.id+')">Xóa</a></td></tr>';
 						$('#tableList tbody').append(bookRow);
 			        });
@@ -114,18 +115,6 @@ function doCheck(status,bookId){
     }
     select += '</select>';
     return select;
-}
-
-function doCheck1(status,bookId){
-	var div = '<div class="btn-group">';
-    if(status){
-    	div += '<a class="btn dropdown-toggle btn-success optEnabled" data-toggle="dropdown" href="#">Hiện<span class="caret"></span></a>';
-    }else{
-    	div += '<a class="btn dropdown-toggle btn-danger optDisabled" data-toggle="dropdown" href="#">Ẩn<span class="caret"></span></a>';
-
-    }
-    div += '<ul class="dropdown-menu"><li><a value="1" onclick="changeStatusBook(this.value,'+bookId+')">Hiện</a></li><li><a value="0" onclick="changeStatusBook(this.value,'+bookId+')">Ẩn</a></li></ul></div>';
-    return div;
 }
 
 $('#sortBy').on('change', function() {

@@ -18,8 +18,8 @@ public class BookService{
   @Autowired
   private BookRepository bookRepository;
   
-  public List<Book> findAllByEnabled(int enabled){
-    return bookRepository.findAllByEnabled(enabled);
+  public Page<Book> findAllByEnabled(int enabled,Pageable pageable){
+    return bookRepository.findAllByEnabled(enabled,pageable);
   }
   
   public Page<Book> findAll(Pageable pageable){
@@ -43,7 +43,7 @@ public class BookService{
     bookRepository.save(book);
   }
   
-  public List<Book> findAllByUserId(int userId){
-    return bookRepository.findAllByUserId(userId);
+  public Page<Book> findAllByUserId(int userId,Pageable pageable){
+    return bookRepository.findAllByUserId(userId,pageable);
   } 
 }

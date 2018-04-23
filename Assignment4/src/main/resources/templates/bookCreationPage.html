@@ -32,6 +32,7 @@ function addBook(){
 		data : JSON.stringify(newBook),
 		dataType : 'json',
 		success: function(result){
+			 $('#bookCreationDiv').modal('hide');
 			 $('.notiMsg').html(result.status);
 			 setTimeout(function(){ $('.notiMsg').html("")}, 5000);
 			 var bookRow = '<tr>' +

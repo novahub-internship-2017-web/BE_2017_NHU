@@ -17,15 +17,13 @@
 </head>
 <script>
 $(document).ready( function () {
-	var roleUser = "isGuest"; 
-	if(!($('#checkRoleUser').val() === undefined)){
-		roleUser = $('#checkRoleUser').val();
-	}
+	
 	var url = window.location.href;
 	var rootUrl = window.location.origin;
 	var home = window.location.origin+"/";
 	var booksList = window.location.origin+"/booksList";
 	var bookDetail = "";
+	var booksListByUser = window.location.origin+"/booksListByUser";
 	var check = url.search("bookDetail");
 	if(check != -1){
 		bookDetail = url;
@@ -44,6 +42,11 @@ $(document).ready( function () {
 	    case bookDetail:
 	        var bookId = bookDetail.substring(url.lastIndexOf('/') + 1);
 	    	getBookDetail(bookId);
+	        break;
+	    case booksListByUser:
+	    	$.ajax({url:window.location.origin+'/booksListPageOfUser',success:function(result){
+	  	      $("#Content").html(result);
+	  	    }});
 	        break;
 	    default:
 	    	alert("error");
@@ -90,18 +93,17 @@ function searchBook(){
 		<a class="btn btn-md btn-default" href="/booksList">
 			<span>Toàn bộ sách</span>
         </a> 
-        <a class="btn btn-md btn-primary" href="javascript:void(0)" onclick="loadBookForm()" 
+        <a class="btn btn-md btn-primary" href="/booksListByUser" sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')" >
+			<span>Sách của bạn</span>
+        </a> 
+        <a class="btn btn-md btn-default" href="javascript:void(0)" onclick="loadBookForm()" 
 		   sec:authorize="hasAnyRole('USER','ADMIN','SUPER_ADMIN')">Thêm sách mới
         </a>
-         <a class="btn btn-md btn-default" href="javascript:void(0)" onclick="censorshipBook()" sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')">
+         <!-- <a class="btn btn-md btn-default" href="javascript:void(0)" onclick="censorshipBook()" sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')">
  		 	<span>Duyệt sách</span>
-         </a>
-         
-         <a class="btn btn-md btn-primary" href="javascript:void(0)" onclick="getBooksListByUser()" sec:authorize="hasAnyRole('USER','ADMIN','SUPER_ADMIN')">
- 		 	<span>Sách của bạn</span>
-         </a>
-         <a class="btn btn-md btn-default" href="javascript:void(0)" onclick="loadUsersList()" sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')" >
- 		 			<span>Quản lý User</span>
+         </a> -->
+         <a class="btn btn-md btn-primary" href="javascript:void(0)" onclick="loadUsersList()" sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')" >
+ 		 	<span>Quản lý User</span>
          </a>
          <p class="notiMsg error"></p>
 	</div>

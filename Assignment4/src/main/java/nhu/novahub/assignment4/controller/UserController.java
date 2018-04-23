@@ -70,13 +70,13 @@ public class UserController {
 }
 
   @PostMapping("/changePassword")
-  public Response changePass( Principal principal,@RequestParam("oldPass") String oldPass,
+  public Response changePass(@RequestParam("oldPass") String oldPass,
                      @RequestParam("newPass") String newPass,
                      @RequestParam("confirmPass") String confirmPass) {
 	  Response response = new Response();
     try {
-      String email = principal.getName();
-      User user = userService.findByEmail(email);
+      authentication = SecurityContextHolder.getContext().getAuthentication();
+      User user =  userService.findByEmail(authentication.getName());
       if(passwordEncoder.matches(oldPass, user.getPassword())) {
     	  if(newPass.equals(confirmPass)) {
     		user.setPassword(passwordEncoder.encode(newPass));

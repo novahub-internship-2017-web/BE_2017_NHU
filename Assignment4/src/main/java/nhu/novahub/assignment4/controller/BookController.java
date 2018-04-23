@@ -51,17 +51,36 @@ public class BookController {
   }
   @GetMapping(value= {"/all"})
   public Response getAll(Pageable pageable) {
-	  Page<Book> books = bookService.findAll(pageable);
+	  authentication = SecurityContextHolder.getContext().getAuthentication();
 	  Response response = new Response();
-	  if(books.hasContent()) {
-		 response.setData(books);
-		 response.setStatus("Có dữ liệu");
-	  }else {
-		  response.setStatus("Dữ liệu trống");
-	  }
+	  if(authentication.toString().contains("ROLE_ADMIN") || 
+		 authentication.toString().contains("ROLE_SUPER_ADMIN") ) {
+        try {
+        	Page<Book> books = bookService.findAll(pageable);
+        	response.setData(books);
+   		 	response.setStatus("Có dữ liệu");
+		}catch(Exception e) {
+			
+		}
+	    }else {
+	    	Page<Book> books = bookService.findAllByEnabled(1,pageable);  
+	    	response.setData(books);
+			response.setStatus("Có dữ liệu");
+	    }
+	  
     return response;
   }
   
+  @GetMapping("/all/byUser")
+  public Response getAllByIdUser(Pageable pageable) {
+	authentication = SecurityContextHolder.getContext().getAuthentication();
+	Response response = new Response();
+    User currentUser =  userService.findByEmail(authentication.getName());
+    int idCurrentUser = currentUser.getId();
+    Page<Book> books = bookService.findAllByUserId(idCurrentUser,pageable);
+    response.setData(books);
+    return response;
+  }
   
   @GetMapping(value= {"/search"})
   public Response search(@RequestParam String keyword,
@@ -76,28 +95,8 @@ public class BookController {
 	  }
     return response;
   }
-  
-  @GetMapping("/all/enabled")
-  public List<Book> getAllEnabledBooks() {
-    return bookService.findAllByEnabled(1);
-  }
-  
-  @GetMapping("/all/disabled")
-  public List<Book> getAllDisabledBooks() {
-    return bookService.findAllByEnabled(0);
-  }
-  
-  @GetMapping("/all/{userId}")
-  public List<Book> getAllByIdUser1(@PathVariable(value = "userId") int userId) {
-    return bookService.findAllByUserId(userId);
-  }
-  
-  @GetMapping("/all/byUser")
-  public List<Book> getAllByIdUser( Principal principal) {
-    User currentUser =  userService.findByEmail(principal.getName());
-    int idCurrentUser = currentUser.getId();
-    return bookService.findAllByUserId(idCurrentUser);
-  }
+     
+ 
   
   @GetMapping("/{id}")
   public Book getBookById(@PathVariable(value = "id") int bookId) {
@@ -105,15 +104,25 @@ public class BookController {
   }
   
   @PostMapping("/enabled/{id}")
-  public void changeEnabled(@PathVariable(value = "id") int bookId,@RequestParam int status,
+  public Response changeEnabled(@PathVariable(value = "id") int bookId,@RequestParam int status,
             Principal principal) {
-    User currentUser =  userService.findByEmail(principal.getName());
-    String currentUserRole = roleService.findById(currentUser.getId()).getName();
-    if(currentUserRole.contains("ADMIN")) {
-      Book book = bookService.findById(bookId);
-      book.setEnabled(status);
-      bookService.updateBook(book);
+    authentication = SecurityContextHolder.getContext().getAuthentication();
+    Response response  = new Response();
+    if(authentication.toString().contains("ROLE_ADMIN") || 
+   		 authentication.toString().contains("ROLE_SUPER_ADMIN") ) {
+    	Book book = bookService.findById(bookId);
+        book.setEnabled(status);
+        try {
+        	bookService.updateBook(book);
+        	response.setStatus("Bạn vừa thay đổi trạng thái của sách");
+		}catch(Exception e) {
+			response.setStatus("Lỗi! Không thay đổi được");
+		}
+    }else {
+    	response.setStatus("Bạn không có quyền thể thay đổi trạng thái");
     }
+   
+    return response;
   }
   
   @PutMapping("/update/{id}")
@@ -122,7 +131,9 @@ public class BookController {
     User currentUser =  userService.findByEmail(principal.getName());
     int idCurrentUser = currentUser.getId(); 
     Book oldBook = bookService.findById(id);
-    if(idCurrentUser == oldBook.getUserId()) {
+    if(authentication.toString().contains("ROLE_ADMIN") || 
+       authentication.toString().contains("ROLE_SUPER_ADMIN") || (
+       authentication.toString().contains("ROLE_USER") && oldBook.getUserId() == idCurrentUser)) {
       oldBook.setTitle(updateBook.getTitle());
       oldBook.setAuthor(updateBook.getAuthor());
       oldBook.setDescription(updateBook.getDescription());
@@ -138,9 +149,13 @@ public class BookController {
   @DeleteMapping("/delete/{id}")
   public Response deleteBook(@PathVariable(value = "id") int bookId) {
 	authentication = SecurityContextHolder.getContext().getAuthentication();
+	User currentUser =  userService.findByEmail(authentication.getName());
+	int idCurrentUser = currentUser.getId();
+	Book book = bookService.findById(bookId);
 	Response response = new Response();
-	if(authentication.toString().contains("ROLE_ADMIN")) {
-		Book book = bookService.findById(bookId);
+	if(authentication.toString().contains("ROLE_ADMIN") || 
+	   authentication.toString().contains("ROLE_SUPER_ADMIN") || (
+	   authentication.toString().contains("ROLE_USER") && book.getUserId() == idCurrentUser)) {
 	    book.setRemoved(1);
 	    try {
 	    	bookService.updateBook(book);
@@ -153,5 +168,4 @@ public class BookController {
 	  }
     return response;
   }
-  
 }

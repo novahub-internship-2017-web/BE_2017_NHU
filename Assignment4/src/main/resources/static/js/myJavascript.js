@@ -52,47 +52,18 @@
 //get books list of each user
 function getBooksListByUser(){
 	window.history.pushState('string', '', window.location.origin+'/booksListByUser');
-		$.ajax({
-			type : "GET",
-			url : window.location.origin+"/api/book/all/byUser",
-			success: function(result){
-				if(result.length > 0){
-					$('#Content').html('<table id="tableList"><thead><tr>'+
-							'<th>Mã số</th>'+
-							'<th>Tiêu đề</th>'+
-							'<th>Tác giả</th>'+
-							'<th>Ngày tạo</th>'+
-							'<th>Ngày cập nhật</th>'+
-							'<th>Tác vụ</th>'+
-							'</tr></thead>'+
-							'<tbody></tbody></table>');
-					$.each(result, function(i, book){
-						var bookRow = '<tr>' +
-							'<td>' + book.id + '</td>' +
-							'<td>' + book.title + '</td>' +
-							'<td>' + book.author + '</td>' +
-							'<td>' + book.createdAt + '</td>' +
-							'<td>' + book.updatedAt + '</td>' +
-							'<td><a title="Chi tiết" href="javascript:void(0)" onclick="getBookDetail('+book.id+')"> Xem</a>';
-							bookRow += '<a title="Xóa" onclick="getBookDetail('+book.id+')"> Xóa</a>';
-							bookRow +='</td></tr>';
-						$('#tableList tbody').append(bookRow);
-						
-			        });
-				}else{
-					$('#Content').html('Không có dữ liệu');
-				}
-			},
-			error : function(e) {
-				alert("ERROR: ", e);
-				console.log("ERROR: ", e);
-			}
-		});	
+	$.ajax({url:window.location.origin+'/booksListPageOfUser',success:function(result){
+	      $("#Content").html(result);
+	    }});
 	}
 
 
 //get book's detail by bookId
 function getBookDetail(bookId){
+	var roleUser = "isGuest"; 
+	if(!($('#checkRoleUser').val() === undefined)){
+		roleUser = $('#checkRoleUser').val();
+	}
 	$.ajax({url:window.location.origin+'/bookDetailPage',success:function(result){
       $("#Content").html(result);
     }});
@@ -126,15 +97,15 @@ function getBookDetail(bookId){
 				$('#editBookForm').find('#title').val(result.title);
 				$('#editBookForm').find('#author').val(result.author);
 				$('#editBookForm').find('#description').val(result.description);
-				/*if(idUser == result.userId){
-					document.getElementById('buttonEditBook').style.display = 'block';
-				}*/
+				if(roleUser === 'isAdmin' || roleUser === 'isSuperAdmin'){
+					  document.getElementById('buttonEditBook').style.display = 'block';
+				}
 				$.ajax({
 					type : "GET",
 					url : window.location.origin+"/api/user/getCurrentUser",
 					success: function(data){
-						if(data.id == result.userId){
-							document.getElementById('buttonEditBook').style.display = 'block';
+						if(data.id == result.userId ){
+						  document.getElementById('buttonEditBook').style.display = 'block';
 						}
 					},
 					error : function(ex) {
@@ -214,8 +185,10 @@ function deleteBook(bookId){
 			type : "DELETE",
 			url : window.location.origin+"/api/book/delete/"+bookId,
 			success: function(result){
-				 $('.notiMsg').html(result.status);
-				 setTimeout(function(){ $('.notiMsg').html("")}, 5000);
+				$('.notiMsg').html(result.status);
+				setTimeout(function(){ $('.notiMsg').html("")}, 5000);
+				getBooksListByUser();
+				 
 			},
 			error : function(e) {
 				alert("ERROR: ", e);

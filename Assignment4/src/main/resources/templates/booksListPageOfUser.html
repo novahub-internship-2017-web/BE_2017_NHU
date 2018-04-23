@@ -1,12 +1,3 @@
-
-<div>
-	Sắp xếp theo : 
-	<select id="sortBy">
-		<option value="id">Mã sách</option>
-		<option value="title">Tiêu đề</option>
-		<option value="author">Tác giả</option>
-	</select>
-</div>
 <table id="tableList" class="display">
        <thead>
             <tr>
@@ -16,8 +7,8 @@
                 <th>Thời gian tạo</th>
                 <th>Thời gian cập nhật</th>
                 <th>Chi tiết</th>
-                <th sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')">Tình trạng</th>
-                <th sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')">Xóa</th>
+                <th>Tình trạng</th>
+                <th>Xóa</th>
             </tr>
         </thead>
         <tbody>
@@ -40,7 +31,6 @@ var roleUser = "isGuest";
 if(!($('#checkRoleUser').val() === undefined)){
 	roleUser = $('#checkRoleUser').val();
 }
-
 var pageSize = 5;
 var currentPageIndex = 0;
 var pageCount = 0;
@@ -70,31 +60,39 @@ function PaginateSetPageObjects() {
 }
 
 function displayBooks(){
+	var keyword = $('#keyword').val();
 	$.ajax({
 		type : "GET",
-		url : window.location.origin+"/api/book/all?page="+currentPageIndex+"&size="+pageSize+"&sort="+sortBy,
+		url : window.location.origin+"/api/book/all/byUser?page="+currentPageIndex+"&size="+pageSize+"&keyword="+keyword,
 		success: function(result){
-				$('#tableList tbody').html("");
-				$.each(result.data.content, function(i, book){
-					var bookRow = '<tr>' +
-					'<td>' + book.id + '</td>' +
-					'<td>' + book.title + '</td>' +
-					'<td>' + book.author + '</td>' +
-					'<td>' + book.createdAt + '</td>' +
-					'<td>' + book.updatedAt + '</td>' +
-					'<td><a title="Chi tiết" href="javascript:void(0)" '+
-						'onclick="getBookDetail('+book.id+')"> Xem</a></td>' ;
-					if(roleUser === 'isAdmin' || roleUser === 'isSuperAdmin'){
-						bookRow += '<td>'+ doCheck(book.enabled,book.id) +'</td>' + 
-						'<td><a title="Xóa" onclick="deleteBook('+ book.id+')">Xóa</a></td>';
-					}	
-					bookRow +='</tr>';
-					$('#tableList tbody').append(bookRow);
-		        });
-				currentPageIndex = result.data.pageable.pageNumber;
-				pageCount = result.data.totalPages;
-				PaginateSetPageObjects();
-		},
+			$('#tableList tbody').html("");
+			$.each(result.data.content, function(i, book){
+				var bookRow = '<tr>' +
+				'<td>' + book.id + '</td>' +
+				'<td>' + book.title + '</td>' +
+				'<td>' + book.author + '</td>' +
+				'<td>' + book.createdAt + '</td>' +
+				'<td>' + book.updatedAt + '</td>' +
+				'<td><a title="Chi tiết" href="javascript:void(0)" '+
+					'onclick="getBookDetail('+book.id+')"> Xem</a></td>' ;
+				if(roleUser === 'isAdmin' || roleUser === 'isSuperAdmin'){
+					bookRow += '<td>'+ doCheck(book.enabled,book.id) +'</td>';
+				}	
+				if(roleUser === 'isUser'){
+					if(book.enabled == 1){
+						bookRow += '<td><span class="label label-success">Hiện</span></td>';
+					}else{
+						bookRow += '<td><span class="label label-danger">Bị Khóa</span></td>';
+					}
+				}
+				bookRow += '<td><a title="Xóa" onclick="deleteBook('+ book.id+')">Xóa</a></td>';
+				bookRow +='</tr>';
+				$('#tableList tbody').append(bookRow);
+	        });
+			currentPageIndex = result.data.pageable.pageNumber;
+			pageCount = result.data.totalPages;
+			PaginateSetPageObjects();
+	},
 		error : function(e) {
 			alert("ERROR: ", e);
 			console.log("ERROR: ", e);
@@ -122,7 +120,6 @@ function doCheck(status,bookId){
     return select;
 }
 
-
 $('#sortBy').on('change', function() {
 	sortBy = this.value;
 	displayBooks();
@@ -136,10 +133,6 @@ function changeStatusBook(st, id){
       data: {
         status : st
       },
-      success: function(result){
-      	$('.notiMsg').html(result.status);
-  		setTimeout(function(){ $('.notiMsg').html("")}, 5000);
-  	  }
 	});	
 	
 }
