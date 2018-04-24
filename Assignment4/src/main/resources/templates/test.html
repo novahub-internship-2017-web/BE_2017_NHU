@@ -17,26 +17,28 @@
 </head>
 <script>
 
-$(document).ready( function () {/* 
-	 $("#tableList tbody tr td .btn1").click(function(){
-		   //alert($(this).closest('tr').prop('rowIndex'));
-		   alert(1);
-		    $(this).closest('td').html(1);
-		  });  */
+$(document).ready( function () {
+	 $("#tableList tbody").on("click",".testbtn",function(){
+		    //$(this).closest('td').html(1);
+		    var cells = $(this).closest('tr').children('td');
+		    alert(cells);
+		  }); 
 	 $.ajax({
 		type : "GET",
 		url : window.location.origin+"/api/book/all?page=0&size=5",
 		success: function(result){
 				$.each(result.data.content, function(i, book){
-					var bookRow = '<tr>' +
-					'<td >'+ '<button id="btn'+book.id+'">A</button>' +'</td>' + 
-					'</tr>';
-					$("#btn"+book.id+"").click(function(){
-					    alert("The button was clicked.");
-					}); 
-					
+					var bookRow='';
+					if(book.enabled == 1){
+						bookRow += '<tr><td>'+book.id+'</td>' +	'<td >'+ 
+						'<button class="changeEnabledBtn btn btn-success"> Hiện </button>' +'</td>' + 
+						'</tr>';
+					}else{
+						bookRow += '<tr><td>'+book.id+'</td>' +'<td >'+ 
+						'<button class="changeEnabledBtn btn btn-danger"> Ẩn </button>' +'</td>' + 
+						'</tr>';
+					}
 					$('#tableList tbody').append(bookRow);
-					
 					
 		        });
 				$("#btntest").click(function(){
@@ -62,20 +64,34 @@ function doCheck(status){
     }
     return div;
 }
-function test(btn){
-	alert(btn);
+function changeStatusBook(st, id){
+	$.ajax({
+	  url: window.location.origin+"/api/book/enabled/"+id,
+      type: 'POST',
+      cache: false,
+      data: {
+        status : st
+      },
+      success: function(result){
+      	$('.notiMsg').html(result.status);
+  		setTimeout(function(){ $('.notiMsg').html("")}, 5000);
+  	  }
+	});	
+	
 }
 </script>
 <body>
 	<table id="tableList" class="display">
        <thead>
             <tr>
+            	<th>ID</th>
                 <th>Tình trạng</th>
             </tr>
         </thead>
         <tbody>
          <tr>
-                <td ><button id = "btntest">A</button></td>
+         	<td>id</td>
+            <td ><button class="testbtn" >A</button></td>
             </tr>
         </tbody>
     </table>

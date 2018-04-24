@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,7 +32,7 @@ public class UserController {
   RoleService roleService;
   
   Authentication authentication;
-  private PasswordEncoder passwordEncoder;
+  PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
   
   Logger logger = LoggerFactory.getLogger(this.getClass());
   
@@ -77,7 +78,8 @@ public class UserController {
     try {
       authentication = SecurityContextHolder.getContext().getAuthentication();
       User user =  userService.findByEmail(authentication.getName());
-      if(passwordEncoder.matches(oldPass, user.getPassword())) {
+      String dbPass = user.getPassword();
+      if(passwordEncoder.matches(oldPass, dbPass)) {
     	  if(newPass.equals(confirmPass)) {
     		user.setPassword(passwordEncoder.encode(newPass));
 	        userService.updateUser(user);
