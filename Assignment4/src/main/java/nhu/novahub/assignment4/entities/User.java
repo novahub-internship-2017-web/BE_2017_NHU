@@ -10,7 +10,6 @@ public class User {
 	
   @Id
   @Column(name = "id")
-  @GeneratedValue(strategy = GenerationType.AUTO)
   private int id;
   
   @Column(name = "email")
@@ -24,6 +23,9 @@ public class User {
   
   @Column(name = "role_id")
   private int roleId;
+  
+  @Transient
+  private String confirmPassword;
   
   public User(){
 
@@ -74,5 +76,13 @@ public class User {
   
   public void setRoleId(int roleId) {
     this.roleId = roleId;
+  }
+  
+  public String getConfirmPassword() {
+	return confirmPassword;
+  }
+
+  public void setConfirmPassword(String confirmPassword) {
+	this.confirmPassword = confirmPassword;
   }
 }

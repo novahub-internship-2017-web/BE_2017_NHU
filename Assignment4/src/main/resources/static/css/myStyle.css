@@ -56,6 +56,11 @@
     color: red;
     padding-top:10px;
   }
+  
+#successMsg {
+    color: #4266ce;
+    padding-top:10px;
+  }
 /* JSON PAGE  */  
 
 #statusBook .choose1{

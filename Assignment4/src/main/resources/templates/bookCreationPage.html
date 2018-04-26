@@ -9,8 +9,7 @@ $(document).ready(function() {
 	    	title:"Tiêu đề không được trống",
 	    	author: " Tác giả không được trống"
 	    }
-    });
-    $('#bookCreationDiv').modal('show');
+    }); $('#bookCreationDiv').modal('show');
 });
 
 $("#bookCreationForm").submit(function(event) {
@@ -33,20 +32,9 @@ function addBook(){
 		dataType : 'json',
 		success: function(result){
 			 $('#bookCreationDiv').modal('hide');
-			 $('.notiMsg').html(result.status);
-			 setTimeout(function(){ $('.notiMsg').html("")}, 5000);
-			 var bookRow = '<tr>' +
-				'<td>' + result.data.id + '</td>' +
-				'<td>' + result.data.title + '</td>' +
-				'<td>' + result.data.author + '</td>' +
-				'<td>' + result.data.createdAt + '</td>' +
-				'<td>' + result.data.updatedAt + '</td>' +
-				'<td><a title="Chi tiết" href="javascript:void(0)" '+
-					'onclick="getBookDetail('+result.data.id+')"> Xem</a></td>' +
-				'<td>'+ doCheck(result.data.enabled,result.data.id) +'</td>' + 
-				'<td id="rowBook'+result.data.id+'">'+ doCheck1(result.data.enabled,result.data.id) +'</td>' + 
-				'<td><a title="Xóa" onclick="deleteBook('+ result.data.id+')">Xóa</a></td></tr>';
-				$('#tableList tbody').append(bookRow);
+			 $('#successMsg').html(result.status);
+			 setTimeout(function(){ $('#successMsg').html("")}, 5000);
+			 displayBooks();
 			 
 			
 		 },
@@ -82,8 +70,8 @@ function addBook(){
 			   <tr>
 			    <td></td>
 			    <td>
-			    	<button type="submit" class="btn btn-primary ">Cập nhật</button>
-	              <button type="submit" class="btn btn-danger btn-default" data-dismiss="modal">
+			    	<button type="submit" class="btn btn-primary" id="bookFormBtn">Cập nhật</button>
+	              	<button type="submit" class="btn btn-danger btn-default" data-dismiss="modal">
 	              		Hủy</button>
 			    </td>
 			   </tr>

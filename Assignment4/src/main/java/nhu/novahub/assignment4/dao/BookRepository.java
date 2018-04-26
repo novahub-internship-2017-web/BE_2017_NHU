@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import nhu.novahub.assignment4.entities.Book;
 
 public interface BookRepository extends CrudRepository<Book , Long>{
-  
+  @Query("select b from Book b where b.removed=0")
   public Page<Book> findAll(Pageable pageable);
   
   public Book findById(int id);

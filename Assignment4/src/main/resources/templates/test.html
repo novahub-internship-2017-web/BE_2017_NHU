@@ -18,26 +18,18 @@
 <script>
 
 $(document).ready( function () {
-	 $("#tableList tbody").on("click",".testbtn",function(){
+	 $("#tableList tbody").on("click",".changeEnabledBtn",function(){
 		    //$(this).closest('td').html(1);
-		    var cells = $(this).closest('tr').children('td');
-		    alert(cells);
+		 var text = $(this).closest('td').parent().find('.table_status').text();
+		 var v = $(this).val();
+		 alert(text+","+v);
 		  }); 
 	 $.ajax({
 		type : "GET",
-		url : window.location.origin+"/api/book/all?page=0&size=5",
+		url : window.location.origin+"/api/book/all?page=1&size=5",
 		success: function(result){
 				$.each(result.data.content, function(i, book){
-					var bookRow='';
-					if(book.enabled == 1){
-						bookRow += '<tr><td>'+book.id+'</td>' +	'<td >'+ 
-						'<button class="changeEnabledBtn btn btn-success"> Hiện </button>' +'</td>' + 
-						'</tr>';
-					}else{
-						bookRow += '<tr><td>'+book.id+'</td>' +'<td >'+ 
-						'<button class="changeEnabledBtn btn btn-danger"> Ẩn </button>' +'</td>' + 
-						'</tr>';
-					}
+					var bookRow='<tr><td class="table_id">'+book.id+'</td>'+displayStatus(book.enabled,book.id)+'</tr>';
 					$('#tableList tbody').append(bookRow);
 					
 		        });
@@ -50,19 +42,34 @@ $(document).ready( function () {
 			console.log("ERROR: ", e);
 		}
 	}); 
-	
-	 
 });
-
-function doCheck(status){
-	var div = '';
+function doCheck(status,bookId){
+	var select = '<select id="statusBook" onchange="changeStatusBook(this.value,'+bookId+')">';
     if(status){
-    	div += '<button class="btn1">A</button>';
+    	 select += '<option value="1" selected="selected" style="color:red">Hiện</option>'+
+			'<option value="0" class="choose2">Ẩn</option>';
     }else{
-    	div += '<button class="btn1">A</button>';
+    	select += '<option value="1" class="choose1">Hiện</option>'+
+		'<option value="0" selected="selected" class="choose2">Ẩn</option>';
+    }
+    select += '</select>';
+    return select;
+}
+
+function displayStatus(status,bookId){
+	var btnStatus = '';
+	
+    if(status){
+    	btnStatus += '<td class="table_status">'+ 
+		'<button class="changeEnabledBtn btn btn-success" value="1"> Hiện </button>' +'</td>' + 
+		'';
+    }else{
+    	btnStatus += '<td class="table_status">'+ 
+		'<button class="changeEnabledBtn btn btn-danger" value="0"> Ẩn </button>' +'</td>' + 
+		'';
 
     }
-    return div;
+    return btnStatus;
 }
 function changeStatusBook(st, id){
 	$.ajax({
@@ -84,14 +91,14 @@ function changeStatusBook(st, id){
 	<table id="tableList" class="display">
        <thead>
             <tr>
-            	<th>ID</th>
+            	<th>id</th>
                 <th>Tình trạng</th>
             </tr>
         </thead>
         <tbody>
          <tr>
-         	<td>id</td>
-            <td ><button class="testbtn" >A</button></td>
+         	<th class="table_id">id</th>
+            <td class="table_status"><button class="changeEnabledBtn" >A</button></td>
             </tr>
         </tbody>
     </table>

@@ -35,9 +35,14 @@ public class BookController {
   Authentication authentication;
   
   @PostMapping("/add")
-  public Response addBook(@RequestBody Book newBook,Principal principal) {
-    User currentUser =  userService.findByEmail(principal.getName());
+  public Response addBook(@RequestBody Book newBook) {
+	authentication = SecurityContextHolder.getContext().getAuthentication();
+    User currentUser =  userService.findByEmail(authentication.getName());
     newBook.setUserId(currentUser.getId());
+    if(authentication.toString().contains("ROLE_ADMIN") || 
+   		 authentication.toString().contains("ROLE_SUPER_ADMIN") ) {
+    	newBook.setEnabled(1);
+    }
     Date timeUpdate=new Date(System.currentTimeMillis()); 
     newBook.setCreatedAt(timeUpdate);
     newBook.setUpdatedAt(timeUpdate);
@@ -107,6 +112,11 @@ public class BookController {
     if(authentication.toString().contains("ROLE_ADMIN") || 
    		 authentication.toString().contains("ROLE_SUPER_ADMIN") ) {
     	Book book = bookService.findById(bookId);
+    	if(status == 1) {
+    		status = 0; //disabled
+    	}else {
+    		status = 1; //enabled
+    	}
         book.setEnabled(status);
         try {
         	bookService.updateBook(book);
@@ -117,7 +127,7 @@ public class BookController {
     }else {
     	response.setStatus("Bạn không có quyền thể thay đổi trạng thái");
     }
-   
+    response.setData( bookService.findById(bookId));
     return response;
   }
   

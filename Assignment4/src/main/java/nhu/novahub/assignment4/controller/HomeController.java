@@ -11,7 +11,7 @@ public class HomeController {
   public String header() {
     return "html/header";
   }
-  @RequestMapping(value= {"/","/booksList","/bookDetail/{id}","booksListByUser"})
+  @RequestMapping(value= {"/","booksList","/booksListByUser"})
   public String welcome() {
     return "home";
   }
@@ -30,9 +30,9 @@ public class HomeController {
     return "bookCreationPage";
   }
   
-  @RequestMapping(value= {"/booksListPageOfUser"})
-  public String booksListPageOfUser() {
-    return "booksListPageOfUser";
+  @RequestMapping(value= {"/bookEditionPage"})
+  public String bookEditionPage() {
+    return "bookEditionPage";
   }
   
   @RequestMapping(value= {"/login"})
@@ -66,9 +66,9 @@ public class HomeController {
     return "403";
   }
 	
-  @RequestMapping("/formBook")
-  public String formBook() {
-    return "formBook";
+  @RequestMapping("/register")
+  public String register() {
+    return "register";
   }
   
   @RequestMapping("/test")

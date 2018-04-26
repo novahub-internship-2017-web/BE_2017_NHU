@@ -15,53 +15,6 @@
     <link rel="stylesheet" href="/css/formStyle.css"/>
     <link rel="stylesheet" href="/css/myStyle.css"/>
 </head>
-<script>
-$(document).ready( function () {
-	
-	var url = window.location.href;
-	var rootUrl = window.location.origin;
-	var home = window.location.origin+"/";
-	var booksList = window.location.origin+"/booksList";
-	var bookDetail = "";
-	var booksListByUser = window.location.origin+"/booksListByUser";
-	var check = url.search("bookDetail");
-	if(check != -1){
-		bookDetail = url;
-	}
-	switch(url) {
-	    case home:
-	    	$.ajax({url:window.location.origin+'/booksListPage',success:function(result){
-	    	      $("#Content").html(result);
-	    	    }});
-	        break;
-	    case booksList:
-	    	$.ajax({url:window.location.origin+'/booksListPage',success:function(result){
-	    	      $("#Content").html(result);
-	    	    }});
-	        break;
-	    case bookDetail:
-	        var bookId = bookDetail.substring(url.lastIndexOf('/') + 1);
-	    	getBookDetail(bookId);
-	        break;
-	    case booksListByUser:
-	    	$.ajax({url:window.location.origin+'/booksListPageOfUser',success:function(result){
-	  	      $("#Content").html(result);
-	  	    }});
-	        break;
-	    default:
-	    	alert("error");
-	        break;
-	}
-});
-
-function searchBook(){
-	$.ajax({url:window.location.origin+'/searchBookResult',success:function(result){
-	      $("#Content").html(result);
-	    }});
-}
-
-
-</script>
 <body>
 	<input id="checkRoleUser" type="hidden" sec:authorize="hasRole('ADMIN')" value="isAdmin"/>
 	<input id="checkRoleUser" type="hidden" sec:authorize="hasRole('SUPER_ADMIN')" value="isSuperAdmin"/>
@@ -90,27 +43,31 @@ function searchBook(){
 		</div>
 	</div>
 	<div class="container main-container" id="menubar">
+		<a class="btn btn-md btn-primary" href="/booksListByUser" 
+			sec:authorize="hasAnyRole('USER','ADMIN','SUPER_ADMIN')" >
+			<span>Sách của bạn</span>
+        </a> 
 		<a class="btn btn-md btn-default" href="/booksList">
 			<span>Toàn bộ sách</span>
         </a> 
-        <a class="btn btn-md btn-primary" href="/booksListByUser" sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')" >
-			<span>Sách của bạn</span>
-        </a> 
-        <a class="btn btn-md btn-default" href="javascript:void(0)" onclick="loadBookForm()" 
+        
+        <a class="btn btn-md btn-primary" href="javascript:void(0)" onclick="loadBookForm()" 
 		   sec:authorize="hasAnyRole('USER','ADMIN','SUPER_ADMIN')">Thêm sách mới
         </a>
-         <!-- <a class="btn btn-md btn-default" href="javascript:void(0)" onclick="censorshipBook()" sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')">
- 		 	<span>Duyệt sách</span>
-         </a> -->
-         <a class="btn btn-md btn-primary" href="javascript:void(0)" onclick="loadUsersList()" sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')" >
+         <a class="btn btn-md btn-default" href="javascript:void(0)" onclick="loadUsersList()" 
+         	sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')" >
  		 	<span>Quản lý User</span>
          </a>
          <p class="notiMsg error"></p>
+         <p id="successMsg"></p>
 	</div>
 	<div class="container main-container">
 		<div class="panel panel-default">
 	 		<div class="panel-body">
-	 			 <div id="Content" > </div>
+	 			 <div id="Content" th:insert="booksListPage::booksList"> 
+	 			 
+	 			 </div> 
+	 			
 	 			 <div id="otherContent" > </div>
  			</div>
 	 		</div>

@@ -1,6 +1,5 @@
 package nhu.novahub.assignment4.service;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,15 @@ public class UserService{
     userRepository.save(user);
   }
   
+  public void addUser(User user) {
+	    userRepository.save(user);
+  }
+  
   public Page<User> findAll(Pageable pageable){
     return userRepository.findAll(pageable);
+  }
+  
+  public boolean existsByEmail(String email) {
+	  return userRepository.existsByEmail(email);
   }
 }

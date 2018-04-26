@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Login Page</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/myStyle.css"/>
+    <style>
+    	@import url(https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700|Open+Sans:400,300,600);
+		*{box-sizing:border-box;}
+
+		body {
+		  font-family: 'open sans', helvetica, arial, sans;
+		background:url(http://gipsypixel.com/wp-content/uploads/2017/11/Widescreen-Of-Here-Are-The
+		-Steps-To-Create-For-Ers-Journey-Blurred-City-Lights-Wallpaper-High-Quality-Mobile-Phones.jpg) 
+		no-repeat center center fixed; 
+		  -webkit-background-size: cover;
+		  -moz-background-size: cover;
+		  -o-background-size: cover;
+		  background-size: cover;
+		}
+		
+		.login-form {
+			width: 450px;
+		   	margin: 50px auto;
+		}
+		.login-form h2 {
+		    margin: 0 0 15px;
+		}
+    	
+    </style>
+    <script>
+	$(document).ready(function() {
+	    $("#registerForm").validate({
+	        rules: {
+	        	email: "required",
+	        	password : "required",
+	        	confirmPassword:  {
+		        	equalTo: "#password"
+		        }
+		    },
+		    messages: {
+		    	email:"Email không được trống",
+		    	password:"Mật khẩu không được trống",
+		    	confirmPassword: " Mật khẩu xác nhận không khớp"
+		    }
+		}); 
+		$("#email").change(function(){   
+			var emailRegister = $('#email').val();
+	     	$.ajax({
+	     		type : "GET",
+	     		url : window.location.origin+"/api/user/checkEmail/"+emailRegister,
+	     		success: function(result){				
+     				if(result.data){
+     					$('#msgNoti').html("Email đã tồn tại");
+     				}else{
+     					$('#msgNoti').html("");
+     				}
+	     		},
+	     		error : function(ex) {
+	     			alert("ERROR: ", ex);
+	     			console.log("ERROR: ", ex);
+	     		}
+	     	});
+		});
+     });
+	function register(){
+		if($("#registerForm").valid() ) {
+		   	var newUser = {}
+		       newUser["email"] =  $('#email').val();
+		       newUser["password"]=  $('#password').val();
+		       newUser["confirmPassword"]=  $('#confirmPassword').val();
+		   	$.ajax({
+		   		type : "POST",
+		   		contentType : "application/json",
+		   		url : window.location.origin+"/api/user/register",
+		   		data : JSON.stringify(newUser),
+		   		dataType : 'json',
+		   		success: function(result){		
+		   			$('#successMsg').html('Đăng kí tài khoản thành công. Nhấn đăng nhập');
+		   			$('#email').val('');
+		   			$('#password').val('');
+		   			$('#confirmPassword').val('');
+		   		},
+		   		error : function(ex) {
+		   			alert("ERROR: ", ex);
+		   			console.log("ERROR: ", ex);
+		   		}
+		   	});
+		   } 
+	}
+    </script>
+</head>
+<body>
+    <div class="main-content login-form">
+    	<div class="panel panel-default">
+	 		<div class="panel-body ">
+		        <h2 class="text-center">Đăng kí tài khoản</h2>
+		        <b id='successMsg'></b>
+		        <form name="registerForm" id="registerForm" method='post' >
+		        	<div class="form-group">
+		        		<label>Email</label>
+		        		<input type="text" name="email" id="email" class="form-control" 
+		        			   placeholder="Nhập Email" />
+		        		<a class='error' id='msgNoti'></a>
+		        	</div>
+		        	<div class="form-group">
+		        		<label>Mật khẩu</label>
+		        		<input type="password" name="password" id="password" class="form-control" 
+		        			   placeholder="Nhập mật khẩu" />
+		        	</div>
+		        	<div class="form-group">
+		        		<label>Xác nhận mật khẩu</label>
+		        		<input type="password" name="confirmPassword" id="confirmPassword" 
+		        			   class="form-control" placeholder="Nhập lại mật khẩu" />
+		        	</div>
+		        	<div class="form-group">
+		        		<button type="button" id="registerBtn" class="btn btn-primary form-control" 
+		        				onclick="return register();">Đăng kí</button>
+		        	</div>
+		            
+		        </form>
+		        <div class="form-group">
+	        		<a type="submit" class="btn btn-success form-control" 
+	        		   href="/login" >Đăng nhập</a>
+		        </div>
+	 		</div>
+	 	</div>
+    </div>
+</body>
+</html>

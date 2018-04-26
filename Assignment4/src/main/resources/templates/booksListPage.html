@@ -1,29 +1,26 @@
-
-<div>
-	Sắp xếp theo : 
-	<select id="sortBy">
-		<option value="id">Mã sách</option>
-		<option value="title">Tiêu đề</option>
-		<option value="author">Tác giả</option>
+<div id="booksListDiv" th:fragment="booksList">
+Hiển thị : 
+	<select id="numberElementsDisplay">
+		<option value="5">5</option>
+		<option value="10">10</option>
+		<option value="20">20</option>
 	</select>
-</div>
 <table id="tableList" class="display">
-       <thead>
-            <tr>
-                <th>Mã</th>
-				<th>Tiêu đề</th>
-                <th>Tác giả</th>
-                <th>Thời gian tạo</th>
-                <th>Thời gian cập nhật</th>
-                <th>Chi tiết</th>
-                <th sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')">Tình trạng</th>
-                <th sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')">Xóa</th>
-            </tr>
-        </thead>
-        <tbody>
-        	
-        </tbody>
-    </table>
+   <thead>
+        <tr>
+            <th><a class="btnSort">Mã <i class="glyphicon glyphicon-triangle-top colId"></i></a></th>
+			<th><a class="btnSort">Tiêu đề <i class="glyphicon glyphicon-triangle-top colTitle"></i></a></th>
+            <th><a class="btnSort">Tác giả <i class="glyphicon glyphicon-triangle-top colAuthor"></i></a></th>
+            <th>Thời gian tạo</th>
+            <th>Thời gian cập nhật</th>
+            <th>Chi tiết</th>
+            <th sec:authorize="hasAnyRole('USER','ADMIN','SUPER_ADMIN')" >Tình trạng</th>
+            <th sec:authorize="hasAnyRole('USER','ADMIN','SUPER_ADMIN')" >Thao tác</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
 <div id="Pagination" class="pagination">
 	<table id="">
 	    <tr>
@@ -35,6 +32,7 @@
 	    </tr>
 	</table>
 </div>
+
 <script>
 var roleUser = "isGuest"; 
 if(!($('#checkRoleUser').val() === undefined)){
@@ -47,6 +45,11 @@ var pageCount = 0;
 var sortBy = 'id';
 var startItemIndex = 0;
 var itemsToDisplay = 0;
+var dir='desc'
+
+var localUrl = window.location.href;
+var rootUrl = window.location.origin;
+
 function PaginateSetPageObjects() {
 	$('#pageTitle').text('Page ' + (currentPageIndex + 1) + ' of ' + pageCount);
 	if (pageCount <= 1) {
@@ -70,30 +73,74 @@ function PaginateSetPageObjects() {
 }
 
 function displayBooks(){
+	localUrl = window.location.href;
+	var urlAjax =  rootUrl+"/api/book/all"+"?page="+currentPageIndex+"&size="+pageSize+"&sort="+sortBy+","+dir;
+	var booksListByUserUrl = rootUrl+"/booksListByUser";
+	if(localUrl == booksListByUserUrl ){
+		urlAjax = rootUrl+"/api/book/all/byUser"+"?page="+currentPageIndex+"&size="+pageSize+"&sort="+sortBy+","+dir;
+	}
+	var bookSearchUrl = rootUrl+"/searchBook";
+	if(localUrl == bookSearchUrl ){
+		var keyword = $('#keyword').val();
+		urlAjax = rootUrl+"/api/book/search?page="+currentPageIndex+"&size="+pageSize+"&sort="+sortBy+","+dir+"&keyword="+keyword;
+	}
+
+	// check id user 
+	var idUser = -1;
 	$.ajax({
 		type : "GET",
-		url : window.location.origin+"/api/book/all?page="+currentPageIndex+"&size="+pageSize+"&sort="+sortBy,
+		async: false,
+		url : window.location.origin+"/api/user/getCurrentUser",
+		success: function(result){		
+			idUser = result.id;
+		},
+		error : function(ex) {
+			console.log("ERROR: ", ex);
+		}
+	});
+	$.ajax({
+		type : "GET",
+		url : urlAjax,
 		success: function(result){
 				$('#tableList tbody').html("");
-				$.each(result.data.content, function(i, book){
-					var bookRow = '<tr>' +
-					'<td>' + book.id + '</td>' +
-					'<td>' + book.title + '</td>' +
-					'<td>' + book.author + '</td>' +
-					'<td>' + book.createdAt + '</td>' +
-					'<td>' + book.updatedAt + '</td>' +
-					'<td><a title="Chi tiết" href="javascript:void(0)" '+
-						'onclick="getBookDetail('+book.id+')"> Xem</a></td>' ;
-					if(roleUser === 'isAdmin' || roleUser === 'isSuperAdmin'){
-						bookRow += '<td>'+ doCheck(book.enabled,book.id) +'</td>' + 
-						'<td><a title="Xóa" onclick="deleteBook('+ book.id+')">Xóa</a></td>';
-					}	
-					bookRow +='</tr>';
-					$('#tableList tbody').append(bookRow);
-		        });
-				currentPageIndex = result.data.pageable.pageNumber;
-				pageCount = result.data.totalPages;
-				PaginateSetPageObjects();
+				if(result.data.totalElements == 0){
+					$('#Content').html('Chưa có cuốn sách nào ! ')
+				}else{
+					$.each(result.data.content, function(i, book){
+						var bookRow = '<tr>' +
+						'<td class="table_id">' + book.id + '</td>' +
+						'<td>' + book.title + '</td>' +
+						'<td>' + book.author + '</td>' +
+						'<td>' + book.createdAt + '</td>' +
+						'<td>' + book.updatedAt + '</td>' +
+						'<td><a title="Chi tiết" href="javascript:void(0)" '+
+							'onclick="loadBookDetail('+book.id+')"> Xem</a></td>' ;
+						if(roleUser === 'isUser' ){
+							bookRow +='<td>'+ displayStatusRoleUser(book.enabled,book.id) +'</td>';
+							if(idUser == book.userId){
+								bookRow += '<td><button type="button" class="btn btn-warning" onclick="loadFormEditBook('+ book.id+')">Sửa</button>'+
+								'<button type="button" class="btn btn-danger" onclick="deleteBook('+ book.id+')">Xóa</button>'+
+								'</td>';
+							}else{
+								bookRow +='<td></td>';
+							}
+							
+							
+						}else if(roleUser === 'isSuperAdmin' || roleUser === 'isAdmin'){
+							bookRow +='<td>'+ displayStatus(book.enabled,book.id) +'</td>';
+							bookRow += '<td><button type="button" class="btn btn-warning" onclick="loadFormEditBook('+ book.id+')">Sửa</button>'+
+							'<button type="button" class="btn btn-danger" onclick="deleteBook('+ book.id+')">Xóa</button>'+
+							'</td>';
+						}
+							
+						bookRow +='</tr>';
+						$('#tableList tbody').append(bookRow);
+			        });
+					currentPageIndex = result.data.pageable.pageNumber;
+					pageCount = result.data.totalPages;
+					PaginateSetPageObjects();
+				}
+				
 		},
 		error : function(e) {
 			alert("ERROR: ", e);
@@ -109,24 +156,31 @@ function moveNextPage() { currentPageIndex++; displayBooks(); }
 
 displayBooks();
 
-function doCheck(status,bookId){
-	var select = '<select id="statusBook" onchange="changeStatusBook(this.value,'+bookId+')">';
+function displayStatus(status,bookId){
+	var select = '';
     if(status){
-    	 select += '<option value="1" selected="selected" style="color:red">Hiện</option>'+
-			'<option value="0" class="choose2">Ẩn</option>';
+    	 select += '<button class="changeEnabledBtn btn btn-success" value="1"> Kích hoạt </button>';
     }else{
-    	select += '<option value="1" class="choose1">Hiện</option>'+
-		'<option value="0" selected="selected" class="choose2">Ẩn</option>';
+    	select += '<button class="changeEnabledBtn btn btn-danger" value="0"> Đang Khóa </button>';
     }
-    select += '</select>';
     return select;
 }
 
+function displayStatusRoleUser(status,bookId){
 
-$('#sortBy').on('change', function() {
-	sortBy = this.value;
-	displayBooks();
-});
+	var select = '';
+    if(status){
+    	 select += '<span class="label label-success">Kích hoạt</span>';
+    }else{
+    	select += '<span class="label label-danger">Đang  Khóa</span></td>';
+    }
+    return select;
+	
+}
+
+function checkBookOwned(id){
+	
+}
 
 function changeStatusBook(st, id){
 	$.ajax({
@@ -140,7 +194,60 @@ function changeStatusBook(st, id){
       	$('.notiMsg').html(result.status);
   		setTimeout(function(){ $('.notiMsg').html("")}, 5000);
   	  }
-	});	
-	
+	});
 }
+
+$("#tableList thead").on("click",".btnSort",function(){
+	 var choose = $(this).find('i');
+	 if(choose.hasClass('colId')){
+		 sortBy = 'id';
+	 }else if(choose.hasClass('colTitle')){
+		 sortBy = 'title';
+	 }else if(choose.hasClass('colAuthor')){
+		 sortBy = 'author';
+	 }
+	 if(choose.hasClass('glyphicon-sort')){
+		 $(this).find('i').removeClass('glyphicon-sort')
+		 				  .addClass('glyphicon-triangle-bottom');
+	 }else{
+		 $(this).find('i').toggleClass('glyphicon-triangle-top')
+		  				  .toggleClass('glyphicon-triangle-bottom');
+	 }
+	 $("#tableList thead a").not(this).each(function(){
+		 $(this).find('i').removeClass('glyphicon-triangle-top').addClass('glyphicon-sort');
+		 $(this).find('i').removeClass('glyphicon-triangle-bottom').addClass('glyphicon-sort');
+     });
+	 if(choose.hasClass('glyphicon-triangle-top')){
+		 dir = 'asc';
+	 }else{
+		 dir = 'desc';
+	 }
+	 displayBooks();
+  });
+  
+$("#tableList tbody").on("click",".changeEnabledBtn",function(){
+    //$(this).closest('td').html(1);
+ var currentPosition = $(this);
+ var id = currentPosition.closest('td').parent().find('.table_id').text();
+ var st = currentPosition.val();
+ $.ajax({
+	  url: window.location.origin+"/api/book/enabled/"+id,
+     type: 'POST',
+     cache: false,
+     data: {
+       status : st
+     },
+     success: function(result){
+     	$('.notiMsg').html(result.status);
+ 		setTimeout(function(){ $('.notiMsg').html("")}, 5000);
+ 		currentPosition.closest('td').html(displayStatus(result.data.enabled,result.data.id));
+ 	  }
+	});	
+ }); 
+  
+$('#numberElementsDisplay').on('change', function() {
+	pageSize = this.value;
+	displayBooks();
+});
 </script>
+</div>
