@@ -61,7 +61,36 @@
     color: #4266ce;
     padding-top:10px;
   }
-/* JSON PAGE  */  
-
-#statusBook .choose1{
+  
+.modifyBtn{
+	background-color: #663399;
+	color :white;
+	margin-right : 10px;
+}  
+.detaiBooklBtn {
+	background-color: #FF7F50;
+	color :white;
 }
+/* PAGINATION  */  
+
+.pagination {
+    display: inline-block;
+}
+
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+    margin: 0 1px;
+}
+
+.pagination a.active {
+    background-color: #4CAF50;
+    color: white;
+    border: 1px solid #4CAF50;
+}
+
+.pagination a:hover:not(.active) {background-color: #ddd;}

@@ -22,15 +22,15 @@ Hiển thị :
 </table>
 
 <div id="Pagination" class="pagination">
-	<table id="">
-	    <tr>
-	        <td ><a href="javascript:void(0);" onclick="moveFirstPage()" id="firstPage">Trang đầu</a></td>
-	        <td ><a href="javascript:void(0);" onclick="movePreviousPage()" id="previousPage">Trang trước</a></td>        
-	        <td id="pageTitle"></td>        
-	        <td><a href="javascript:void(0);" onclick="moveNextPage()" id="nextPage">Trang sau</a></td>        
-	        <td ><a href="javascript:void(0);" onclick="moveLastPage()" id="lastPage">Trang cuối</a></td>
-	    </tr>
-	</table>
+	    <a href="javascript:void(0);" onclick="moveFirstPage()" id="firstPage">&lt;&lt;</a>
+	     <a href="javascript:void(0);" onclick="movePreviousPage()" id="previousPage">&lt;</a>   
+	        <a id="moreBefore" > ... </a >     
+	        <a href="javascript:void(0);" onclick="movePreviousPage()" id="beforeActive"></a>  
+	        <a id="pageTitle"  class="active"></a>        
+	        <a href="javascript:void(0);" onclick="moveNextPage()" id="nextActive"></a>
+	        <a id="moreAfter" > ... </a>   
+	        <a href="javascript:void(0);" onclick="moveNextPage()" id="nextPage">&gt;</a>      
+	        <a href="javascript:void(0);" onclick="moveLastPage()" id="lastPage">&gt;&gt;</a>
 </div>
 
 <script>
@@ -51,38 +51,82 @@ var localUrl = window.location.href;
 var rootUrl = window.location.origin;
 
 function PaginateSetPageObjects() {
-	$('#pageTitle').text('Page ' + (currentPageIndex + 1) + ' of ' + pageCount);
+	$('#pageTitle').text(currentPageIndex + 1);
 	if (pageCount <= 1) {
 		$('#nextPage').hide();
 		$('#previousPage').hide();
 		$('#lastPage').hide();
 		$('#firstPage').hide();
+		$('#moreBefore').hide();
+		$('#moreAfter').hide();
+		$('#nextActive').hide();
+		$('#beforeActive').hide();
 	} else {
 		$('#nextPage').show();
 		$('#previousPage').show();
 		$('#lastPage').show();
 		$('#firstPage').show();
+		$('#moreBefore').show();
+		$('#moreAfter').show();
+		$('#nextActive').show();
+		$('#beforeActive').show();
 		if (currentPageIndex == 0) {
 			$('#previousPage').hide();
 			$('#firstPage').hide();
+			$('#moreBefore').hide();
+			if(pageCount < 4){
+				$('#moreAfter').hide();
+			}
+			$('#beforeActive').hide();
+			$('#nextActive').text(currentPageIndex + 2);
 		} else if (currentPageIndex == (pageCount - 1)) {
 			$('#nextPage').hide();
 			$('#lastPage').hide();
+			$('#moreAfter').hide();
+			if(pageCount < 4){
+				$('#moreBefore').hide();
+			}
+			$('#beforeActive').text(currentPageIndex);
+			$('#nextActive').hide();
+		}else if(currentPageIndex == 1){
+			$('#beforeActive').text(1);
+			$('#nextActive').text(3);
+			$('#moreBefore').hide();
+			if(pageCount < 4){
+				$('#moreAfter').hide();
+			}
+		}else if(currentPageIndex == (pageCount - 2)){
+			$('#beforeActive').text(pageCount - 2);
+			$('#nextActive').text(pageCount);
+			$('#moreAfter').hide();
+			if(pageCount < 4){
+				$('#moreBefore').hide();
+			}
+		}else{
+			$('#beforeActive').text(currentPageIndex);
+			$('#nextActive').text(currentPageIndex + 2);
 		}
 	}
 }
+function moveFirstPage() { currentPageIndex = 0; displayBooks(); }
+function moveLastPage() { currentPageIndex = pageCount - 1; displayBooks(); }
+function movePreviousPage() { currentPageIndex--; displayBooks(); }
+function moveNextPage() { currentPageIndex++; displayBooks(); }
 
 function displayBooks(){
 	localUrl = window.location.href;
-	var urlAjax =  rootUrl+"/api/book/all"+"?page="+currentPageIndex+"&size="+pageSize+"&sort="+sortBy+","+dir;
+	var urlAjax =  rootUrl+"/api/book/all"+"?page="+currentPageIndex+
+			"&size="+pageSize+"&sort="+sortBy+","+dir;
 	var booksListByUserUrl = rootUrl+"/booksListByUser";
 	if(localUrl == booksListByUserUrl ){
-		urlAjax = rootUrl+"/api/book/all/byUser"+"?page="+currentPageIndex+"&size="+pageSize+"&sort="+sortBy+","+dir;
+		urlAjax = rootUrl+"/api/book/all/byUser"+"?page="+currentPageIndex+
+				"&size="+pageSize+"&sort="+sortBy+","+dir;
 	}
 	var bookSearchUrl = rootUrl+"/searchBook";
 	if(localUrl == bookSearchUrl ){
 		var keyword = $('#keyword').val();
-		urlAjax = rootUrl+"/api/book/search?page="+currentPageIndex+"&size="+pageSize+"&sort="+sortBy+","+dir+"&keyword="+keyword;
+		urlAjax = rootUrl+"/api/book/search?page="+currentPageIndex+
+				"&size="+pageSize+"&sort="+sortBy+","+dir+"&keyword="+keyword;
 	}
 
 	// check id user 
@@ -114,22 +158,31 @@ function displayBooks(){
 						'<td>' + book.createdAt + '</td>' +
 						'<td>' + book.updatedAt + '</td>' +
 						'<td><a title="Chi tiết" href="javascript:void(0)" '+
-							'onclick="loadBookDetail('+book.id+')"> Xem</a></td>' ;
+							'class="btn detaiBooklBtn" onclick="loadBookDetail('+book.id+')">'+
+							'<span class="glyphicon glyphicon-eye-open"></span></a></td>' ;
 						if(roleUser === 'isUser' ){
 							bookRow +='<td>'+ displayStatusRoleUser(book.enabled,book.id) +'</td>';
 							if(idUser == book.userId){
-								bookRow += '<td><button type="button" class="btn btn-warning" onclick="loadFormEditBook('+ book.id+')">Sửa</button>'+
-								'<button type="button" class="btn btn-danger" onclick="deleteBook('+ book.id+')">Xóa</button>'+
+								bookRow += '<td>'+
+									'<button type="button" class="btn modifyBtn"'+ 
+									'onclick="loadFormEditBook('+ book.id+')">'+
+									'<span class="glyphicon glyphicon-edit"></span> Sửa</button>'+
+									'<button type="button" class="btn btn-danger"'+
+									'onclick="deleteBook('+ book.id+')">'+
+									'<span class="glyphicon glyphicon-remove-sign"></span> Xóa</button>'+
 								'</td>';
 							}else{
 								bookRow +='<td></td>';
 							}
-							
-							
 						}else if(roleUser === 'isSuperAdmin' || roleUser === 'isAdmin'){
 							bookRow +='<td>'+ displayStatus(book.enabled,book.id) +'</td>';
-							bookRow += '<td><button type="button" class="btn btn-warning" onclick="loadFormEditBook('+ book.id+')">Sửa</button>'+
-							'<button type="button" class="btn btn-danger" onclick="deleteBook('+ book.id+')">Xóa</button>'+
+							bookRow += '<td>'+
+								'<button type="button" class="btn modifyBtn"'+
+								'onclick="loadFormEditBook('+ book.id+')">'+
+								'<span class="glyphicon glyphicon-edit"></span> Sửa</button>'+
+								'<button type="button" class="btn btn-danger" '+
+								'onclick="deleteBook('+ book.id+')">'+
+								'<span class="glyphicon glyphicon-trash"></span> Xóa</button>'+
 							'</td>';
 						}
 							
@@ -149,10 +202,7 @@ function displayBooks(){
 	});
 }
 	
-function moveFirstPage() { currentPageIndex = 0; displayBooks(); }
-function moveLastPage() { currentPageIndex = pageCount - 1; displayBooks(); }
-function movePreviousPage() { currentPageIndex--; displayBooks(); }
-function moveNextPage() { currentPageIndex++; displayBooks(); }
+
 
 displayBooks();
 
@@ -170,9 +220,9 @@ function displayStatusRoleUser(status,bookId){
 
 	var select = '';
     if(status){
-    	 select += '<span class="label label-success">Kích hoạt</span>';
+    	 select += '<span style="color:#4169E1">Kích hoạt</span>';
     }else{
-    	select += '<span class="label label-danger">Đang  Khóa</span></td>';
+    	select += '<span style="color:#8B0000">Đang  Khóa</span></td>';
     }
     return select;
 	
