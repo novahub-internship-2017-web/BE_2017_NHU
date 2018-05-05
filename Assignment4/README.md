@@ -5,7 +5,7 @@ This project is a small web application using Spring Boot Framework. The applica
 No need login
 View enabled books
 * User 
-(username: superadmin@gmail.com, password: 123456) 
+(username: totoro@gmail.com, password: 123456) 
 Required: login
 View enabled books & disabled books (created from that user)
 Create new book
