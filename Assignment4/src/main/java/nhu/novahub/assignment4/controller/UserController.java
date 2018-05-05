@@ -40,7 +40,7 @@ public class UserController {
   Logger logger = LoggerFactory.getLogger(this.getClass());
   
   @GetMapping("/all")
-  public Response usersList(Pageable pageable) {
+  public Response getAll(Pageable pageable) {
 	Page<User> users = userService.findAll(pageable);
 	Response response = new Response();
 	if(users.hasContent()) {
@@ -51,6 +51,32 @@ public class UserController {
 	}
     return response;
   } 
+  
+  @GetMapping("/allUser")
+  public Response getUsersRoleUser(Pageable pageable) {
+	Page<User> users = userService.findAllUser(pageable);
+	Response response = new Response();
+	if(users.hasContent()) {
+		response.setData(users);
+		response.setStatus("Có dữ liệu");
+	}else {
+	  response.setStatus("Dữ liệu trống");
+	}
+    return response;
+  }
+  
+  @GetMapping("/allAdmin")
+  public Response getUsersRoleAdmin(Pageable pageable) {
+	Page<User> users = userService.findAllAdmin(pageable);
+	Response response = new Response();
+	if(users.hasContent()) {
+		response.setData(users);
+		response.setStatus("Có dữ liệu");
+	}else {
+	  response.setStatus("Dữ liệu trống");
+	}
+    return response;
+  }
   
   @GetMapping("/{email}")
   public User getIdUser(@PathVariable(value = "email") String email) {
@@ -135,10 +161,16 @@ public class UserController {
 			response.setStatus("Bạn không thể thay đổi hoạt động của mình");
 		  }else {
 			User user = userService.findById(userId);
+			if(status == 1) {
+	    		status = 0; //disabled
+	    	}else {
+	    		status = 1; //enabled
+	    	}
 			user.setEnabled(status);
 			try {
 				userService.updateUser(user);
 				response.setStatus("Bạn vừa thay đổi hoạt động của người dùng");
+				response.setData(userService.findById(userId));
 			}catch(Exception e) {
 				response.setStatus("Lỗi! Không thay đổi được quyền hoạt động");
 			}

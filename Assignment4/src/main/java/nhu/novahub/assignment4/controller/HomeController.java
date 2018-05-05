@@ -11,7 +11,8 @@ public class HomeController {
   public String header() {
     return "html/header";
   }
-  @RequestMapping(value= {"/","booksList","/booksListByUser"})
+  @RequestMapping(value= {"/","booksList","/booksListByUser","/bookDetail/{id}",
+		  "/bookDetail/{id}","/searchBook/{keyword}"})
   public String welcome() {
     return "home";
   }
@@ -19,6 +20,7 @@ public class HomeController {
   public String bookDetailPage() {
     return "bookDetailPage";
   }
+  
   
   @RequestMapping(value= {"/booksListPage"})
   public String booksListPage() {
@@ -49,11 +51,6 @@ public class HomeController {
   @RequestMapping(value= {"/userProfilePage"})
   public String userProfilePage() {
     return "userProfilePage";
-  }
-	
-  @RequestMapping(value= {"/searchBookResult"})
-  public String searchBookResult() {
-	return "searchBookResult";
   }
   
   @RequestMapping(value= {"/usersListPage"})

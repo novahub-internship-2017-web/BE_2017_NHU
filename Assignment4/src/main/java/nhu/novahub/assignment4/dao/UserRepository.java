@@ -16,6 +16,13 @@ public interface UserRepository extends CrudRepository<User , Long>{
   @Query("select u from User u where u.roleId=1 or u.roleId=2")
   public Page<User> findAll(Pageable pageable);
   
+  
+  @Query("select u from User u where u.roleId=2")
+  public Page<User> findAllUser(Pageable pageable);
+  
+  @Query("select u from User u where u.roleId=1")
+  public Page<User> findAllAdmin(Pageable pageable);
+  
   public boolean existsByEmail(String email);
   
 }

@@ -1,10 +1,10 @@
-<table id="tableList" class="display">
-   <thead>
-        <tr>
+<table id="tableUserList" class="tableList display">
+   <thead >
+        <tr >
             <th>Mã</th>
 			<th>Email</th>
 			<th>Quyền truy cập</th>
-			<th>Hoạt động</th>
+			<th>Quyền hoạt động</th>
         </tr>
     </thead>
     <tbody>
@@ -12,16 +12,17 @@
     </tbody>
 </table>
 <div id="Pagination" class="pagination">
-	<table id="">
-	    <tr>
-	        <td ><a href="javascript:void(0);" onclick="moveFirstPage()" id="firstPage">Trang đầu</a></td>
-	        <td ><a href="javascript:void(0);" onclick="movePreviousPage()" id="previousPage">Trang trước</a></td>        
-	        <td id="pageTitle"></td>        
-	        <td><a href="javascript:void(0);" onclick="moveNextPage()" id="nextPage">Trang sau</a></td>        
-	        <td ><a href="javascript:void(0);" onclick="moveLastPage()" id="lastPage">Trang cuối</a></td>
-	    </tr>
-	</table>
+	<a href="javascript:void(0);" onclick="moveFirstPage()" id="firstPage">&lt;&lt;</a>
+	<a href="javascript:void(0);" onclick="movePreviousPage()" id="previousPage">&lt;</a>   
+	<a id="moreBefore" > ... </a >     
+	<a href="javascript:void(0);" onclick="movePreviousPage()" id="beforeActive"></a>  
+	<a id="pageTitle"  class="active"></a>        
+	<a href="javascript:void(0);" onclick="moveNextPage()" id="nextActive"></a>
+	<a id="moreAfter" > ... </a>   
+	<a href="javascript:void(0);" onclick="moveNextPage()" id="nextPage">&gt;</a>      
+	<a href="javascript:void(0);" onclick="moveLastPage()" id="lastPage">&gt;&gt;</a>
 </div>
+
 <script>
 
 var pageSize = 5;
@@ -32,24 +33,63 @@ var startItemIndex = 0;
 var itemsToDisplay = 0;
 
 var roleName ='non';
+
+displayUsers();
 function PaginateSetPageObjects() {
-	$('#pageTitle').text('Page ' + (currentPageIndex + 1) + ' of ' + pageCount);
+	$('#pageTitle').text(currentPageIndex + 1);
 	if (pageCount <= 1) {
 		$('#nextPage').hide();
 		$('#previousPage').hide();
 		$('#lastPage').hide();
 		$('#firstPage').hide();
+		$('#moreBefore').hide();
+		$('#moreAfter').hide();
+		$('#nextActive').hide();
+		$('#beforeActive').hide();
 	} else {
 		$('#nextPage').show();
 		$('#previousPage').show();
 		$('#lastPage').show();
 		$('#firstPage').show();
+		$('#moreBefore').show();
+		$('#moreAfter').show();
+		$('#nextActive').show();
+		$('#beforeActive').show();
 		if (currentPageIndex == 0) {
 			$('#previousPage').hide();
 			$('#firstPage').hide();
+			$('#moreBefore').hide();
+			if(pageCount < 4){
+				$('#moreAfter').hide();
+			}
+			$('#beforeActive').hide();
+			$('#nextActive').text(currentPageIndex + 2);
 		} else if (currentPageIndex == (pageCount - 1)) {
 			$('#nextPage').hide();
 			$('#lastPage').hide();
+			$('#moreAfter').hide();
+			if(pageCount < 4){
+				$('#moreBefore').hide();
+			}
+			$('#beforeActive').text(currentPageIndex);
+			$('#nextActive').hide();
+		}else if(currentPageIndex == 1){
+			$('#beforeActive').text(1);
+			$('#nextActive').text(3);
+			$('#moreBefore').hide();
+			if(pageCount < 4){
+				$('#moreAfter').hide();
+			}
+		}else if(currentPageIndex == (pageCount - 2)){
+			$('#beforeActive').text(pageCount - 2);
+			$('#nextActive').text(pageCount);
+			$('#moreAfter').hide();
+			if(pageCount < 4){
+				$('#moreBefore').hide();
+			}
+		}else{
+			$('#beforeActive').text(currentPageIndex);
+			$('#nextActive').text(currentPageIndex + 2);
 		}
 	}
 }
@@ -58,17 +98,17 @@ function displayUsers(){
 	
 	$.ajax({
 		type : "GET",
-		url : window.location.origin+"/api/user/all?page="+currentPageIndex+"&size="+pageSize,
+		url : window.location.origin+"/api/user/allUser?page="+currentPageIndex+"&size="+pageSize,
 		success: function(result){
-				$('#tableList tbody').html("");
+				$('#tableUserList tbody').html("");
 				$.each(result.data.content, function(i, user){
 					var userRow = '<tr>' +
-					'<td>' + user.id + '</td>' +
+					'<td class="table_id">' + user.id + '</td>' +
 					'<td>' + user.email + '</td>' +
 					'<td>' + getRoleName(user.roleId) + '</td>' +
-					'<td>' + doCheck(user.enabled,user.id) + '</td>' +
+					'<td>' + displayStatus(user.enabled,user.id) + '</td>' +
 					'</tr>';
-					$('#tableList tbody').append(userRow);
+					$('#tableUserList tbody').append(userRow);
 		        });
 				currentPageIndex = result.data.pageable.pageNumber;
 				pageCount = result.data.totalPages;
@@ -81,12 +121,10 @@ function displayUsers(){
 	});
 }
 	
-function moveFirstPage() { currentPageIndex = 0; displayBooks(); }
-function moveLastPage() { currentPageIndex = pageCount - 1; displayBooks(); }
-function movePreviousPage() { currentPageIndex--; displayBooks(); }
-function moveNextPage() { currentPageIndex++; displayBooks(); }
-
-displayUsers();
+function moveFirstPage() { currentPageIndex = 0; displayUsers(); }
+function moveLastPage() { currentPageIndex = pageCount - 1; displayUsers(); }
+function movePreviousPage() { currentPageIndex--; displayUsers(); }
+function moveNextPage() { currentPageIndex++; displayUsers(); }
 
 function doCheck(status,userId){
 	var select = '<select id="statusBook" onchange="enabledUser(this.value,'+userId+')">';
@@ -127,4 +165,36 @@ function enabledUser(st, id){
 	  }
 	});	
 }
+
+function displayStatus(status,userId){
+	var select = '';
+    if(status){
+    	 select += '<button class="changeEnabledBtn btn btn-success" value="1"> Hoạt động </button>';
+    }else{
+    	select += '<button class="changeEnabledBtn btn btn-danger" value="0"> Bị Khóa </button>';
+    }
+    return select;
+}
+
+$("#tableUserList tbody").on("click",".changeEnabledBtn",function(){
+	var currentPosition = $(this);
+	var id = currentPosition.closest('td').parent().find('.table_id').text();
+	var st = currentPosition.val();
+	var confirmMsg = confirm("Bạn có muốn thay đổi quyền hoạt động ?");
+	if(confirmMsg == true){
+		$.ajax({
+			  url: window.location.origin+"/api/user/enabled/"+id,
+		     type: 'POST',
+		     cache: false,
+		     data: {
+		       status : st
+		     },
+		     success: function(result){
+		     	$('.notiMsg').html(result.status);
+		 		setTimeout(function(){ $('.notiMsg').html("")}, 5000);
+		 		currentPosition.closest('td').html(displayStatus(result.data.enabled,result.data.id));
+		 	  }
+			});	
+	}
+ });
 </script>

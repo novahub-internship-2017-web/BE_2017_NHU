@@ -36,10 +36,7 @@ function getEmailUserById(id){
 	return result;
 }
 
-function searchBook(){
-	window.history.pushState('string', '', window.location.origin+'/searchBook');
-	displayBooks();
-}
+
 
 function loadBookDetail(bookId){
 	window.history.pushState('string', '', window.location.origin+'/bookDetail/'+bookId);
@@ -73,3 +70,5 @@ function loadUserProfile(){
 	      $("#otherContent").html(result);
 	    }});
 }
+
+

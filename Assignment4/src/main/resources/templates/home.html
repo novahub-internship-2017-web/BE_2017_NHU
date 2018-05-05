@@ -64,15 +64,18 @@
 	<div class="container main-container">
 		<div class="panel panel-default">
 	 		<div class="panel-body">
-	 			 <div id="Content" th:insert="booksListPage::booksList"> 
-	 			 
-	 			 </div> 
-	 			
+	 			 <div id="Content" th:insert="booksListPage::booksList"></div> 
 	 			 <div id="otherContent" > </div>
  			</div>
 	 		</div>
  	</div>
-	
+	<script type="text/javascript">
+	function searchBook(){
+		var keyword = $('#keyword').val();
+		window.history.pushState('string', '', window.location.origin+'/searchBook/'+keyword);
+		displayBooks();
+	}
+	</script>
     
 </body>
 </html>

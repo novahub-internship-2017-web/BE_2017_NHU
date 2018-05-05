@@ -77,6 +77,10 @@ $("#commentForm").submit(function(event) {
     event.preventDefault();
     addComment();
 });
+
+$('#bookDetailDiv').on('hidden.bs.modal', function () {
+	window.history.pushState('string', '', window.history.back());
+})
 </script>
 
 <div id="bookDetailDiv" class="modal fade" role="dialog" >

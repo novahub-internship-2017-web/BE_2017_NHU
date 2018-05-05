@@ -36,6 +36,14 @@ public class UserService{
     return userRepository.findAll(pageable);
   }
   
+  public Page<User> findAllUser(Pageable pageable){
+    return userRepository.findAllUser(pageable);
+  }
+  
+  public Page<User> findAllAdmin(Pageable pageable){
+    return userRepository.findAllAdmin(pageable);
+  }
+  
   public boolean existsByEmail(String email) {
 	  return userRepository.existsByEmail(email);
   }

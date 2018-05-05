@@ -5,12 +5,12 @@ Hiển thị :
 		<option value="10">10</option>
 		<option value="20">20</option>
 	</select>
-<table id="tableList" class="display">
+<table id="tableBooksList" class="tableList display">
    <thead>
         <tr>
             <th><a class="btnSort">Mã <i class="glyphicon glyphicon-triangle-top colId"></i></a></th>
-			<th><a class="btnSort">Tiêu đề <i class="glyphicon glyphicon-triangle-top colTitle"></i></a></th>
-            <th><a class="btnSort">Tác giả <i class="glyphicon glyphicon-triangle-top colAuthor"></i></a></th>
+			<th><a class="btnSort">Tiêu đề <i class="glyphicon glyphicon-sort colTitle"></i></a></th>
+            <th><a class="btnSort">Tác giả <i class="glyphicon glyphicon-sort colAuthor"></i></a></th>
             <th>Thời gian tạo</th>
             <th>Thời gian cập nhật</th>
             <th>Chi tiết</th>
@@ -22,18 +22,21 @@ Hiển thị :
 </table>
 
 <div id="Pagination" class="pagination">
-	    <a href="javascript:void(0);" onclick="moveFirstPage()" id="firstPage">&lt;&lt;</a>
-	     <a href="javascript:void(0);" onclick="movePreviousPage()" id="previousPage">&lt;</a>   
-	        <a id="moreBefore" > ... </a >     
-	        <a href="javascript:void(0);" onclick="movePreviousPage()" id="beforeActive"></a>  
-	        <a id="pageTitle"  class="active"></a>        
-	        <a href="javascript:void(0);" onclick="moveNextPage()" id="nextActive"></a>
-	        <a id="moreAfter" > ... </a>   
-	        <a href="javascript:void(0);" onclick="moveNextPage()" id="nextPage">&gt;</a>      
-	        <a href="javascript:void(0);" onclick="moveLastPage()" id="lastPage">&gt;&gt;</a>
+	<a href="javascript:void(0);" onclick="moveFirstPage()" id="firstPage">&lt;&lt;</a>
+	<a href="javascript:void(0);" onclick="movePreviousPage()" id="previousPage">&lt;</a>   
+	<a id="moreBefore" > ... </a >     
+	<a href="javascript:void(0);" onclick="movePreviousPage()" id="beforeActive"></a>  
+	<a id="pageTitle"  class="active"></a>        
+	<a href="javascript:void(0);" onclick="moveNextPage()" id="nextActive"></a>
+	<a id="moreAfter" > ... </a>   
+	<a href="javascript:void(0);" onclick="moveNextPage()" id="nextPage">&gt;</a>      
+	<a href="javascript:void(0);" onclick="moveLastPage()" id="lastPage">&gt;&gt;</a>
 </div>
 
 <script>
+var CURRENT_URL = window.location.href;
+var ROOT_URL = window.location.origin;
+
 var roleUser = "isGuest"; 
 if(!($('#checkRoleUser').val() === undefined)){
 	roleUser = $('#checkRoleUser').val();
@@ -47,8 +50,12 @@ var startItemIndex = 0;
 var itemsToDisplay = 0;
 var dir='desc'
 
-var localUrl = window.location.href;
-var rootUrl = window.location.origin;
+displayBooks();
+
+if(CURRENT_URL.search("/booksDetail/") != -1){
+	var bookId = CURRENT_URL.substring(CURRENT_URL.lastIndexOf('/') + 1);
+	loadBookDetail(bookId);	
+}
 
 function PaginateSetPageObjects() {
 	$('#pageTitle').text(currentPageIndex + 1);
@@ -114,19 +121,19 @@ function movePreviousPage() { currentPageIndex--; displayBooks(); }
 function moveNextPage() { currentPageIndex++; displayBooks(); }
 
 function displayBooks(){
-	localUrl = window.location.href;
-	var urlAjax =  rootUrl+"/api/book/all"+"?page="+currentPageIndex+
+	CURRENT_URL = window.location.href;
+	var urlAjax =  ROOT_URL+"/api/book/all"+"?page="+currentPageIndex+
 			"&size="+pageSize+"&sort="+sortBy+","+dir;
-	var booksListByUserUrl = rootUrl+"/booksListByUser";
-	if(localUrl == booksListByUserUrl ){
-		urlAjax = rootUrl+"/api/book/all/byUser"+"?page="+currentPageIndex+
+	var booksListByUserUrl = ROOT_URL+"/booksListByUser";
+	if(CURRENT_URL == booksListByUserUrl ){
+		urlAjax = ROOT_URL+"/api/book/all/byUser"+"?page="+currentPageIndex+
 				"&size="+pageSize+"&sort="+sortBy+","+dir;
 	}
-	var bookSearchUrl = rootUrl+"/searchBook";
-	if(localUrl == bookSearchUrl ){
-		var keyword = $('#keyword').val();
-		urlAjax = rootUrl+"/api/book/search?page="+currentPageIndex+
-				"&size="+pageSize+"&sort="+sortBy+","+dir+"&keyword="+keyword;
+	var bookSearchUrl = ROOT_URL+"/searchBook";
+	if(CURRENT_URL.search(bookSearchUrl) != -1 ){
+		var keywordSearch = CURRENT_URL.substring(CURRENT_URL.lastIndexOf('/') + 1);
+		urlAjax = ROOT_URL+"/api/book/search?page="+currentPageIndex+
+				"&size="+pageSize+"&sort="+sortBy+","+dir+"&keyword="+keywordSearch;
 	}
 
 	// check id user 
@@ -146,7 +153,7 @@ function displayBooks(){
 		type : "GET",
 		url : urlAjax,
 		success: function(result){
-				$('#tableList tbody').html("");
+				$('#tableBooksList tbody').html("");
 				if(result.data.totalElements == 0){
 					$('#Content').html('Chưa có cuốn sách nào ! ')
 				}else{
@@ -187,7 +194,7 @@ function displayBooks(){
 						}
 							
 						bookRow +='</tr>';
-						$('#tableList tbody').append(bookRow);
+						$('#tableBooksList tbody').append(bookRow);
 			        });
 					currentPageIndex = result.data.pageable.pageNumber;
 					pageCount = result.data.totalPages;
@@ -204,7 +211,7 @@ function displayBooks(){
 	
 
 
-displayBooks();
+
 
 function displayStatus(status,bookId){
 	var select = '';
@@ -247,7 +254,7 @@ function changeStatusBook(st, id){
 	});
 }
 
-$("#tableList thead").on("click",".btnSort",function(){
+$("#tableBooksList thead").on("click",".btnSort",function(){
 	 var choose = $(this).find('i');
 	 if(choose.hasClass('colId')){
 		 sortBy = 'id';
@@ -263,7 +270,7 @@ $("#tableList thead").on("click",".btnSort",function(){
 		 $(this).find('i').toggleClass('glyphicon-triangle-top')
 		  				  .toggleClass('glyphicon-triangle-bottom');
 	 }
-	 $("#tableList thead a").not(this).each(function(){
+	 $("#tableBooksList thead a").not(this).each(function(){
 		 $(this).find('i').removeClass('glyphicon-triangle-top').addClass('glyphicon-sort');
 		 $(this).find('i').removeClass('glyphicon-triangle-bottom').addClass('glyphicon-sort');
      });
@@ -275,11 +282,12 @@ $("#tableList thead").on("click",".btnSort",function(){
 	 displayBooks();
   });
   
-$("#tableList tbody").on("click",".changeEnabledBtn",function(){
-    //$(this).closest('td').html(1);
+$("#tableBooksList tbody").on("click",".changeEnabledBtn",function(){
  var currentPosition = $(this);
  var id = currentPosition.closest('td').parent().find('.table_id').text();
  var st = currentPosition.val();
+ var confirmMsg = confirm("Bạn có muốn thay đổi tình trạng cuốn sách này ?");
+ if(confirmMsg == true){
  $.ajax({
 	  url: window.location.origin+"/api/book/enabled/"+id,
      type: 'POST',
@@ -293,6 +301,7 @@ $("#tableList tbody").on("click",".changeEnabledBtn",function(){
  		currentPosition.closest('td').html(displayStatus(result.data.enabled,result.data.id));
  	  }
 	});	
+ }
  }); 
   
 $('#numberElementsDisplay').on('change', function() {

@@ -61,6 +61,9 @@ function editBook(){
 	  }
 	 }); 
 }
+$('#editBookFormDiv').on('hidden.bs.modal', function () {
+	window.history.pushState('string', '', window.history.back());
+})
 </script>
 
 <div id="editBookFormDiv" class="modal fade" role="dialog" sec:authorize="hasAnyRole('USER','ADMIN','SUPER_ADMIN')">
