@@ -32,6 +32,11 @@ public class HomeController {
     return "bookCreationPage";
   }
   
+  @RequestMapping(value= {"/userCreationPage"})
+  public String userCreationPage() {
+    return "userCreationPage";
+  }
+  
   @RequestMapping(value= {"/bookEditionPage"})
   public String bookEditionPage() {
     return "bookEditionPage";

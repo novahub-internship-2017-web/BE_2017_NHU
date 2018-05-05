@@ -52,6 +52,12 @@ function loadBookForm(){
 	    }});
 }
 
+function loadFormAddNewUser(){
+	$.ajax({url:window.location.origin+'/userCreationPage',success:function(result){
+	      $("#otherContent").html(result);
+	    }});
+}
+
 function loadFormEditBook(bookId){
 	window.history.pushState('string', '', window.location.origin+'/editBookForm/'+bookId);
 	$.ajax({url:window.location.origin+'/bookEditionPage',success:function(result){

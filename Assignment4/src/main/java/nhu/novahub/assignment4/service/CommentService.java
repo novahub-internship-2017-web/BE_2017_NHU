@@ -17,7 +17,7 @@ public class CommentService{
   private CommentRepository commentRepository;
   
   public List<Comment> findAllByBookId(int bookId){
-    return commentRepository.findAllByBookId(bookId);
+    return commentRepository.findAllByBookIdOrderByIdDesc(bookId);
   }
   
   public Comment addComment(Comment comment) {

@@ -133,7 +133,11 @@ public class UserController {
 			  User newUser = new User();
 			  newUser.setEmail(user.getEmail());
 			  newUser.setPassword(passwordEncoder.encode(user.getPassword()));
-			  newUser.setRoleId(2); // role user
+			  if(user.getRoleId() != 1 ) {
+				  newUser.setRoleId(2); // role user
+			  }else {
+				  newUser.setRoleId(user.getRoleId());
+			  }
 			  newUser.setEnabled(1); //enabled
 			  try{
 				  userService.addUser(newUser);
@@ -148,6 +152,13 @@ public class UserController {
 	  }else {
 		  response.setStatus("Email đã tồn tại");
 	  }
+	  return response;
+  }
+  
+  @PostMapping("/add")
+  public Response addNewUser(@RequestBody User user) {
+	  Response response  = new Response();
+	  
 	  return response;
   }
   @PostMapping("/enabled/{id}")

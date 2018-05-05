@@ -58,6 +58,10 @@
          	sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')" >
  		 	<span>Quản lý User</span>
          </a>
+         <a class="btn btn-md btn-default" href="javascript:void(0)" onclick="loadFormAddNewUser()" 
+         	sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')" >
+ 		 	<span>Thêm User</span>
+         </a>
          <p class="notiMsg error"></p>
          <p id="successMsg"></p>
 	</div>

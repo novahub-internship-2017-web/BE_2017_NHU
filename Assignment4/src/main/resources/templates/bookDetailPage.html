@@ -26,6 +26,7 @@ function getBookDetail(bookId){
 }
 
 function getAllComment(bookId){
+	$('#commentDiv').html("");
 	 $.ajax({
 		type : "GET",
 		contentType : "application/json",
@@ -59,13 +60,8 @@ function addComment(){
 		data : JSON.stringify(newComment),
 		dataType : 'json',
 		success: function(result){
-			$('#commentForm').find('#comment').html("");
-			var commentDiv = '<div class="panel panel-info">' + 
-			'<div class="panel-heading" style="margin: 3px"><b>' + getEmailUserById(result.userId) + 
-			'</b><i style="padding-left: 10px;font-size: small;">' + result.createdAt + '</i></div>' +
-			'<div class="panel-body">'+result.message + '</div>' +
-			'</div>';
-		$('#commentDiv').append(commentDiv);
+			$('#commentForm').find('#comment').val("");
+			getAllComment(bookId);
 		 },
 	  error: function(e){      
 	   alert('Error while request..'+e);

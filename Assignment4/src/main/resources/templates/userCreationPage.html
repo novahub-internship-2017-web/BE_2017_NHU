@@ -1,0 +1,93 @@
+<script>
+$(document).ready(function() {
+    $("#userCreationForm").validate({
+        rules: {
+	    	email: "required",
+	    	password: "required",
+	    	passwordConfirm: {
+	        	equalTo: "#password"
+	        }
+	    },
+	    messages: {
+	    	email:"Email không được trống",
+	    	password: " Mật khẩu không được trống",
+	    	passwordConfirm: "Mật khẩu không khớp"
+	    }
+    }); $('#userCreationDiv').modal('show');
+});
+
+$("#userCreationForm").submit(function(event) {
+    event.preventDefault();
+    if($("#userCreationForm").valid() ) {
+        addUser();
+    }
+})
+
+function addUser(){
+	 var newUser = {}
+	 newUser["email"] = $('#userCreationForm').find('#email').val();
+	 newUser["password"]= $('#userCreationForm').find('#password').val();	
+	 newUser["confirmPassword"]= $('#userCreationForm').find('#confirmPassword').val();
+	 newUser["roleId"]= $('#userCreationForm').find('#roleId').val();
+	 $.ajax({
+		type : "POST",
+		contentType : "application/json",
+		url : window.location.origin+"/api/user/register",
+		data : JSON.stringify(newUser),
+		dataType : 'json',
+		success: function(result){
+			 $('#userCreationDiv').modal('hide');
+			 $('#successMsg').html(result.status);
+			 setTimeout(function(){ $('#successMsg').html("")}, 5000);
+			 loadUsersList();
+			 
+			
+		 },
+	  error: function(e){      
+	   alert('Error while request..'+e);
+	  }
+	 }); 
+}
+</script>
+
+<div id="userCreationDiv" class="modal fade" role="dialog" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header" style="padding:20px 40px;">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4>Thêm người dùng</h4>
+        </div>
+        <div class="modal-body" style="padding:40px 50px;">
+	          <form role="form" name="userCreationForm" id="userCreationForm"> 
+			  <table style=" width:100%"  class="bookForm">
+			   <tr>
+			    <td><label ><b>Email</b></label></td>
+			    <td><input type="email" name="email" id="email" class="form-control" ></td>
+			   </tr>
+			   <tr>
+			    <td><label ><b>Mật khẩu</b></label></td>
+			    <td> <input type="password" name="password" id="password" class="form-control"></td>
+			   </tr>
+			   <tr>
+			    <td><label ><b>Xác nhận mật khẩu</b></label></td>
+			   	<td> <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" ></td>
+			   </tr>
+			   <tr>
+			    <td><label ><b>Quyền truy cập</b></label></td>
+			   	<td><select id="roleId">
+			   		<option value="1">Admin</option>
+			   		<option value="2">User</option>
+			   	</select></td>
+			   </tr>
+			   <tr>
+			    <td></td>
+			    <td>
+			    	<button type="submit" class="btn btn-primary" id="addUserBtn">Tạo</button>
+			    </td>
+			   </tr>
+			  </table>
+			 </form>
+	        </div>
+		</div>
+	</div>
+</div>	
