@@ -14,7 +14,7 @@ public interface BookRepository extends CrudRepository<Book , Long>{
   
   public Book findById(int id);
   
-  @Query("select b from Book b where b.title like %:title% and b.removed=0")
+  @Query("select b from Book b where b.title like %:title% or b.author like %:title% and b.removed=0")
   public Page<Book> searchByTitle(@Param("title") String title,Pageable pageable); 
   
   @Query("select b from Book b where b.enabled=?1 and b.removed=0")

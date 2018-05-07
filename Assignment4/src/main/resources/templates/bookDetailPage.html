@@ -109,7 +109,11 @@ $('#bookDetailDiv').on('hidden.bs.modal', function () {
 				   	</tr>
 				   	
 				 </table>
-				<div class="col-md-12 form-group" id="" sec:authorize="hasAnyRole('USER','ADMIN','SUPER_ADMIN')">
+					
+					
+			</div>
+			<div class="modal-footer" style="background-color:white">
+			<div class="col-md-12 form-group" id="" sec:authorize="hasAnyRole('USER','ADMIN','SUPER_ADMIN')">
 					<form role="form" name="commentForm" id="commentForm">
 						<div class="form-group">
 							<label> Bình luận </label>
@@ -117,12 +121,9 @@ $('#bookDetailDiv').on('hidden.bs.modal', function () {
 						</div>	 
 						<button type="submit" class="btn btn-primary ">Đăng</button>
 					</form>
-				</div>	
-				<div class="col-md-10" id="commentDiv" style="margin-top:20px"></div>	
-				
-				 <div class="modal-footer">
-		      	</div>				 
-			</div>
+				</div>
+			<div class="col-md-12" id="commentDiv" style="margin-top:20px"></div>
+		      	</div>
 		</div>
 	</div>
 </div>	

@@ -77,4 +77,8 @@ function loadUserProfile(){
 	    }});
 }
 
-
+function loadPageUserManagement(){
+	$.ajax({url:window.location.origin+'/usersListPage_2',success:function(result){
+	      $("#Content").html(result);
+	    }});
+}

@@ -112,12 +112,12 @@ public class UserController {
     	  if(newPass.equals(confirmPass)) {
     		user.setPassword(passwordEncoder.encode(newPass));
 	        userService.updateUser(user);
-	        response.setStatus("Cập nhật mật khẩu thành công");
+	        response.setStatus("<b style=\"color:blue\">Cập nhật mật khẩu thành công</b>");
     	  }else {
-    		  response.setStatus("Mật khẩu xác nhận không khớp");
+    		  response.setStatus("<b style=\"color:red\">Mật khẩu xác nhận không khớp</b>");
     	  }
       }else {
-    	  response.setStatus("Mật khẩu cũ không chính xác");
+    	  response.setStatus("<b style=\"color:red\">Mật khẩu cũ không chính xác</b>");
       }
     }catch(Exception e) {
 		logger.error("Exception !", e);

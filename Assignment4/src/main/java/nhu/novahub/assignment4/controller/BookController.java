@@ -59,14 +59,14 @@ public class BookController {
         try {
         	Page<Book> books = bookService.findAll(pageable);
         	response.setData(books);
-   		 	response.setStatus("Có dữ liệu");
+   		 	response.setStatus("");
 		}catch(Exception e) {
 			
 		}
 	    }else {
 	    	Page<Book> books = bookService.findAllByEnabled(1,pageable);  
 	    	response.setData(books);
-			response.setStatus("Có dữ liệu");
+			response.setStatus("");
 	    }
 	  
     return response;

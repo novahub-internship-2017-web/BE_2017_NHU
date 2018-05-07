@@ -1,0 +1,317 @@
+<table id="tableUserList" class="tableList display">
+   <thead >
+        <tr >
+            <th>Mã</th>
+			<th>Email</th>
+			<th>Quyền truy cập</th>
+			<th>Quyền hoạt động</th>
+        </tr>
+    </thead>
+    <tbody>
+    	
+    </tbody>
+</table>
+<div id="Pagination" class="pagination">
+	<a href="javascript:void(0);" onclick="moveFirstPage()" id="firstPage">&lt;&lt;</a>
+	<a href="javascript:void(0);" onclick="movePreviousPage()" id="previousPage">&lt;</a>   
+	<a id="moreBefore" > ... </a >     
+	<a href="javascript:void(0);" onclick="movePreviousPage()" id="beforeActive"></a>  
+	<a id="pageTitle"  class="active"></a>        
+	<a href="javascript:void(0);" onclick="moveNextPage()" id="nextActive"></a>
+	<a id="moreAfter" > ... </a>   
+	<a href="javascript:void(0);" onclick="moveNextPage()" id="nextPage">&gt;</a>      
+	<a href="javascript:void(0);" onclick="moveLastPage()" id="lastPage">&gt;&gt;</a>
+</div>
+
+
+<table id="tableAdminList" class="tableList display">
+   <thead >
+        <tr >
+            <th>Mã</th>
+			<th>Email</th>
+			<th>Quyền truy cập</th>
+			<th>Quyền hoạt động</th>
+        </tr>
+    </thead>
+    <tbody>
+    	
+    </tbody>
+</table>
+
+<script>
+
+var pageSize = 5;
+var currentPageIndex = 0;
+var pageCount = 0;
+var sortBy = 'id';
+var startItemIndex = 0;
+var itemsToDisplay = 0;
+
+var roleName ='non';
+
+displayUsers();
+displayAdmin();
+
+function PaginateSetPageObjects() {
+	$('#pageTitle').text(currentPageIndex + 1);
+	if (pageCount <= 1) {
+		$('#nextPage').hide();
+		$('#previousPage').hide();
+		$('#lastPage').hide();
+		$('#firstPage').hide();
+		$('#moreBefore').hide();
+		$('#moreAfter').hide();
+		$('#nextActive').hide();
+		$('#beforeActive').hide();
+	} else {
+		$('#nextPage').show();
+		$('#previousPage').show();
+		$('#lastPage').show();
+		$('#firstPage').show();
+		$('#moreBefore').show();
+		$('#moreAfter').show();
+		$('#nextActive').show();
+		$('#beforeActive').show();
+		if (currentPageIndex == 0) {
+			$('#previousPage').hide();
+			$('#firstPage').hide();
+			$('#moreBefore').hide();
+			if(pageCount < 4){
+				$('#moreAfter').hide();
+			}
+			$('#beforeActive').hide();
+			$('#nextActive').text(currentPageIndex + 2);
+		} else if (currentPageIndex == (pageCount - 1)) {
+			$('#nextPage').hide();
+			$('#lastPage').hide();
+			$('#moreAfter').hide();
+			if(pageCount < 4){
+				$('#moreBefore').hide();
+			}
+			$('#beforeActive').text(currentPageIndex);
+			$('#nextActive').hide();
+		}else if(currentPageIndex == 1){
+			$('#beforeActive').text(1);
+			$('#nextActive').text(3);
+			$('#moreBefore').hide();
+			if(pageCount < 4){
+				$('#moreAfter').hide();
+			}
+		}else if(currentPageIndex == (pageCount - 2)){
+			$('#beforeActive').text(pageCount - 2);
+			$('#nextActive').text(pageCount);
+			$('#moreAfter').hide();
+			if(pageCount < 4){
+				$('#moreBefore').hide();
+			}
+		}else{
+			$('#beforeActive').text(currentPageIndex);
+			$('#nextActive').text(currentPageIndex + 2);
+		}
+	}
+}
+
+function displayUsers(){
+	
+	$.ajax({
+		type : "GET",
+		url : window.location.origin+"/api/user/allUser?page="+currentPageIndex+"&size="+pageSize,
+		success: function(result){
+				$('#tableUserList tbody').html("");
+				$.each(result.data.content, function(i, user){
+					var userRow = '<tr>' +
+					'<td class="table_id">' + user.id + '</td>' +
+					'<td>' + user.email + '</td>' +
+					'<td>' + displayRole(user.roleId) + '</td>' +
+					'<td>' + displayStatus(user.enabled,user.id) + '</td>' +
+					'</tr>';
+					$('#tableUserList tbody').append(userRow);
+		        });
+				currentPageIndex = result.data.pageable.pageNumber;
+				pageCount = result.data.totalPages;
+				PaginateSetPageObjects();
+		},
+		error : function(e) {
+			alert("ERROR: ", e);
+			console.log("ERROR: ", e);
+		}
+	});
+}
+
+function displayAdmin(){
+	
+	$.ajax({
+		type : "GET",
+		url : window.location.origin+"/api/user/allAdmin?page="+currentPageIndex+"&size="+pageSize,
+		success: function(result){
+				$('#tableAdminList tbody').html("");
+				$.each(result.data.content, function(i, user){
+					var userRow = '<tr>' +
+					'<td class="table_id">' + user.id + '</td>' +
+					'<td>' + user.email + '</td>' +
+					'<td>' + displayRole(user.roleId) + '</td>' +
+					'<td>' + displayStatus(user.enabled,user.id) + '</td>' +
+					'</tr>';
+					$('#tableAdminList tbody').append(userRow);
+		        });
+		},
+		error : function(e) {
+			alert("ERROR: ", e);
+			console.log("ERROR: ", e);
+		}
+	});
+}
+	
+function moveFirstPage() { currentPageIndex = 0; displayUsers(); }
+function moveLastPage() { currentPageIndex = pageCount - 1; displayUsers(); }
+function movePreviousPage() { currentPageIndex--; displayUsers(); }
+function moveNextPage() { currentPageIndex++; displayUsers(); }
+
+function doCheck(status,userId){
+	var select = '<select id="statusBook" onchange="enabledUser(this.value,'+userId+')">';
+    if(status){
+    	 select += '<option value="1" selected="selected" style="color:red">Hiện</option>'+
+			'<option value="0" class="choose2">Ẩn</option>';
+    }else{
+    	select += '<option value="1" class="choose1">Hiện</option>'+
+		'<option value="0" selected="selected" class="choose2">Ẩn</option>';
+    }
+    select += '</select>';
+    return select;
+}
+
+function getRoleName(roleId){
+	var result = 'undefined';
+		$.ajax({
+		 type : "GET",
+		 async: false,
+         url: window.location.origin+"/api/role/"+roleId
+     }).done(function (data) {
+    	 result = data.name;
+     });
+	return result;
+}
+
+function enabledUser(st, id){
+	$.ajax({
+	  url: window.location.origin+"/api/user/enabled/"+id,
+      type: 'POST',
+      cache: false,
+      data: {
+        status : st
+      },
+      success: function(result){
+    	$('.notiMsg').html(result.status);
+		setTimeout(function(){ $('.notiMsg').html("")}, 5000);
+	  }
+	});	
+}
+
+function displayStatus(status,userId){
+	var select = '';
+    if(status){
+    	 select += '<button class="changeEnabledBtn btn btn-success" value="1"> Hoạt động </button>';
+    }else{
+    	select += '<button class="changeEnabledBtn btn btn-danger" value="0"> Bị Khóa </button>';
+    }
+    return select;
+}
+
+function displayRole(roleId){
+	var select = '<button class="changeRoleBtn btn btn-info" value="'+roleId+'">'+
+		'<span class="glyphicon glyphicon-edit"></span> '+getRoleName(roleId)+' </button>';
+    return select;
+}
+
+$("#tableUserList tbody").on("click",".changeEnabledBtn",function(){
+	var currentPosition = $(this);
+	var id = currentPosition.closest('td').parent().find('.table_id').text();
+	var st = currentPosition.val();
+	var confirmMsg = confirm("Bạn có muốn thay đổi quyền hoạt động ?");
+	if(confirmMsg == true){
+		$.ajax({
+			  url: window.location.origin+"/api/user/enabled/"+id,
+		     type: 'POST',
+		     cache: false,
+		     data: {
+		       status : st
+		     },
+		     success: function(result){
+		     	$('.notiMsg').html(result.status);
+		 		setTimeout(function(){ $('.notiMsg').html("")}, 5000);
+		 		currentPosition.closest('td').html(displayStatus(result.data.enabled,result.data.id));
+		 	  }
+			});	
+	}
+ });
+ 
+$("#tableAdminList tbody").on("click",".changeEnabledBtn",function(){
+	var currentPosition = $(this);
+	var id = currentPosition.closest('td').parent().find('.table_id').text();
+	var st = currentPosition.val();
+	var confirmMsg = confirm("Bạn có muốn thay đổi quyền hoạt động ?");
+	if(confirmMsg == true){
+		$.ajax({
+			  url: window.location.origin+"/api/user/enabled/"+id,
+		     type: 'POST',
+		     cache: false,
+		     data: {
+		       status : st
+		     },
+		     success: function(result){
+		     	$('.notiMsg').html(result.status);
+		 		setTimeout(function(){ $('.notiMsg').html("")}, 5000);
+		 		currentPosition.closest('td').html(displayStatus(result.data.enabled,result.data.id));
+		 	  }
+			});	
+	}
+ });
+ 
+$("#tableAdminList tbody").on("click",".changeRoleBtn",function(){
+	var currentPosition = $(this);
+	var id = currentPosition.closest('td').parent().find('.table_id').text();
+	var st = currentPosition.val();
+	var confirmMsg = confirm("Bạn có muốn thay đổi quyền truy cập ?");
+	if(confirmMsg == true){
+		$.ajax({
+			  url: window.location.origin+"/api/role/change/"+id,
+		     type: 'POST',
+		     cache: false,
+		     data: {
+		       roleId : st
+		     },
+		     success: function(result){
+		     	$('.notiMsg').html(result.status);
+		 		setTimeout(function(){ $('.notiMsg').html("")}, 5000);
+		 		currentPosition.closest('td').html(displayStatus(result.data.enabled,result.data.id));
+		 		displayUsers();
+		 		displayAdmin();
+		 	  }
+			});	
+	}
+ });
+ 
+$("#tableUserList tbody").on("click",".changeRoleBtn",function(){
+	var currentPosition = $(this);
+	var id = currentPosition.closest('td').parent().find('.table_id').text();
+	var st = currentPosition.val();
+	var confirmMsg = confirm("Bạn có muốn thay đổi quyền truy cập ?");
+	if(confirmMsg == true){
+		$.ajax({
+			  url: window.location.origin+"/api/role/change/"+id,
+		     type: 'POST',
+		     cache: false,
+		     data: {
+		       roleId : st
+		     },
+		     success: function(result){
+		     	$('.notiMsg').html(result.status);
+		 		setTimeout(function(){ $('.notiMsg').html("")}, 5000);
+		 		currentPosition.closest('td').html(displayStatus(result.data.enabled,result.data.id));
+		 		displayUsers();
+		 		displayAdmin();
+		 	  }
+			});	
+	}
+ });
+</script>

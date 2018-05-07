@@ -54,7 +54,8 @@ function editBook(){
 			$('#editBookFormDiv').modal('hide');
 			 $('#successMsg').html("Cập nhật thành công");
 			 setTimeout(function(){ $('#successMsg').html("")}, 5000);
-			 displayBooks();
+			 window.history.back();
+			 location.reload(); 
 		 },
 	  error: function(e){      
 	   alert('Lỗi!Không cập nhật được'+e);

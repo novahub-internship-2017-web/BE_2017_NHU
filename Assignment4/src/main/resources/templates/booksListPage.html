@@ -8,7 +8,7 @@ Hiển thị :
 <table id="tableBooksList" class="tableList display">
    <thead>
         <tr>
-            <th><a class="btnSort">Mã <i class="glyphicon glyphicon-triangle-top colId"></i></a></th>
+            <th><a class="btnSort">Mã <i class="glyphicon glyphicon-triangle-bottom colId"></i></a></th>
 			<th><a class="btnSort">Tiêu đề <i class="glyphicon glyphicon-sort colTitle"></i></a></th>
             <th><a class="btnSort">Tác giả <i class="glyphicon glyphicon-sort colAuthor"></i></a></th>
             <th>Thời gian tạo</th>
@@ -51,8 +51,7 @@ var itemsToDisplay = 0;
 var dir='desc'
 
 displayBooks();
-
-if(CURRENT_URL.search("/booksDetail/") != -1){
+if(CURRENT_URL.search("/bookDetail/") != -1){
 	var bookId = CURRENT_URL.substring(CURRENT_URL.lastIndexOf('/') + 1);
 	loadBookDetail(bookId);	
 }
@@ -132,6 +131,7 @@ function displayBooks(){
 	var bookSearchUrl = ROOT_URL+"/searchBook";
 	if(CURRENT_URL.search(bookSearchUrl) != -1 ){
 		var keywordSearch = CURRENT_URL.substring(CURRENT_URL.lastIndexOf('/') + 1);
+		currentPageIndex = 0;
 		urlAjax = ROOT_URL+"/api/book/search?page="+currentPageIndex+
 				"&size="+pageSize+"&sort="+sortBy+","+dir+"&keyword="+keywordSearch;
 	}
@@ -194,8 +194,10 @@ function displayBooks(){
 						}
 							
 						bookRow +='</tr>';
+						
 						$('#tableBooksList tbody').append(bookRow);
 			        });
+					$('#successMsg').html(result.status);
 					currentPageIndex = result.data.pageable.pageNumber;
 					pageCount = result.data.totalPages;
 					PaginateSetPageObjects();
@@ -297,7 +299,7 @@ $("#tableBooksList tbody").on("click",".changeEnabledBtn",function(){
      },
      success: function(result){
      	$('.notiMsg').html(result.status);
- 		setTimeout(function(){ $('.notiMsg').html("")}, 5000);
+ 		setTimeout(function(){ $('.successMsg').html("")}, 5000);
  		currentPosition.closest('td').html(displayStatus(result.data.enabled,result.data.id));
  	  }
 	});	

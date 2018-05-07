@@ -1,5 +1,9 @@
 package nhu.novahub.assignment4.entities;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -14,7 +18,9 @@ import javax.persistence.*;
 @Entity
 @Table (name = "Book")
 public class Book {
-  
+	
+  ZonedDateTime time = ZonedDateTime.now();
+	
   @Id
   //@GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "id")
@@ -31,12 +37,12 @@ public class Book {
   
   @Column(name = "created_at")
   @JsonFormat
-  (shape = JsonFormat.Shape.STRING, pattern = "hh:mm:ss dd-MM-yyyy")
+  (shape = JsonFormat.Shape.STRING, pattern = "hh:mm:ss dd-MM-yyyy", timezone="Asia/Ho_Chi_Minh")
   private Date createdAt;
   
   @Column(name = "updated_at")
   @JsonFormat
-  (shape = JsonFormat.Shape.STRING, pattern = "hh:mm:ss dd-MM-yyyy")
+  (shape = JsonFormat.Shape.STRING, pattern = "hh:mm:ss dd-MM-yyyy", timezone="Asia/Ho_Chi_Minh")
   private Date updatedAt;
   
   @Column(name = "image")
@@ -80,7 +86,7 @@ public class Book {
   public Date getCreatedAt() {
     return createdAt;
   }
-  public void setCreatedAt(Date createdAt) {
+  public void setCreatedAt(Date createdAt) {	  
     this.createdAt = createdAt;
   }
   public Date getUpdatedAt() {

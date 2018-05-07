@@ -62,6 +62,11 @@ public class HomeController {
   public String usersListPage() {
     return "usersListPage";
   }
+  
+  @RequestMapping(value= {"/usersListPage_2"})
+  public String usersListPageSuperAdmin() {
+    return "usersListPage_superadmin";
+  }
 	
   @RequestMapping("/403")
   public String error() {
