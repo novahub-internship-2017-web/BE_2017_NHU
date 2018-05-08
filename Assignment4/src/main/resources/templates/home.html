@@ -34,14 +34,18 @@
 			
 			
      		<ul class="nav navbar-nav navbar-right">
-		      <li><a href="/register" sec:authorize="isAnonymous()"><span class="glyphicon glyphicon-user"></span> Đăng kí</a></li>
-		      <li><a href="/login" sec:authorize="isAnonymous()"><span class="glyphicon glyphicon-log-in"></span> Đăng nhập</a></li>
+		      <li><a href="/register" sec:authorize="isAnonymous()">
+		      	<span class="glyphicon glyphicon-user"></span> Đăng kí</a></li>
+		      <li><a href="/login" sec:authorize="isAnonymous()">
+		      	<span class="glyphicon glyphicon-log-in"></span> Đăng nhập</a></li>
 		      <li><a href="javascript:void(0)" onclick="loadUserProfile()" 
-		      			sec:authorize="hasAnyRole('USER','ADMIN','SUPER_ADMIN')">Đổi mật khẩu</a></li>
-		      <li><a th:href="@{/logout}" sec:authorize="hasAnyRole('USER','ADMIN','SUPER_ADMIN')">Đăng xuất</a></li>
+		      	sec:authorize="hasAnyRole('USER','ADMIN','SUPER_ADMIN')">Đổi mật khẩu</a></li>
+		      <li><a sec:authorize="hasAnyRole('USER','ADMIN','SUPER_ADMIN')" 
+		      	th:href="@{/logout}">Đăng xuất</a></li>
 		    </ul>
 		    
-		    <p class="navbar-text navbar-right">Hi! <span sec:authentication="name"></span></p>
+		    <p sec:authorize="hasAnyRole('USER','ADMIN','SUPER_ADMIN')" 
+		    	class="navbar-text navbar-right" >Hi! <span sec:authentication="name"></span></p>
 		</div>
 	</nav>
 	<div class="container main-container" id="menubar">

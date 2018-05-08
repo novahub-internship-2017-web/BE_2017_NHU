@@ -31,7 +31,7 @@ public class Comment {
   
   @Column(name = "created_at")
   @JsonFormat
-  (shape = JsonFormat.Shape.STRING, pattern = "hh:mm:ss dd-MM-yyyy")
+  (shape = JsonFormat.Shape.STRING, pattern = "hh:mm:ss dd-MM-yyyy", timezone="Asia/Ho_Chi_Minh")
   private Date createdAt;
   
   @Column(name = "updated_at")

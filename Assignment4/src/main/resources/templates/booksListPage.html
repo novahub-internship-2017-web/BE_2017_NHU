@@ -8,9 +8,9 @@ Hiển thị :
 <table id="tableBooksList" class="tableList display">
    <thead>
         <tr>
-            <th><a class="btnSort">Mã <i class="glyphicon glyphicon-triangle-bottom colId"></i></a></th>
-			<th><a class="btnSort">Tiêu đề <i class="glyphicon glyphicon-sort colTitle"></i></a></th>
-            <th><a class="btnSort">Tác giả <i class="glyphicon glyphicon-sort colAuthor"></i></a></th>
+            <th>Mã <a class="btnSort"><i class="glyphicon glyphicon-triangle-bottom colId"></i></a></th>
+			<th>Tiêu đề <a class="btnSort"><i class="glyphicon glyphicon-sort colTitle"></i></a></th>
+            <th>Tác giả <a class="btnSort"><i class="glyphicon glyphicon-sort colAuthor"></i></a></th>
             <th>Thời gian tạo</th>
             <th>Thời gian cập nhật</th>
             <th>Chi tiết</th>
@@ -131,7 +131,7 @@ function displayBooks(){
 	var bookSearchUrl = ROOT_URL+"/searchBook";
 	if(CURRENT_URL.search(bookSearchUrl) != -1 ){
 		var keywordSearch = CURRENT_URL.substring(CURRENT_URL.lastIndexOf('/') + 1);
-		currentPageIndex = 0;
+		//currentPageIndex = 0;
 		urlAjax = ROOT_URL+"/api/book/search?page="+currentPageIndex+
 				"&size="+pageSize+"&sort="+sortBy+","+dir+"&keyword="+keywordSearch;
 	}
@@ -153,55 +153,56 @@ function displayBooks(){
 		type : "GET",
 		url : urlAjax,
 		success: function(result){
-				$('#tableBooksList tbody').html("");
-				if(result.data.totalElements == 0){
-					$('#Content').html('Chưa có cuốn sách nào ! ')
-				}else{
-					$.each(result.data.content, function(i, book){
-						var bookRow = '<tr>' +
-						'<td class="table_id">' + book.id + '</td>' +
-						'<td>' + book.title + '</td>' +
-						'<td>' + book.author + '</td>' +
-						'<td>' + book.createdAt + '</td>' +
-						'<td>' + book.updatedAt + '</td>' +
-						'<td><a title="Chi tiết" href="javascript:void(0)" '+
-							'class="btn detaiBooklBtn" onclick="loadBookDetail('+book.id+')">'+
-							'<span class="glyphicon glyphicon-eye-open"></span></a></td>' ;
-						if(roleUser === 'isUser' ){
-							bookRow +='<td>'+ displayStatusRoleUser(book.enabled,book.id) +'</td>';
-							if(idUser == book.userId){
-								bookRow += '<td>'+
-									'<button type="button" class="btn modifyBtn"'+ 
-									'onclick="loadFormEditBook('+ book.id+')">'+
-									'<span class="glyphicon glyphicon-edit"></span> Sửa</button>'+
-									'<button type="button" class="btn btn-danger"'+
-									'onclick="deleteBook('+ book.id+')">'+
-									'<span class="glyphicon glyphicon-remove-sign"></span> Xóa</button>'+
-								'</td>';
-							}else{
-								bookRow +='<td></td>';
-							}
-						}else if(roleUser === 'isSuperAdmin' || roleUser === 'isAdmin'){
-							bookRow +='<td>'+ displayStatus(book.enabled,book.id) +'</td>';
+			$('#successMsg').html('');
+			$('#tableBooksList tbody').html("");
+			if(result.data == null){
+				$('#Content').html('Không có kết quả ');
+			}else{
+				$.each(result.data.content, function(i, book){
+					var bookRow = '<tr>' +
+					'<td class="table_id">' + book.id + '</td>' +
+					'<td>' + book.title + '</td>' +
+					'<td>' + book.author + '</td>' +
+					'<td>' + book.createdAt + '</td>' +
+					'<td>' + book.updatedAt + '</td>' +
+					'<td><a title="Chi tiết" href="javascript:void(0)" '+
+						'class="btn detaiBooklBtn btn-sm" onclick="loadBookDetail('+book.id+')">'+
+						'<span class="glyphicon glyphicon-eye-open"></span></a></td>' ;
+					if(roleUser === 'isUser' ){
+						bookRow +='<td>'+ displayStatusRoleUser(book.enabled,book.id) +'</td>';
+						if(idUser == book.userId){
 							bookRow += '<td>'+
-								'<button type="button" class="btn modifyBtn"'+
+								'<button type="button" class="btn modifyBtn btn-sm"'+ 
 								'onclick="loadFormEditBook('+ book.id+')">'+
 								'<span class="glyphicon glyphicon-edit"></span> Sửa</button>'+
-								'<button type="button" class="btn btn-danger" '+
+								'<button type="button" class="btn btn-danger btn-sm"'+
 								'onclick="deleteBook('+ book.id+')">'+
-								'<span class="glyphicon glyphicon-trash"></span> Xóa</button>'+
+								'<span class="glyphicon glyphicon-remove-sign"></span> Xóa</button>'+
 							'</td>';
+						}else{
+							bookRow +='<td></td>';
 						}
-							
-						bookRow +='</tr>';
+					}else if(roleUser === 'isSuperAdmin' || roleUser === 'isAdmin'){
+						bookRow +='<td>'+ displayStatus(book.enabled,book.id) +'</td>';
+						bookRow += '<td>'+
+							'<button type="button" class="btn modifyBtn btn-sm"'+
+							'onclick="loadFormEditBook('+ book.id+')">'+
+							'<span class="glyphicon glyphicon-edit"></span> Sửa</button>'+
+							'<button type="button" class="btn btn-danger btn-sm" '+
+							'onclick="deleteBook('+ book.id+')">'+
+							'<span class="glyphicon glyphicon-trash"></span> Xóa</button>'+
+						'</td>';
+					}
 						
-						$('#tableBooksList tbody').append(bookRow);
-			        });
-					$('#successMsg').html(result.status);
-					currentPageIndex = result.data.pageable.pageNumber;
-					pageCount = result.data.totalPages;
-					PaginateSetPageObjects();
-				}
+					bookRow +='</tr>';
+					
+					$('#tableBooksList tbody').append(bookRow);
+		        });
+				$('#successMsg').html(result.status);
+				currentPageIndex = result.data.pageable.pageNumber;
+				pageCount = result.data.totalPages;
+				PaginateSetPageObjects();
+			}
 				
 		},
 		error : function(e) {
@@ -214,9 +215,11 @@ function displayBooks(){
 function displayStatus(status,bookId){
 	var select = '';
     if(status){
-    	 select += '<button class="changeEnabledBtn btn btn-success" value="1"> Kích hoạt </button>';
+    	 select += '<button class="changeEnabledBtn btn btn-success btn-sm" '+
+    	 		'value="1"> Kích hoạt </button>';
     }else{
-    	select += '<button class="changeEnabledBtn btn btn-danger" value="0"> Đang Khóa </button>';
+    	select += '<button class="changeEnabledBtn btn btn-danger btn-sm" '+
+    			'value="0"> Đang Khóa </button>';
     }
     return select;
 }
@@ -304,7 +307,7 @@ $("#tableBooksList tbody").on("click",".changeEnabledBtn",function(){
   
 $('#numberElementsDisplay').on('change', function() {
 	pageSize = this.value;
-	displayBooks();
+	moveFirstPage();
 });
 </script>
 </div>

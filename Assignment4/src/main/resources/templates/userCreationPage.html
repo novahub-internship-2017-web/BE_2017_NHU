@@ -37,7 +37,7 @@ function addUser(){
 		dataType : 'json',
 		success: function(result){
 			 $('#userCreationDiv').modal('hide');
-			 $('#successMsg').html(result.status);
+			 $('#successMsg').html("Thêm user thành công");
 			 setTimeout(function(){ $('#successMsg').html("")}, 5000);
 			 loadUsersList();
 			 
