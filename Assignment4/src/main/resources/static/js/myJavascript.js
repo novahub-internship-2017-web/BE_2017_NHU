@@ -5,7 +5,7 @@ function deleteBook(bookId){
 	if(confirmMsg == true){
 		$.ajax({
 			type : "DELETE",
-			url : window.location.origin+"/api/book/delete/"+bookId,
+			url : window.location.origin+"/api/books/"+bookId,
 			success: function(result){
 				$('.notiMsg').html(result.status);
 				setTimeout(function(){ $('.notiMsg').html("")}, 5000);

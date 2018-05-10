@@ -25,7 +25,7 @@ import nhu.novahub.assignment4.service.RoleService;
 import nhu.novahub.assignment4.service.UserService;
 
 @RestController
-@RequestMapping("/api/book")
+@RequestMapping("/api/books")
 public class BookController {
   @Autowired
   private BookService bookService;
@@ -34,7 +34,7 @@ public class BookController {
   
   Authentication authentication;
   
-  @PostMapping("/add")
+  @PostMapping("")
   public Response addBook(@RequestBody Book newBook) {
 	authentication = SecurityContextHolder.getContext().getAuthentication();
     User currentUser =  userService.findByEmail(authentication.getName());
@@ -50,7 +50,7 @@ public class BookController {
     Response response = new Response("Thêm sách thành công",newBookAdd);
     return response;
   }
-  @GetMapping(value= {"/all"})
+  @GetMapping(value= {""})
   public Response getAll(Pageable pageable) {
 	  authentication = SecurityContextHolder.getContext().getAuthentication();
 	  Response response = new Response();
@@ -72,7 +72,7 @@ public class BookController {
     return response;
   }
   
-  @GetMapping("/all/byUser")
+  @GetMapping("/byUser")
   public Response getAllByIdUser(Pageable pageable) {
 	authentication = SecurityContextHolder.getContext().getAuthentication();
 	Response response = new Response();
@@ -131,7 +131,7 @@ public class BookController {
     return response;
   }
   
-  @PutMapping("/update/{id}")
+  @PutMapping("/{id}")
   public Book updateBook(@PathVariable int id,@RequestBody Book updateBook,
                        Principal principal) {
     User currentUser =  userService.findByEmail(principal.getName());
@@ -152,7 +152,7 @@ public class BookController {
     }
   }
   
-  @DeleteMapping("/delete/{id}")
+  @DeleteMapping("/{id}")
   public Response deleteBook(@PathVariable(value = "id") int bookId) {
 	authentication = SecurityContextHolder.getContext().getAuthentication();
 	User currentUser =  userService.findByEmail(authentication.getName());

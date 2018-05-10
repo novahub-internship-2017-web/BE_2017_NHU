@@ -27,7 +27,7 @@ function addBook(){
 	 $.ajax({
 		type : "POST",
 		contentType : "application/json",
-		url : window.location.origin+"/api/book/add",
+		url : window.location.origin+"/api/books/",
 		data : JSON.stringify(newBook),
 		dataType : 'json',
 		success: function(result){

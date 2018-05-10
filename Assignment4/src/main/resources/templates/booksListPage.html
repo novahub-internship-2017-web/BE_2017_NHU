@@ -121,18 +121,18 @@ function moveNextPage() { currentPageIndex++; displayBooks(); }
 
 function displayBooks(){
 	CURRENT_URL = window.location.href;
-	var urlAjax =  ROOT_URL+"/api/book/all"+"?page="+currentPageIndex+
+	var urlAjax =  ROOT_URL+"/api/books"+"?page="+currentPageIndex+
 			"&size="+pageSize+"&sort="+sortBy+","+dir;
 	var booksListByUserUrl = ROOT_URL+"/booksListByUser";
 	if(CURRENT_URL == booksListByUserUrl ){
-		urlAjax = ROOT_URL+"/api/book/all/byUser"+"?page="+currentPageIndex+
+		urlAjax = ROOT_URL+"/api/books/byUser"+"?page="+currentPageIndex+
 				"&size="+pageSize+"&sort="+sortBy+","+dir;
 	}
 	var bookSearchUrl = ROOT_URL+"/searchBook";
 	if(CURRENT_URL.search(bookSearchUrl) != -1 ){
 		var keywordSearch = CURRENT_URL.substring(CURRENT_URL.lastIndexOf('/') + 1);
 		//currentPageIndex = 0;
-		urlAjax = ROOT_URL+"/api/book/search?page="+currentPageIndex+
+		urlAjax = ROOT_URL+"/api/books/search?page="+currentPageIndex+
 				"&size="+pageSize+"&sort="+sortBy+","+dir+"&keyword="+keywordSearch;
 	}
 
@@ -242,7 +242,7 @@ function checkBookOwned(id){
 
 function changeStatusBook(st, id){
 	$.ajax({
-	  url: window.location.origin+"/api/book/enabled/"+id,
+	  url: window.location.origin+"/api/books/enabled/"+id,
       type: 'POST',
       cache: false,
       data: {
@@ -290,7 +290,7 @@ $("#tableBooksList tbody").on("click",".changeEnabledBtn",function(){
  var confirmMsg = confirm("Bạn có muốn thay đổi tình trạng cuốn sách này ?");
  if(confirmMsg == true){
  $.ajax({
-	  url: window.location.origin+"/api/book/enabled/"+id,
+	  url: window.location.origin+"/api/books/enabled/"+id,
      type: 'POST',
      cache: false,
      data: {

@@ -19,8 +19,6 @@ import javax.persistence.*;
 @Table (name = "Book")
 public class Book {
 	
-  ZonedDateTime time = ZonedDateTime.now();
-	
   @Id
   //@GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "id")

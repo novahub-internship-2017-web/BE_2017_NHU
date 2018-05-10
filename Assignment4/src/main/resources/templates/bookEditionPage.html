@@ -14,7 +14,7 @@ $(document).ready(function() {
     	var bookId = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
     	$.ajax({
     		type : "GET",
-    		url : window.location.origin+"/api/book/"+bookId,
+    		url : window.location.origin+"/api/books/"+bookId,
     		success: function(result){				
     			$('#editBookForm').find('#id').val(result.id);
 				$('#editBookForm').find('#title').val(result.title);
@@ -47,7 +47,7 @@ function editBook(){
 	 $.ajax({
 		type : "PUT",
 		contentType : "application/json",
-		url : window.location.origin+"/api/book/update/"+bookId,
+		url : window.location.origin+"/api/books/"+bookId,
 		data : JSON.stringify(updateBook),
 		dataType : 'json',
 		success: function(result){

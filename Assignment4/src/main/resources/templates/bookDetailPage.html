@@ -8,7 +8,7 @@ $('#bookDetailDiv').modal('show');
 function getBookDetail(bookId){
 	$.ajax({
 		type : "GET",
-		url : window.location.origin+"/api/book/"+bookId,
+		url : window.location.origin+"/api/books/"+bookId,
 		success: function(result){				
 				$('#bookDetailDiv').find('h4#title').html(result.title);
 				$('.tableDetailBook').find('td#author').html(result.author);
