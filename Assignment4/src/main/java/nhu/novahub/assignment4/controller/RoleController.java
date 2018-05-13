@@ -18,7 +18,7 @@ import nhu.novahub.assignment4.service.RoleService;
 import nhu.novahub.assignment4.service.UserService;
 
 @RestController
-@RequestMapping("/api/role")
+@RequestMapping("/api/roles")
 public class RoleController {
   @Autowired
   RoleService roleService;

@@ -115,7 +115,7 @@ function displayUsers(){
 	
 	$.ajax({
 		type : "GET",
-		url : window.location.origin+"/api/user/allUser?page="+currentPageIndex+"&size="+pageSize,
+		url : window.location.origin+"/api/users/findByRole/user?page="+currentPageIndex+"&size="+pageSize,
 		success: function(result){
 				$('#tableUserList tbody').html("");
 				$.each(result.data.content, function(i, user){
@@ -142,7 +142,7 @@ function displayAdmin(){
 	
 	$.ajax({
 		type : "GET",
-		url : window.location.origin+"/api/user/allAdmin?page="+currentPageIndex+"&size="+pageSize,
+		url : window.location.origin+"/api/users/findByRole/admin?page="+currentPageIndex+"&size="+pageSize,
 		success: function(result){
 				$('#tableAdminList tbody').html("");
 				$.each(result.data.content, function(i, user){
@@ -194,7 +194,7 @@ function getRoleName(roleId){
 
 function enabledUser(st, id){
 	$.ajax({
-	  url: window.location.origin+"/api/user/enabled/"+id,
+	  url: window.location.origin+"/api/users/enabled/"+id,
       type: 'POST',
       cache: false,
       data: {
@@ -230,7 +230,7 @@ $("#tableUserList tbody").on("click",".changeEnabledBtn",function(){
 	var confirmMsg = confirm("Bạn có muốn thay đổi quyền hoạt động ?");
 	if(confirmMsg == true){
 		$.ajax({
-			  url: window.location.origin+"/api/user/enabled/"+id,
+			  url: window.location.origin+"/api/users/enabled/"+id,
 		     type: 'POST',
 		     cache: false,
 		     data: {
@@ -252,7 +252,7 @@ $("#tableAdminList tbody").on("click",".changeEnabledBtn",function(){
 	var confirmMsg = confirm("Bạn có muốn thay đổi quyền hoạt động ?");
 	if(confirmMsg == true){
 		$.ajax({
-			  url: window.location.origin+"/api/user/enabled/"+id,
+			  url: window.location.origin+"/api/users/enabled/"+id,
 		     type: 'POST',
 		     cache: false,
 		     data: {
@@ -274,7 +274,7 @@ $("#tableAdminList tbody").on("click",".changeRoleBtn",function(){
 	var confirmMsg = confirm("Bạn có muốn thay đổi quyền truy cập ?");
 	if(confirmMsg == true){
 		$.ajax({
-			  url: window.location.origin+"/api/role/change/"+id,
+			  url: window.location.origin+"/api/roles/change/"+id,
 		     type: 'POST',
 		     cache: false,
 		     data: {
@@ -298,7 +298,7 @@ $("#tableUserList tbody").on("click",".changeRoleBtn",function(){
 	var confirmMsg = confirm("Bạn có muốn thay đổi quyền truy cập ?");
 	if(confirmMsg == true){
 		$.ajax({
-			  url: window.location.origin+"/api/role/change/"+id,
+			  url: window.location.origin+"/api/roles/change/"+id,
 		     type: 'POST',
 		     cache: false,
 		     data: {

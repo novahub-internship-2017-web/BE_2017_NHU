@@ -18,7 +18,7 @@ import nhu.novahub.assignment4.service.CommentService;
 import nhu.novahub.assignment4.service.UserService;
 
 @RestController
-@RequestMapping("/api/comment")
+@RequestMapping("/api/comments")
 public class CommentController {
   
   @Autowired
@@ -26,12 +26,12 @@ public class CommentController {
   @Autowired
   private UserService userService;
   
-  @GetMapping("/all/{bookId}")
+  @GetMapping("/{bookId}")
   public List<Comment> getAllByBookId(@PathVariable(value = "bookId") int bookId) {
     return commentService.findAllByBookId(bookId);
   }
   
-  @PostMapping("/add/{bookId}")
+  @PostMapping("/{bookId}")
   public Comment postMethod(@RequestBody Comment newComment,Principal principal,
                             @PathVariable(value = "bookId") int bookId) {
     User currentUser =  userService.findByEmail(principal.getName());

@@ -79,7 +79,12 @@ public class BookController {
     User currentUser =  userService.findByEmail(authentication.getName());
     int idCurrentUser = currentUser.getId();
     Page<Book> books = bookService.findAllByUserId(idCurrentUser,pageable);
-    response.setData(books);
+    if(books.hasContent()) {
+    	 response.setData(books);
+    }else {
+		  response.setStatus("Không có dữ liệu");
+	}
+   
     return response;
   }
   

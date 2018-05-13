@@ -134,6 +134,7 @@ function displayBooks(){
 		//currentPageIndex = 0;
 		urlAjax = ROOT_URL+"/api/books/search?page="+currentPageIndex+
 				"&size="+pageSize+"&sort="+sortBy+","+dir+"&keyword="+keywordSearch;
+		$('#successMsg').html("Kết quả tìm kiếm với từ khóa '<i>"+keywordSearch +"</i>'");
 	}
 
 	// check id user 
@@ -141,7 +142,7 @@ function displayBooks(){
 	$.ajax({
 		type : "GET",
 		async: false,
-		url : window.location.origin+"/api/user/getCurrentUser",
+		url : window.location.origin+"/api/users/self",
 		success: function(result){		
 			idUser = result.id;
 		},
@@ -153,10 +154,9 @@ function displayBooks(){
 		type : "GET",
 		url : urlAjax,
 		success: function(result){
-			$('#successMsg').html('');
 			$('#tableBooksList tbody').html("");
-			if(result.data == null){
-				$('#Content').html('Không có kết quả ');
+			if(result.data == null ){
+				$('#Content').html('Không có kết quả.');
 			}else{
 				$.each(result.data.content, function(i, book){
 					var bookRow = '<tr>' +
@@ -198,7 +198,7 @@ function displayBooks(){
 					
 					$('#tableBooksList tbody').append(bookRow);
 		        });
-				$('#successMsg').html(result.status);
+				
 				currentPageIndex = result.data.pageable.pageNumber;
 				pageCount = result.data.totalPages;
 				PaginateSetPageObjects();

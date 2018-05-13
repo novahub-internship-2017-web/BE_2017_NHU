@@ -25,7 +25,7 @@ function getEmailUserById(id){
 	$.ajax({
 		type : "GET",
 		async: false,
-		url : window.location.origin+"/api/user/profile/"+id,
+		url : window.location.origin+"/api/users/profile/"+id,
 		success: function(data){
 			result =  data.email;
 		},

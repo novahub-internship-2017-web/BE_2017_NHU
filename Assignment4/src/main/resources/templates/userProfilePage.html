@@ -52,7 +52,7 @@ $(document).ready(function() {
     });
 	$.ajax({
 		type : "GET",
-		url : window.location.origin+"/api/user/getCurrentUser",
+		url : window.location.origin+"/api/users/self",
 		success: function(result){		
 			$('#userProfileForm').find('#email').val(result.email);
 			
@@ -72,7 +72,7 @@ $("#userProfileForm").submit(function(event) {
 
 function editPassword(){
 	
-	$.post(window.location.origin+"/api/user/changePassword",
+	$.post(window.location.origin+"/api/users/changePassword",
 	      {oldPass: $('#userProfileForm').find('#oldPass').val(),
 	       newPass: $('#userProfileForm').find('#newPass').val(),
 	       confirmPass: $('#userProfileForm').find('#confirmPass').val()} ,function(data){

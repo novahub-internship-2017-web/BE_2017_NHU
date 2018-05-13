@@ -27,7 +27,7 @@ import nhu.novahub.assignment4.service.RoleService;
 import nhu.novahub.assignment4.service.UserService;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 public class UserController {
   @Autowired
   UserService userService;
@@ -39,7 +39,7 @@ public class UserController {
   
   Logger logger = LoggerFactory.getLogger(this.getClass());
   
-  @GetMapping("/all")
+  @GetMapping("")
   public Response getAll(Pageable pageable) {
 	Page<User> users = userService.findAll(pageable);
 	Response response = new Response();
@@ -52,7 +52,7 @@ public class UserController {
     return response;
   } 
   
-  @GetMapping("/allUser")
+  @GetMapping("/findByRole/user")
   public Response getUsersRoleUser(Pageable pageable) {
 	Page<User> users = userService.findAllUser(pageable);
 	Response response = new Response();
@@ -65,7 +65,7 @@ public class UserController {
     return response;
   }
   
-  @GetMapping("/allAdmin")
+  @GetMapping("/findByRole/admin")
   public Response getUsersRoleAdmin(Pageable pageable) {
 	Page<User> users = userService.findAllAdmin(pageable);
 	Response response = new Response();
@@ -78,17 +78,17 @@ public class UserController {
     return response;
   }
   
-  @GetMapping("/{email}")
+  @GetMapping("/email/{email}")
   public User getIdUser(@PathVariable(value = "email") String email) {
     return userService.findByEmail(email);
   }  
   
-  @GetMapping("/profile/{id}")
+  @GetMapping("/id/{id}")
   public User getEmailUser(@PathVariable(value = "id") int id) {
     return userService.findById(id);
   }
   
-  @GetMapping("/getCurrentUser")
+  @GetMapping("/self")
   public User currentUserName( Principal principal) {
     try {
       String email = principal.getName();
@@ -125,7 +125,9 @@ public class UserController {
     }
     return response;
   }
-  @PostMapping("/register")
+  
+  // register and add new user
+  @PostMapping("")
   public Response addBook(@RequestBody User user) {
 	  Response response  = new Response();
 	  if(!userService.existsByEmail(user.getEmail())) {
@@ -155,12 +157,6 @@ public class UserController {
 	  return response;
   }
   
-  @PostMapping("/add")
-  public Response addNewUser(@RequestBody User user) {
-	  Response response  = new Response();
-	  
-	  return response;
-  }
   @PostMapping("/enabled/{id}")
   public Response changeEnabled(@PathVariable(value = "id") int userId,@RequestParam int status) {
 	  authentication = SecurityContextHolder.getContext().getAuthentication();
